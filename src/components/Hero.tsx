@@ -70,7 +70,7 @@ export const Hero = () => {
             LAUNCH CYB
           </a>
           <a
-            href="https://github.com/cybercongress"
+            href="https://github.com/cyberia-to/go-cyber"
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 border-2 border-secondary text-secondary font-orbitron font-bold rounded-lg hover:bg-secondary/10 transition-colors duration-300"
