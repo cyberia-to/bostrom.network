@@ -3,6 +3,16 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+interface TokenData {
+  price: number | null;
+  priceChange24h: number | null;
+  marketCap: number | null;
+  fullyDilutedValuation: number | null;
+  volume24h: number | null;
+  circulatingSupply: number | null;
+  totalSupply: number | null;
+}
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -10,55 +20,79 @@ Deno.serve(async (req) => {
   }
 
   try {
-    console.log('Fetching BOOT token price from Osmosis API...');
-    
-    // Try multiple endpoints for redundancy
-    const endpoints = [
-      'https://api-osmosis.imperator.co/tokens/v2/boot',
-      'https://api-osmosis.imperator.co/tokens/v2/all',
-    ];
+    console.log('Fetching BOOT token data...');
 
-    let bootPrice = null;
-    let priceChange24h = null;
+    const tokenData: TokenData = {
+      price: null,
+      priceChange24h: null,
+      marketCap: null,
+      fullyDilutedValuation: null,
+      volume24h: null,
+      circulatingSupply: null,
+      totalSupply: null,
+    };
 
-    // Try the direct BOOT endpoint first
+    // Try CoinGecko first for comprehensive data
     try {
-      const response = await fetch(endpoints[0], {
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Direct BOOT endpoint response:', JSON.stringify(data).substring(0, 500));
-        
-        if (Array.isArray(data) && data.length > 0) {
-          bootPrice = data[0].price;
-          priceChange24h = data[0].price_24h_change;
-        } else if (data.price) {
-          bootPrice = data.price;
-          priceChange24h = data.price_24h_change;
-        }
-      }
-    } catch (e) {
-      console.log('Direct endpoint failed, trying all tokens endpoint...');
-    }
-
-    // If direct endpoint failed, try the all tokens endpoint
-    if (bootPrice === null) {
-      try {
-        const response = await fetch(endpoints[1], {
+      console.log('Fetching from CoinGecko...');
+      const response = await fetch(
+        'https://api.coingecko.com/api/v3/coins/bostrom?localization=false&tickers=false&community_data=false&developer_data=false',
+        {
           headers: {
             'Accept': 'application/json',
           },
+        }
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('CoinGecko response received');
+        
+        if (data.market_data) {
+          tokenData.price = data.market_data.current_price?.usd || null;
+          tokenData.priceChange24h = data.market_data.price_change_percentage_24h || null;
+          tokenData.marketCap = data.market_data.market_cap?.usd || null;
+          tokenData.fullyDilutedValuation = data.market_data.fully_diluted_valuation?.usd || null;
+          tokenData.volume24h = data.market_data.total_volume?.usd || null;
+          tokenData.circulatingSupply = data.market_data.circulating_supply || null;
+          tokenData.totalSupply = data.market_data.total_supply || null;
+        }
+      } else {
+        console.log('CoinGecko request failed with status:', response.status);
+      }
+    } catch (e) {
+      console.error('CoinGecko fetch error:', e);
+    }
+
+    // If CoinGecko failed for price, try Osmosis as fallback
+    if (tokenData.price === null) {
+      try {
+        console.log('Trying Osmosis API fallback for price...');
+        const response = await fetch('https://api-osmosis.imperator.co/tokens/v2/boot', {
+          headers: { 'Accept': 'application/json' },
         });
         
         if (response.ok) {
           const data = await response.json();
-          console.log('All tokens response received, searching for BOOT...');
-          
-          // Find BOOT in the list
+          if (Array.isArray(data) && data.length > 0) {
+            tokenData.price = data[0].price;
+            tokenData.priceChange24h = data[0].price_24h_change;
+          }
+        }
+      } catch (e) {
+        console.error('Osmosis fallback failed:', e);
+      }
+    }
+
+    // If still no price, try all tokens endpoint
+    if (tokenData.price === null) {
+      try {
+        const response = await fetch('https://api-osmosis.imperator.co/tokens/v2/all', {
+          headers: { 'Accept': 'application/json' },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
           const bootToken = data.find((token: any) => 
             token.symbol?.toLowerCase() === 'boot' || 
             token.display?.toLowerCase() === 'boot' ||
@@ -66,74 +100,30 @@ Deno.serve(async (req) => {
           );
           
           if (bootToken) {
-            console.log('Found BOOT token:', JSON.stringify(bootToken));
-            bootPrice = bootToken.price;
-            priceChange24h = bootToken.price_24h_change;
+            tokenData.price = bootToken.price;
+            tokenData.priceChange24h = bootToken.price_24h_change;
           }
         }
       } catch (e) {
-        console.error('All tokens endpoint also failed:', e);
+        console.error('Osmosis all tokens fallback failed:', e);
       }
     }
 
-    // If still no price, try CoinGecko as fallback
-    if (bootPrice === null) {
-      try {
-        console.log('Trying CoinGecko fallback...');
-        const response = await fetch(
-          'https://api.coingecko.com/api/v3/simple/price?ids=bostrom&vs_currencies=usd&include_24hr_change=true',
-          {
-            headers: {
-              'Accept': 'application/json',
-            },
-          }
-        );
-        
-        if (response.ok) {
-          const data = await response.json();
-          console.log('CoinGecko response:', JSON.stringify(data));
-          
-          if (data.bostrom) {
-            bootPrice = data.bostrom.usd;
-            priceChange24h = data.bostrom.usd_24h_change;
-          }
-        }
-      } catch (e) {
-        console.error('CoinGecko fallback failed:', e);
-      }
-    }
+    console.log('Final token data:', JSON.stringify(tokenData));
 
-    if (bootPrice !== null) {
-      console.log(`BOOT price found: $${bootPrice}, 24h change: ${priceChange24h}%`);
-      
-      return new Response(
-        JSON.stringify({
-          success: true,
-          price: bootPrice,
-          priceChange24h: priceChange24h,
-          symbol: 'BOOT',
-          source: 'osmosis',
-        }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // Return error if no price found
-    console.error('Could not fetch BOOT price from any source');
     return new Response(
       JSON.stringify({
-        success: false,
-        error: 'Could not fetch BOOT price',
+        success: true,
+        ...tokenData,
+        symbol: 'BOOT',
+        source: 'coingecko',
       }),
       { 
-        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   } catch (error) {
-    console.error('Error fetching BOOT price:', error);
+    console.error('Error fetching BOOT data:', error);
     
     return new Response(
       JSON.stringify({
