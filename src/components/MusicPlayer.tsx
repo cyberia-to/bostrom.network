@@ -1,17 +1,35 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Repeat, Download, Music, ChevronUp, ChevronDown } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 
+declare global {
+  interface Window {
+    __bostromBgAudio?: HTMLAudioElement;
+  }
+}
+
+const AUDIO_SRC = '/audio/background-music.mp3';
+
+const getGlobalAudio = (): HTMLAudioElement | null => {
+  if (typeof window === 'undefined') return null;
+  if (!window.__bostromBgAudio) {
+    const audio = new Audio(AUDIO_SRC);
+    audio.preload = 'auto';
+    window.__bostromBgAudio = audio;
+  }
+  return window.__bostromBgAudio;
+};
+
 const formatTime = (seconds: number): string => {
-  if (isNaN(seconds)) return '0:00';
+  if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
 export const MusicPlayer = () => {
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(30);
@@ -20,33 +38,56 @@ export const MusicPlayer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  // Autoplay on mount with proper cleanup
+  // Ensure there's only ONE audio instance (prevents overlap on hot reload / remount)
   useEffect(() => {
-    const audio = audioRef.current;
+    const audio = getGlobalAudio();
     if (!audio) return;
+    audioRef.current = audio;
+
+    // If any old <audio> tags are lingering (dev hot reload), stop them.
+    document.querySelectorAll('audio').forEach((el) => {
+      try {
+        el.pause();
+      } catch {
+        // ignore
+      }
+    });
+
+    // Hard-stop any previous playback before starting (fixes the "two tracks" bug)
+    audio.pause();
+    audio.currentTime = 0;
+
+    // Apply initial settings
+    audio.loop = isLooping;
+    audio.volume = volume / 100;
+    audio.muted = isMuted;
+
+    // Keep UI in sync with the audio element
+    const onTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const onLoadedMetadata = () => setDuration(audio.duration || 0);
+    const onDurationChange = () => setDuration(audio.duration || 0);
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+
+    audio.addEventListener('timeupdate', onTimeUpdate);
+    audio.addEventListener('loadedmetadata', onLoadedMetadata);
+    audio.addEventListener('durationchange', onDurationChange);
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
+
+    setCurrentTime(audio.currentTime || 0);
+    setDuration(audio.duration || 0);
+    setIsPlaying(!audio.paused);
 
     let interactionHandler: (() => void) | null = null;
 
-    audio.volume = volume / 100;
-    audio.loop = isLooping;
-
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => setDuration(audio.duration);
-    const handleDurationChange = () => setDuration(audio.duration);
-
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-    audio.addEventListener('durationchange', handleDurationChange);
-    
     // Attempt to autoplay
     const playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise
-        .then(() => {
-          setIsPlaying(true);
-        })
+        .then(() => setIsPlaying(true))
         .catch(() => {
-          // Autoplay was prevented by browser, wait for user interaction
+          // Autoplay was prevented by browser, wait for first interaction
           setIsPlaying(false);
           interactionHandler = () => {
             audio.play().then(() => setIsPlaying(true)).catch(() => {});
@@ -59,13 +100,14 @@ export const MusicPlayer = () => {
         });
     }
 
-    // Cleanup function - stops audio and removes listeners on unmount
     return () => {
       audio.pause();
       audio.currentTime = 0;
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.removeEventListener('durationchange', handleDurationChange);
+      audio.removeEventListener('timeupdate', onTimeUpdate);
+      audio.removeEventListener('loadedmetadata', onLoadedMetadata);
+      audio.removeEventListener('durationchange', onDurationChange);
+      audio.removeEventListener('play', onPlay);
+      audio.removeEventListener('pause', onPause);
       if (interactionHandler) {
         document.removeEventListener('click', interactionHandler);
         document.removeEventListener('keydown', interactionHandler);
@@ -74,56 +116,66 @@ export const MusicPlayer = () => {
   }, []);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume / 100;
-      audioRef.current.loop = isLooping;
-    }
-  }, [volume, isLooping]);
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = volume / 100;
+  }, [volume]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.loop = isLooping;
+  }, [isLooping]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.muted = isMuted;
+  }, [isMuted]);
 
   const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      audio.play().then(() => setIsPlaying(true)).catch(() => {});
+    } else {
+      audio.pause();
+      setIsPlaying(false);
     }
   };
 
   const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
+    setIsMuted((prev) => {
+      const next = !prev;
+      const audio = audioRef.current;
+      if (audio) audio.muted = next;
+      return next;
+    });
   };
 
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume / 100;
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = newVolume / 100;
+      if (newVolume === 0) audio.muted = true;
+      if (newVolume > 0 && isMuted) audio.muted = false;
     }
-    if (newVolume === 0) {
-      setIsMuted(true);
-    } else if (isMuted) {
-      setIsMuted(false);
-    }
+    if (newVolume === 0) setIsMuted(true);
+    else if (isMuted) setIsMuted(false);
   };
 
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
-    if (audioRef.current) {
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-    }
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
   };
 
   const toggleLoop = () => {
-    setIsLooping(!isLooping);
-    if (audioRef.current) {
-      audioRef.current.loop = !isLooping;
-    }
+    setIsLooping((v) => !v);
   };
 
   const handleDownload = () => {
@@ -137,8 +189,6 @@ export const MusicPlayer = () => {
 
   return (
     <>
-      <audio ref={audioRef} src="/audio/background-music.mp3" loop={isLooping} />
-      
       <motion.div
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
@@ -189,6 +239,7 @@ export const MusicPlayer = () => {
                       onValueChange={handleSeek}
                       max={duration || 100}
                       step={0.1}
+                      disabled={!duration}
                       className="w-full"
                     />
                     <div className="flex justify-between text-xs font-mono text-muted-foreground">
