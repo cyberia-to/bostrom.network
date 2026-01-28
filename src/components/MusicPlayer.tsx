@@ -5,11 +5,40 @@ import { Slider } from '@/components/ui/slider';
 
 export const MusicPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(30);
   const [isLooping, setIsLooping] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Autoplay on mount
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = volume / 100;
+      audio.loop = isLooping;
+      
+      // Attempt to autoplay
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            // Autoplay was prevented by browser, wait for user interaction
+            setIsPlaying(false);
+            const handleFirstInteraction = () => {
+              audio.play().then(() => setIsPlaying(true)).catch(() => {});
+              document.removeEventListener('click', handleFirstInteraction);
+              document.removeEventListener('keydown', handleFirstInteraction);
+            };
+            document.addEventListener('click', handleFirstInteraction);
+            document.addEventListener('keydown', handleFirstInteraction);
+          });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (audioRef.current) {
