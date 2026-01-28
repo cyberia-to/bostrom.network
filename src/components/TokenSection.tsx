@@ -3,13 +3,6 @@ import bostromLogo from '@/assets/bostrom-logo.png';
 import { useBootPrice } from '@/hooks/useBootPrice';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
-const stats = [
-  { label: 'Total Supply', value: '1T', suffix: 'BOOT' },
-  { label: 'Staking APR', value: '~20', suffix: '%' },
-  { label: 'Active Validators', value: '50', suffix: '+' },
-  { label: 'Network State', value: 'MOON', suffix: '' },
-];
-
 const formatPrice = (price: number): string => {
   if (price < 0.00001) {
     return price.toExponential(2);
@@ -21,8 +14,69 @@ const formatPrice = (price: number): string => {
   return price.toFixed(2);
 };
 
+const formatLargeNumber = (num: number): string => {
+  if (num >= 1e12) {
+    return `${(num / 1e12).toFixed(2)}T`;
+  } else if (num >= 1e9) {
+    return `${(num / 1e9).toFixed(2)}B`;
+  } else if (num >= 1e6) {
+    return `${(num / 1e6).toFixed(2)}M`;
+  } else if (num >= 1e3) {
+    return `${(num / 1e3).toFixed(2)}K`;
+  }
+  return num.toFixed(2);
+};
+
+const formatSupply = (num: number): string => {
+  if (num >= 1e12) {
+    return `${(num / 1e12).toFixed(0)}T`;
+  } else if (num >= 1e9) {
+    return `${(num / 1e9).toFixed(0)}B`;
+  } else if (num >= 1e6) {
+    return `${(num / 1e6).toFixed(0)}M`;
+  }
+  return num.toLocaleString();
+};
+
 export const TokenSection = () => {
-  const { price, priceChange24h, isLoading } = useBootPrice();
+  const { 
+    price, 
+    priceChange24h, 
+    marketCap, 
+    fullyDilutedValuation, 
+    volume24h, 
+    circulatingSupply, 
+    totalSupply,
+    isLoading 
+  } = useBootPrice();
+
+  const liveStats = [
+    { 
+      label: 'Market Cap', 
+      value: marketCap !== null ? `$${formatLargeNumber(marketCap)}` : null,
+      loading: isLoading,
+    },
+    { 
+      label: 'Fully Diluted Valuation', 
+      value: fullyDilutedValuation !== null ? `$${formatLargeNumber(fullyDilutedValuation)}` : null,
+      loading: isLoading,
+    },
+    { 
+      label: '24h Trading Volume', 
+      value: volume24h !== null ? `$${formatLargeNumber(volume24h)}` : null,
+      loading: isLoading,
+    },
+    { 
+      label: 'Circulating Supply', 
+      value: circulatingSupply !== null ? `${formatSupply(circulatingSupply)} BOOT` : null,
+      loading: isLoading,
+    },
+    { 
+      label: 'Total Supply', 
+      value: totalSupply !== null ? `${formatSupply(totalSupply)} BOOT` : null,
+      loading: isLoading,
+    },
+  ];
 
   return (
     <section id="token" className="py-24 relative overflow-hidden">
@@ -121,9 +175,9 @@ export const TokenSection = () => {
               </div>
             </motion.div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              {stats.map((stat, index) => (
+            {/* Live Stats Grid from CoinGecko */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+              {liveStats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
                   initial={{ opacity: 0, y: 10 }}
@@ -132,11 +186,16 @@ export const TokenSection = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="p-4 rounded-xl border border-border bg-card/50"
                 >
-                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary">
-                    {stat.value}
-                    <span className="text-lg text-muted-foreground ml-1">{stat.suffix}</span>
+                  <div className="text-lg md:text-xl font-orbitron font-bold text-primary">
+                    {stat.loading ? (
+                      <span className="animate-pulse text-muted-foreground">...</span>
+                    ) : stat.value !== null ? (
+                      stat.value
+                    ) : (
+                      <span className="text-muted-foreground text-sm">N/A</span>
+                    )}
                   </div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  <div className="text-xs text-muted-foreground mt-1">{stat.label}</div>
                 </motion.div>
               ))}
             </div>

@@ -4,13 +4,25 @@ import { supabase } from '@/integrations/supabase/client';
 interface BootPriceData {
   price: number | null;
   priceChange24h: number | null;
+  marketCap: number | null;
+  fullyDilutedValuation: number | null;
+  volume24h: number | null;
+  circulatingSupply: number | null;
+  totalSupply: number | null;
   isLoading: boolean;
   error: string | null;
 }
 
 export const useBootPrice = (): BootPriceData => {
-  const [price, setPrice] = useState<number | null>(null);
-  const [priceChange24h, setPriceChange24h] = useState<number | null>(null);
+  const [data, setData] = useState<Omit<BootPriceData, 'isLoading' | 'error'>>({
+    price: null,
+    priceChange24h: null,
+    marketCap: null,
+    fullyDilutedValuation: null,
+    volume24h: null,
+    circulatingSupply: null,
+    totalSupply: null,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,17 +32,24 @@ export const useBootPrice = (): BootPriceData => {
         setIsLoading(true);
         setError(null);
 
-        const { data, error: fnError } = await supabase.functions.invoke('get-boot-price');
+        const { data: responseData, error: fnError } = await supabase.functions.invoke('get-boot-price');
 
         if (fnError) {
           throw new Error(fnError.message);
         }
 
-        if (data?.success) {
-          setPrice(data.price);
-          setPriceChange24h(data.priceChange24h);
+        if (responseData?.success) {
+          setData({
+            price: responseData.price,
+            priceChange24h: responseData.priceChange24h,
+            marketCap: responseData.marketCap,
+            fullyDilutedValuation: responseData.fullyDilutedValuation,
+            volume24h: responseData.volume24h,
+            circulatingSupply: responseData.circulatingSupply,
+            totalSupply: responseData.totalSupply,
+          });
         } else {
-          throw new Error(data?.error || 'Failed to fetch price');
+          throw new Error(responseData?.error || 'Failed to fetch price');
         }
       } catch (err) {
         console.error('Error fetching BOOT price:', err);
@@ -47,5 +66,5 @@ export const useBootPrice = (): BootPriceData => {
     return () => clearInterval(interval);
   }, []);
 
-  return { price, priceChange24h, isLoading, error };
+  return { ...data, isLoading, error };
 };
