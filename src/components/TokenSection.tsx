@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import bostromLogo from '@/assets/bostrom-logo.png';
+import { useBootPrice } from '@/hooks/useBootPrice';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
 const stats = [
   { label: 'Total Supply', value: '1T', suffix: 'BOOT' },
@@ -8,7 +10,20 @@ const stats = [
   { label: 'Network State', value: 'MOON', suffix: '' },
 ];
 
+const formatPrice = (price: number): string => {
+  if (price < 0.00001) {
+    return price.toExponential(2);
+  } else if (price < 0.01) {
+    return price.toFixed(6);
+  } else if (price < 1) {
+    return price.toFixed(4);
+  }
+  return price.toFixed(2);
+};
+
 export const TokenSection = () => {
+  const { price, priceChange24h, isLoading } = useBootPrice();
+
   return (
     <section id="token" className="py-24 relative overflow-hidden">
       {/* Background glow */}
@@ -63,6 +78,48 @@ export const TokenSection = () => {
               mint cyberlinks, and participate in governance. Fair genesis distribution 
               ensures decentralized ownership.
             </p>
+
+            {/* Live Price Block */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="mb-8 p-6 rounded-xl border-2 border-primary/50 bg-primary/5 box-glow-primary"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm text-muted-foreground font-play mb-1">
+                    Live Price (Osmosis)
+                  </div>
+                  <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary">
+                    {isLoading ? (
+                      <span className="animate-pulse">Loading...</span>
+                    ) : price !== null ? (
+                      `$${formatPrice(price)}`
+                    ) : (
+                      <span className="text-muted-foreground text-xl">Unavailable</span>
+                    )}
+                  </div>
+                </div>
+                {!isLoading && priceChange24h !== null && (
+                  <div className={`flex items-center gap-1 px-3 py-2 rounded-lg ${
+                    priceChange24h >= 0 
+                      ? 'bg-green-500/20 text-green-400' 
+                      : 'bg-red-500/20 text-red-400'
+                  }`}>
+                    {priceChange24h >= 0 ? (
+                      <TrendingUp className="w-4 h-4" />
+                    ) : (
+                      <TrendingDown className="w-4 h-4" />
+                    )}
+                    <span className="font-mono text-sm font-bold">
+                      {priceChange24h >= 0 ? '+' : ''}{priceChange24h.toFixed(2)}%
+                    </span>
+                  </div>
+                )}
+              </div>
+            </motion.div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-4 mb-8">
