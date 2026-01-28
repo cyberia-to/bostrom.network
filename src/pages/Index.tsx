@@ -4,6 +4,7 @@ import { Features } from '@/components/Features';
 import { TokenSection } from '@/components/TokenSection';
 import { Ecosystem } from '@/components/Ecosystem';
 import { Footer } from '@/components/Footer';
+import { MusicPlayer } from '@/components/MusicPlayer';
 
 const Index = () => {
   return (
@@ -16,6 +17,7 @@ const Index = () => {
         <Ecosystem />
       </main>
       <Footer />
+      <MusicPlayer />
     </div>
   );
 };
