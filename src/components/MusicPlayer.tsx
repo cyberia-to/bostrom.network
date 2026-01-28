@@ -11,33 +11,46 @@ export const MusicPlayer = () => {
   const [isLooping, setIsLooping] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Autoplay on mount
+  // Autoplay on mount with proper cleanup
   useEffect(() => {
     const audio = audioRef.current;
-    if (audio) {
-      audio.volume = volume / 100;
-      audio.loop = isLooping;
-      
-      // Attempt to autoplay
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch(() => {
-            // Autoplay was prevented by browser, wait for user interaction
-            setIsPlaying(false);
-            const handleFirstInteraction = () => {
-              audio.play().then(() => setIsPlaying(true)).catch(() => {});
-              document.removeEventListener('click', handleFirstInteraction);
-              document.removeEventListener('keydown', handleFirstInteraction);
-            };
-            document.addEventListener('click', handleFirstInteraction);
-            document.addEventListener('keydown', handleFirstInteraction);
-          });
-      }
+    if (!audio) return;
+
+    let interactionHandler: (() => void) | null = null;
+
+    audio.volume = volume / 100;
+    audio.loop = isLooping;
+    
+    // Attempt to autoplay
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {
+          // Autoplay was prevented by browser, wait for user interaction
+          setIsPlaying(false);
+          interactionHandler = () => {
+            audio.play().then(() => setIsPlaying(true)).catch(() => {});
+            document.removeEventListener('click', interactionHandler!);
+            document.removeEventListener('keydown', interactionHandler!);
+            interactionHandler = null;
+          };
+          document.addEventListener('click', interactionHandler);
+          document.addEventListener('keydown', interactionHandler);
+        });
     }
+
+    // Cleanup function - stops audio and removes listeners on unmount
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+      if (interactionHandler) {
+        document.removeEventListener('click', interactionHandler);
+        document.removeEventListener('keydown', interactionHandler);
+      }
+    };
   }, []);
 
   useEffect(() => {
