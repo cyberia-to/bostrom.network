@@ -3,6 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Repeat, Download, Music, ChevronUp, ChevronDown } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 
+const formatTime = (seconds: number): string => {
+  if (isNaN(seconds)) return '0:00';
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
+
 export const MusicPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -10,6 +17,8 @@ export const MusicPlayer = () => {
   const [volume, setVolume] = useState(30);
   const [isLooping, setIsLooping] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   // Autoplay on mount with proper cleanup
   useEffect(() => {
@@ -20,6 +29,14 @@ export const MusicPlayer = () => {
 
     audio.volume = volume / 100;
     audio.loop = isLooping;
+
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleDurationChange = () => setDuration(audio.duration);
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('durationchange', handleDurationChange);
     
     // Attempt to autoplay
     const playPromise = audio.play();
@@ -46,6 +63,9 @@ export const MusicPlayer = () => {
     return () => {
       audio.pause();
       audio.currentTime = 0;
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('durationchange', handleDurationChange);
       if (interactionHandler) {
         document.removeEventListener('click', interactionHandler);
         document.removeEventListener('keydown', interactionHandler);
@@ -88,6 +108,14 @@ export const MusicPlayer = () => {
       setIsMuted(true);
     } else if (isMuted) {
       setIsMuted(false);
+    }
+  };
+
+  const handleSeek = (value: number[]) => {
+    const newTime = value[0];
+    if (audioRef.current) {
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
     }
   };
 
@@ -154,6 +182,21 @@ export const MusicPlayer = () => {
                 className="border-t border-border overflow-hidden"
               >
                 <div className="p-4 space-y-4">
+                  {/* Timeline / Seek control */}
+                  <div className="space-y-2">
+                    <Slider
+                      value={[currentTime]}
+                      onValueChange={handleSeek}
+                      max={duration || 100}
+                      step={0.1}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-xs font-mono text-muted-foreground">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{formatTime(duration)}</span>
+                    </div>
+                  </div>
+
                   {/* Volume control */}
                   <div className="flex items-center gap-3">
                     <button
