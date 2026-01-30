@@ -60,7 +60,7 @@ export const Header = () => {
               rel="noopener noreferrer"
               className="px-4 py-2 bg-primary text-primary-foreground font-orbitron font-bold text-sm rounded-lg hover:scale-105 transition-transform"
             >
-              LAUNCH APP
+              BROWSER
             </a>
           </nav>
 
@@ -101,7 +101,7 @@ export const Header = () => {
               rel="noopener noreferrer"
               className="px-4 py-3 bg-primary text-primary-foreground font-orbitron font-bold text-center rounded-lg"
             >
-              LAUNCH APP
+              BROWSER
             </a>
           </nav>
         </motion.div>
