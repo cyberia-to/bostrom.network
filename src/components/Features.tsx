@@ -225,18 +225,18 @@ const FeatureCard = ({ feature, index, isComplete }: { feature: Feature; index: 
       {/* Puzzle connector - right */}
       <div className="absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 rounded-full bg-card border-2 border-current opacity-60" />
       
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2">
         <div className={`
-          w-8 h-8 rounded-lg flex items-center justify-center shrink-0
-          bg-current/10
+          w-7 h-7 rounded-lg flex items-center justify-center shrink-0
+          bg-current/10 -ml-0.5
         `}>
-          <feature.icon className="w-4 h-4" />
+          <feature.icon className="w-3.5 h-3.5" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-orbitron font-bold text-sm mb-1 text-foreground truncate">
+          <h3 className="font-orbitron font-bold text-xs mb-1 text-foreground leading-tight">
             {feature.title}
           </h3>
-          <p className="text-muted-foreground text-xs leading-tight">
+          <p className="text-muted-foreground text-[10px] leading-tight">
             {feature.description}
           </p>
         </div>
