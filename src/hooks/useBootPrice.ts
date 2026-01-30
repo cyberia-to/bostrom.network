@@ -9,6 +9,7 @@ interface BootPriceData {
   volume24h: number | null;
   circulatingSupply: number | null;
   totalSupply: number | null;
+  stakingApr: number | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -22,6 +23,7 @@ export const useBootPrice = (): BootPriceData => {
     volume24h: null,
     circulatingSupply: null,
     totalSupply: null,
+    stakingApr: null,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +49,7 @@ export const useBootPrice = (): BootPriceData => {
             volume24h: responseData.volume24h,
             circulatingSupply: responseData.circulatingSupply,
             totalSupply: responseData.totalSupply,
+            stakingApr: responseData.stakingApr,
           });
         } else {
           throw new Error(responseData?.error || 'Failed to fetch price');

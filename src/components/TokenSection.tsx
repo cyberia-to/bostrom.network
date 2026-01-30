@@ -47,6 +47,7 @@ export const TokenSection = () => {
     volume24h, 
     circulatingSupply, 
     totalSupply,
+    stakingApr,
     isLoading 
   } = useBootPrice();
 
@@ -65,6 +66,12 @@ export const TokenSection = () => {
       label: '24h Trading Volume', 
       value: volume24h !== null ? `$${formatLargeNumber(volume24h)}` : null,
       loading: isLoading,
+    },
+    { 
+      label: 'Staking APR', 
+      value: stakingApr !== null ? `${stakingApr.toFixed(2)}%` : null,
+      loading: isLoading,
+      highlight: true,
     },
     { 
       label: 'Circulating Supply', 
@@ -184,9 +191,15 @@ export const TokenSection = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="p-4 rounded-xl border border-border bg-card/50"
+                  className={`p-4 rounded-xl border ${
+                    stat.highlight 
+                      ? 'border-secondary bg-secondary/10' 
+                      : 'border-border bg-card/50'
+                  }`}
                 >
-                  <div className="text-lg md:text-xl font-orbitron font-bold text-primary">
+                  <div className={`text-lg md:text-xl font-orbitron font-bold ${
+                    stat.highlight ? 'text-secondary' : 'text-primary'
+                  }`}>
                     {stat.loading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
                     ) : stat.value !== null ? (
