@@ -27,6 +27,7 @@ const features = [
     title: 'Cyberlinks',
     description: 'Connect any content through cryptographic links',
     color: 'secondary',
+    url: 'https://cyber.page/cyberlink',
   },
   {
     icon: Sparkles,
