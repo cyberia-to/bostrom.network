@@ -20,6 +20,7 @@ const features = [
     title: 'Cybergraph',
     description: 'Decentralized knowledge graph with semantic neural proofs',
     color: 'primary',
+    url: 'https://cyber.page/cybergraph',
   },
   {
     icon: Link2,
@@ -121,33 +122,57 @@ export const Features = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-              className={`
-                p-6 rounded-xl border bg-card/50 backdrop-blur-sm
-                transition-all duration-300 cursor-default
-                ${colorClasses[feature.color as keyof typeof colorClasses]}
-              `}
-            >
-              <div className={`
-                w-12 h-12 rounded-lg flex items-center justify-center mb-4
-                ${iconBgClasses[feature.color as keyof typeof iconBgClasses]}
-              `}>
-                <feature.icon className="w-6 h-6" />
-              </div>
-              <h3 className="font-orbitron font-bold text-lg mb-2 text-foreground">
-                {feature.title}
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                {feature.description}
-              </p>
-            </motion.div>
-          ))}
+          {features.map((feature, index) => {
+            const content = (
+              <>
+                <div className={`
+                  w-12 h-12 rounded-lg flex items-center justify-center mb-4
+                  ${iconBgClasses[feature.color as keyof typeof iconBgClasses]}
+                `}>
+                  <feature.icon className="w-6 h-6" />
+                </div>
+                <h3 className="font-orbitron font-bold text-lg mb-2 text-foreground">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  {feature.description}
+                </p>
+              </>
+            );
+
+            const cardClasses = `
+              p-6 rounded-xl border bg-card/50 backdrop-blur-sm
+              transition-all duration-300 ${feature.url ? 'cursor-pointer' : 'cursor-default'}
+              ${colorClasses[feature.color as keyof typeof colorClasses]}
+            `;
+
+            return feature.url ? (
+              <motion.a
+                key={feature.title}
+                href={feature.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                className={cardClasses}
+              >
+                {content}
+              </motion.a>
+            ) : (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                className={cardClasses}
+              >
+                {content}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
