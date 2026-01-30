@@ -7,7 +7,7 @@ const navLinks = [
   { label: 'Features', href: '#features' },
   { label: '$BOOT', href: '#token' },
   { label: 'Ecosystem', href: '#ecosystem' },
-  { label: 'Docs', href: 'https://cyb.ai/search/bostrom', external: true },
+  { label: 'Docs', href: 'https://cyber.page/bostrom', external: true },
 ];
 
 export const Header = () => {
