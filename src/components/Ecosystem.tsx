@@ -17,7 +17,7 @@ const ecosystemItems = [
   {
     name: 'Pussy',
     description: 'Fair token for learning incentives',
-    url: 'https://cyb.ai/search/pussy',
+    url: 'https://spacepussy.ai/',
     color: 'accent',
   },
   {
