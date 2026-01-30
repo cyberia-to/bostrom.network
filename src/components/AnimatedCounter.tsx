@@ -41,7 +41,7 @@ export const AnimatedCounter = () => {
         >
           <div className="inline-block p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary">
             <div className="text-sm font-play text-muted-foreground mb-2 uppercase tracking-wider">
-              Cyberlinks Created
+              Weight Per Second
             </div>
             <div className="text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary tabular-nums">
               {formatNumber(count)}
