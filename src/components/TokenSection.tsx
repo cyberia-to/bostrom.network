@@ -216,7 +216,7 @@ export const TokenSection = () => {
             {/* CTA */}
             <div className="flex flex-wrap gap-4">
               <a
-                href="https://www.mintscan.io/bostrom"
+                href="https://cyb.ai/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 bg-primary text-primary-foreground font-orbitron font-bold rounded-lg hover:scale-105 transition-transform"
