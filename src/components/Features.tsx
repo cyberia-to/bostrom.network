@@ -57,6 +57,7 @@ const doneFeatures: Feature[] = [
     title: 'Bandwidth Limiting',
     description: 'Adaptive network pricing',
     color: 'accent',
+    url: 'https://cv.land/bandwidth-limiting',
     progress: 100,
   },
   {
