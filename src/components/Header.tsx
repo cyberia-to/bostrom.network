@@ -5,7 +5,7 @@ import bostromLogo from '@/assets/bostrom-logo.png';
 
 const navLinks = [
   { label: 'Features', href: '#features' },
-  { label: 'Token', href: '#token' },
+  { label: '$BOOT', href: '#token' },
   { label: 'Ecosystem', href: '#ecosystem' },
   { label: 'Docs', href: 'https://cyb.ai/search/bostrom', external: true },
 ];
