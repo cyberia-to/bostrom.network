@@ -32,9 +32,51 @@ Deno.serve(async (req) => {
       totalSupply: null,
     };
 
-    // Try CoinGecko first for comprehensive data
+    // Fetch total supply from Bostrom LCD API (accurate source)
+    let bostromTotalSupply: number | null = null;
     try {
-      console.log('Fetching from CoinGecko...');
+      console.log('Fetching total supply from Bostrom LCD API...');
+      const supplyResponse = await fetch(
+        'https://lcd.bostrom.cybernode.ai/cosmos/bank/v1beta1/supply',
+        { headers: { 'Accept': 'application/json' } }
+      );
+      
+      if (supplyResponse.ok) {
+        const supplyData = await supplyResponse.json();
+        const bootSupply = supplyData.supply?.find((s: any) => s.denom === 'boot');
+        if (bootSupply) {
+          bostromTotalSupply = parseInt(bootSupply.amount, 10);
+          tokenData.totalSupply = bostromTotalSupply;
+          console.log('Bostrom total supply:', bostromTotalSupply);
+        }
+      }
+    } catch (e) {
+      console.error('Bostrom LCD API error:', e);
+    }
+
+    // Fetch staking pool to calculate circulating supply
+    try {
+      console.log('Fetching staking pool from Bostrom...');
+      const poolResponse = await fetch(
+        'https://lcd.bostrom.cybernode.ai/cosmos/staking/v1beta1/pool',
+        { headers: { 'Accept': 'application/json' } }
+      );
+      
+      if (poolResponse.ok) {
+        const poolData = await poolResponse.json();
+        const bondedTokens = parseInt(poolData.pool?.bonded_tokens || '0', 10);
+        const notBondedTokens = parseInt(poolData.pool?.not_bonded_tokens || '0', 10);
+        // Circulating supply = bonded + not_bonded (tokens that can be transferred)
+        tokenData.circulatingSupply = bondedTokens + notBondedTokens;
+        console.log('Circulating supply from staking pool:', tokenData.circulatingSupply);
+      }
+    } catch (e) {
+      console.error('Bostrom staking pool API error:', e);
+    }
+
+    // Try CoinGecko for price data
+    try {
+      console.log('Fetching price from CoinGecko...');
       const response = await fetch(
         'https://api.coingecko.com/api/v3/coins/bostrom?localization=false&tickers=false&community_data=false&developer_data=false',
         {
@@ -52,10 +94,12 @@ Deno.serve(async (req) => {
           tokenData.price = data.market_data.current_price?.usd || null;
           tokenData.priceChange24h = data.market_data.price_change_percentage_24h || null;
           tokenData.marketCap = data.market_data.market_cap?.usd || null;
-          tokenData.fullyDilutedValuation = data.market_data.fully_diluted_valuation?.usd || null;
           tokenData.volume24h = data.market_data.total_volume?.usd || null;
-          tokenData.circulatingSupply = data.market_data.circulating_supply || null;
-          tokenData.totalSupply = data.market_data.total_supply || null;
+          
+          // Use circulating supply from CoinGecko as fallback
+          if (tokenData.circulatingSupply === null) {
+            tokenData.circulatingSupply = data.market_data.circulating_supply || null;
+          }
         }
       } else {
         console.log('CoinGecko request failed with status:', response.status);
@@ -109,6 +153,12 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Calculate FDV using Bostrom's accurate total supply and current price
+    if (tokenData.price !== null && bostromTotalSupply !== null) {
+      tokenData.fullyDilutedValuation = tokenData.price * bostromTotalSupply;
+      console.log('Calculated FDV:', tokenData.fullyDilutedValuation);
+    }
+
     console.log('Final token data:', JSON.stringify(tokenData));
 
     return new Response(
@@ -116,7 +166,7 @@ Deno.serve(async (req) => {
         success: true,
         ...tokenData,
         symbol: 'BOOT',
-        source: 'coingecko',
+        source: 'bostrom-lcd',
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
