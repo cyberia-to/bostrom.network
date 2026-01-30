@@ -11,6 +11,7 @@ interface TokenData {
   volume24h: number | null;
   circulatingSupply: number | null;
   totalSupply: number | null;
+  stakingApr: number | null;
 }
 
 Deno.serve(async (req) => {
@@ -30,6 +31,7 @@ Deno.serve(async (req) => {
       volume24h: null,
       circulatingSupply: null,
       totalSupply: null,
+      stakingApr: null,
     };
 
     // Fetch total supply from Bostrom LCD API (accurate source)
@@ -54,7 +56,8 @@ Deno.serve(async (req) => {
       console.error('Bostrom LCD API error:', e);
     }
 
-    // Fetch staking pool to calculate circulating supply
+    // Fetch staking pool to calculate circulating supply and APR
+    let bondedTokens: number | null = null;
     try {
       console.log('Fetching staking pool from Bostrom...');
       const poolResponse = await fetch(
@@ -64,14 +67,46 @@ Deno.serve(async (req) => {
       
       if (poolResponse.ok) {
         const poolData = await poolResponse.json();
-        const bondedTokens = parseInt(poolData.pool?.bonded_tokens || '0', 10);
+        bondedTokens = parseInt(poolData.pool?.bonded_tokens || '0', 10);
         const notBondedTokens = parseInt(poolData.pool?.not_bonded_tokens || '0', 10);
         // Circulating supply = bonded + not_bonded (tokens that can be transferred)
         tokenData.circulatingSupply = bondedTokens + notBondedTokens;
         console.log('Circulating supply from staking pool:', tokenData.circulatingSupply);
+        console.log('Bonded tokens:', bondedTokens);
       }
     } catch (e) {
       console.error('Bostrom staking pool API error:', e);
+    }
+
+    // Fetch inflation and distribution params to calculate staking APR
+    // APR = (inflation * (1 - community_tax)) / bonded_ratio
+    try {
+      console.log('Fetching inflation and distribution params...');
+      const [inflationRes, distRes] = await Promise.all([
+        fetch('https://lcd.bostrom.cybernode.ai/cosmos/mint/v1beta1/inflation', {
+          headers: { 'Accept': 'application/json' }
+        }),
+        fetch('https://lcd.bostrom.cybernode.ai/cosmos/distribution/v1beta1/params', {
+          headers: { 'Accept': 'application/json' }
+        })
+      ]);
+
+      if (inflationRes.ok && distRes.ok && bostromTotalSupply && bondedTokens) {
+        const inflationData = await inflationRes.json();
+        const distData = await distRes.json();
+
+        const inflation = parseFloat(inflationData.inflation || '0');
+        const communityTax = parseFloat(distData.params?.community_tax || '0');
+        const bondedRatio = bondedTokens / bostromTotalSupply;
+
+        if (bondedRatio > 0) {
+          // Staking APR formula: (inflation * (1 - community_tax)) / bonded_ratio * 100
+          tokenData.stakingApr = (inflation * (1 - communityTax)) / bondedRatio * 100;
+          console.log('Calculated staking APR:', tokenData.stakingApr, '%');
+        }
+      }
+    } catch (e) {
+      console.error('Error calculating staking APR:', e);
     }
 
     // Try CoinGecko for price data
