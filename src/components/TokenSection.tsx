@@ -221,7 +221,7 @@ export const TokenSection = () => {
                 rel="noopener noreferrer"
                 className="px-6 py-3 bg-primary text-primary-foreground font-orbitron font-bold rounded-lg hover:scale-105 transition-transform"
               >
-                VIEW EXPLORER
+                ORACLE
               </a>
               <a
                 href="https://cyb.ai/senate"
@@ -229,7 +229,7 @@ export const TokenSection = () => {
                 rel="noopener noreferrer"
                 className="px-6 py-3 border border-primary text-primary font-orbitron font-bold rounded-lg hover:bg-primary/10 transition-colors"
               >
-                GOVERNANCE
+                SENATE
               </a>
             </div>
           </motion.div>
