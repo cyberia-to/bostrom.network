@@ -11,7 +11,7 @@ const ecosystemItems = [
   {
     name: 'Cyber',
     description: 'Production network for superintelligence',
-    url: 'https://cyb.ai/search/cyber',
+    url: 'https://cyber.page/',
     color: 'secondary',
   },
   {
