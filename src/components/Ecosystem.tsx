@@ -23,7 +23,7 @@ const ecosystemItems = [
   {
     name: 'GitHub',
     description: 'Open source code and contributions',
-    url: 'https://github.com/cybercongress',
+    url: 'https://github.com/cybercongress/cyber-ts',
     color: 'primary',
   },
 ];
