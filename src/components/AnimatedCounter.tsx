@@ -3,13 +3,20 @@ import { useEffect, useState } from 'react';
 
 export const AnimatedCounter = () => {
   const [count, setCount] = useState(0);
-  const incrementPerSecond = 70000;
+  const maxCount = 3000000;
+  const durationMs = 60000; // 1 minute
   const intervalMs = 16; // ~60fps
-  const incrementPerInterval = Math.round(incrementPerSecond / (1000 / intervalMs));
+  const incrementPerInterval = Math.round(maxCount / (durationMs / intervalMs));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCount(prev => prev + incrementPerInterval);
+      setCount(prev => {
+        const next = prev + incrementPerInterval;
+        if (next >= maxCount) {
+          return 0;
+        }
+        return next;
+      });
     }, intervalMs);
 
     return () => clearInterval(interval);
