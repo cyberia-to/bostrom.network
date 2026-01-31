@@ -241,31 +241,60 @@ export const CyberlinkVisualizer = () => {
         p.y = Math.max(30, Math.min(canvas.height - 30, p.y));
       });
 
-      // Draw particles (bigger = heavier weight)
+      // Draw particles (bigger = heavier weight) - 3D sphere effect
       particles.forEach((p) => {
-        const size = 6 + p.weight * 12;
+        const size = 5 + p.weight * 10;
         
-        // Glow effect
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 2);
-        gradient.addColorStop(0, p.color);
-        gradient.addColorStop(0.4, p.color.replace(')', ', 0.4)').replace('hsl', 'hsla'));
-        gradient.addColorStop(1, 'transparent');
+        // Outer glow
+        const glowGradient = ctx.createRadialGradient(p.x, p.y, size * 0.8, p.x, p.y, size * 3);
+        glowGradient.addColorStop(0, p.color.replace(')', ', 0.4)').replace('hsl', 'hsla'));
+        glowGradient.addColorStop(1, 'transparent');
         
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = glowGradient;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, size * 2, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, size * 3, 0, Math.PI * 2);
         ctx.fill();
 
-        // Core
-        ctx.fillStyle = p.color;
+        // Main sphere with 3D gradient (light from top-left)
+        const sphereGradient = ctx.createRadialGradient(
+          p.x - size * 0.35, p.y - size * 0.35, size * 0.1,
+          p.x, p.y, size
+        );
+        sphereGradient.addColorStop(0, 'hsl(210, 100%, 75%)'); // bright highlight
+        sphereGradient.addColorStop(0.3, 'hsl(210, 100%, 55%)'); // mid tone
+        sphereGradient.addColorStop(0.7, 'hsl(210, 100%, 45%)'); // base color
+        sphereGradient.addColorStop(1, 'hsl(210, 100%, 25%)'); // dark edge
+        
+        ctx.fillStyle = sphereGradient;
         ctx.beginPath();
         ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
         ctx.fill();
         
-        // Inner highlight
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        // Specular highlight (small bright spot)
+        const highlightGradient = ctx.createRadialGradient(
+          p.x - size * 0.4, p.y - size * 0.4, 0,
+          p.x - size * 0.4, p.y - size * 0.4, size * 0.5
+        );
+        highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+        highlightGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.3)');
+        highlightGradient.addColorStop(1, 'transparent');
+        
+        ctx.fillStyle = highlightGradient;
         ctx.beginPath();
-        ctx.arc(p.x - size * 0.3, p.y - size * 0.3, size * 0.4, 0, Math.PI * 2);
+        ctx.arc(p.x - size * 0.4, p.y - size * 0.4, size * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Secondary reflection (bottom-right subtle glow)
+        const reflectionGradient = ctx.createRadialGradient(
+          p.x + size * 0.3, p.y + size * 0.3, 0,
+          p.x + size * 0.3, p.y + size * 0.3, size * 0.4
+        );
+        reflectionGradient.addColorStop(0, 'rgba(100, 180, 255, 0.3)');
+        reflectionGradient.addColorStop(1, 'transparent');
+        
+        ctx.fillStyle = reflectionGradient;
+        ctx.beginPath();
+        ctx.arc(p.x + size * 0.3, p.y + size * 0.3, size * 0.4, 0, Math.PI * 2);
         ctx.fill();
       });
 
