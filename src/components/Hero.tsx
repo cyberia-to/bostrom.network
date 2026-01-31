@@ -46,14 +46,6 @@ export const Hero = () => {
           Bootloader of Superintelligence
         </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
-        >
-          The tokenized knowledge graph powering the moon network state
-        </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
