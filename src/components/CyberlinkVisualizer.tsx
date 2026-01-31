@@ -35,7 +35,6 @@ export const CyberlinkVisualizer = () => {
   const animationRef = useRef<number>();
   const centerParticleRef = useRef({ x: 0, y: 0 });
   
-  const [fromText, setFromText] = useState('');
   const [toText, setToText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [linkCount, setLinkCount] = useState(0);
@@ -226,7 +225,7 @@ export const CyberlinkVisualizer = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fromText.trim() || !toText.trim()) return;
+    if (!toText.trim()) return;
 
     setIsProcessing(true);
     setShowResult(null);
@@ -244,14 +243,13 @@ export const CyberlinkVisualizer = () => {
     setShowResult(result);
     
     setResults(prev => [{
-      from: fromText,
+      from: '△',
       to: toText,
       result,
       timestamp: Date.now(),
     }, ...prev.slice(0, 4)]);
 
     setIsProcessing(false);
-    setFromText('');
     setToText('');
   };
 
@@ -342,31 +340,47 @@ export const CyberlinkVisualizer = () => {
 
           {/* Input Form */}
           <div className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm text-muted-foreground font-play">From (Particle A)</label>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Neon Pink Triangle */}
+              <div className="flex flex-col items-center gap-4">
                 <div className="relative">
-                  <Input
-                    value={fromText}
-                    onChange={(e) => setFromText(e.target.value)}
-                    placeholder="Enter knowledge..."
-                    className="bg-card/50 border-primary/30 focus:border-primary text-foreground placeholder:text-muted-foreground"
-                    disabled={isProcessing}
-                  />
+                  <svg 
+                    width="80" 
+                    height="70" 
+                    viewBox="0 0 80 70" 
+                    className="drop-shadow-[0_0_15px_hsl(300,100%,60%)]"
+                  >
+                    <polygon 
+                      points="40,5 75,65 5,65" 
+                      fill="transparent"
+                      stroke="hsl(300, 100%, 60%)"
+                      strokeWidth="3"
+                      className="animate-pulse-slow"
+                    />
+                    <polygon 
+                      points="40,5 75,65 5,65" 
+                      fill="hsla(300, 100%, 60%, 0.1)"
+                    />
+                  </svg>
+                  {/* Inner glow */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full bg-[hsl(300,100%,60%)] blur-md opacity-60" />
+                  </div>
                 </div>
+                <span className="text-xs text-muted-foreground font-play uppercase tracking-wider">Particle</span>
               </div>
 
               <div className="flex justify-center">
-                <Link2 className="w-6 h-6 text-primary rotate-90" />
+                <Link2 className="w-6 h-6 text-[hsl(300,100%,60%)] rotate-90" />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-muted-foreground font-play">To (Particle B)</label>
+                <label className="text-sm text-muted-foreground font-play">Connect to</label>
                 <div className="relative">
                   <Input
                     value={toText}
                     onChange={(e) => setToText(e.target.value)}
-                    placeholder="Connect to..."
+                    placeholder="Enter knowledge..."
                     className="bg-card/50 border-primary/30 focus:border-primary text-foreground placeholder:text-muted-foreground"
                     disabled={isProcessing}
                   />
@@ -375,7 +389,7 @@ export const CyberlinkVisualizer = () => {
 
               <Button
                 type="submit"
-                disabled={isProcessing || !fromText.trim() || !toText.trim()}
+                disabled={isProcessing || !toText.trim()}
                 className="w-full font-orbitron box-glow-primary"
               >
                 <Zap className="w-4 h-4 mr-2" />
