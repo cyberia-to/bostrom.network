@@ -165,28 +165,53 @@ export const CyberlinkVisualizer = () => {
         ctx.fill();
       });
 
-      // Draw center particle (main knowledge node)
-      const centerGradient = ctx.createRadialGradient(
-        center.x, center.y, 0,
-        center.x, center.y, 40
-      );
-      centerGradient.addColorStop(0, 'hsl(130, 100%, 60%)');
-      centerGradient.addColorStop(0.3, 'hsl(130, 100%, 50%)');
-      centerGradient.addColorStop(0.6, 'hsla(130, 100%, 50%, 0.3)');
-      centerGradient.addColorStop(1, 'transparent');
+      // Draw center particle (neon triangle)
+      const triangleSize = 35;
+      const rotation = Date.now() / 3000; // Slow rotation
+      const pulse = 1 + Math.sin(Date.now() / 500) * 0.1;
       
-      ctx.fillStyle = centerGradient;
-      ctx.beginPath();
-      ctx.arc(center.x, center.y, 40, 0, Math.PI * 2);
-      ctx.fill();
+      // Triangle vertices
+      const vertices = [];
+      for (let i = 0; i < 3; i++) {
+        const angle = rotation + (i * Math.PI * 2) / 3 - Math.PI / 2;
+        vertices.push({
+          x: center.x + Math.cos(angle) * triangleSize * pulse,
+          y: center.y + Math.sin(angle) * triangleSize * pulse,
+        });
+      }
 
-      // Pulsing ring
-      const pulseRadius = 25 + Math.sin(Date.now() / 500) * 5;
-      ctx.strokeStyle = 'hsla(130, 100%, 50%, 0.8)';
-      ctx.lineWidth = 2;
+      // Outer glow
+      ctx.shadowColor = 'hsl(130, 100%, 50%)';
+      ctx.shadowBlur = 30;
+      
+      // Fill with gradient
+      const triGradient = ctx.createRadialGradient(
+        center.x, center.y, 0,
+        center.x, center.y, triangleSize * 1.5
+      );
+      triGradient.addColorStop(0, 'hsla(130, 100%, 60%, 0.4)');
+      triGradient.addColorStop(1, 'transparent');
+      
+      ctx.fillStyle = triGradient;
       ctx.beginPath();
-      ctx.arc(center.x, center.y, pulseRadius, 0, Math.PI * 2);
+      ctx.moveTo(vertices[0].x, vertices[0].y);
+      ctx.lineTo(vertices[1].x, vertices[1].y);
+      ctx.lineTo(vertices[2].x, vertices[2].y);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Neon stroke
+      ctx.strokeStyle = 'hsl(130, 100%, 50%)';
+      ctx.lineWidth = 3;
       ctx.stroke();
+      
+      // Inner glow stroke
+      ctx.strokeStyle = 'hsla(130, 100%, 70%, 0.5)';
+      ctx.lineWidth = 6;
+      ctx.stroke();
+      
+      // Reset shadow
+      ctx.shadowBlur = 0;
 
       animationRef.current = requestAnimationFrame(animate);
     };
