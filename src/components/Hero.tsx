@@ -50,7 +50,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto font-play"
+          className="text-xl md:text-2xl lg:text-3xl mb-8 max-w-2xl mx-auto font-orbitron text-accent text-glow-accent"
         >
           fastest on-chain probabilistic model
         </motion.p>
