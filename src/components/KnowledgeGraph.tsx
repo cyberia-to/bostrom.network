@@ -43,7 +43,7 @@ export const KnowledgeGraph = () => {
     };
 
     const initNodes = () => {
-      const nodeCount = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
+      const nodeCount = Math.min(200, Math.floor((canvas.width * canvas.height) / 6000));
       nodesRef.current = [];
       edgesRef.current = [];
 
