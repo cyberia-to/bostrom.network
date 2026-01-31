@@ -301,9 +301,9 @@ export const CyberlinkVisualizer = () => {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 items-start">
           {/* Visualization Canvas */}
-          <div className="relative aspect-square max-h-[500px] rounded-xl border border-primary/30 overflow-hidden box-glow-primary">
+          <div className="relative aspect-square max-h-[500px] min-h-[400px] rounded-xl border border-primary/30 overflow-hidden box-glow-primary bg-black/50">
             <canvas
               ref={canvasRef}
               className="w-full h-full"
