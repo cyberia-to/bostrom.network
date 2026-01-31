@@ -129,15 +129,11 @@ export const CyberlinkVisualizer = () => {
         const dy = center.y - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         
-        // Attraction to maintain orbit
+        // Attraction to maintain position
         const targetDist = 120 + p.weight * 80;
-        const force = (dist - targetDist) * 0.001;
+        const force = (dist - targetDist) * 0.002;
         p.vx += (dx / dist) * force;
         p.vy += (dy / dist) * force;
-        
-        // Tangential velocity for orbit
-        p.vx += (-dy / dist) * 0.02;
-        p.vy += (dx / dist) * 0.02;
         
         // Damping
         p.vx *= 0.98;
