@@ -6,22 +6,22 @@ interface ConvergenceGraphProps {
 }
 
 export const ConvergenceGraph = ({ progress }: ConvergenceGraphProps) => {
-  const width = 280;
+  const width = 1000;
   const height = 60;
-  const padding = 10;
+  const padding = 20;
   
-  // Generate converging oscillation path
+  // Generate converging oscillation path that spans across all blocks
   const pathData = useMemo(() => {
     const points: string[] = [];
-    const numPoints = 50;
+    const numPoints = 100;
     
     for (let i = 0; i <= numPoints; i++) {
       const x = padding + (i / numPoints) * (width - 2 * padding);
       const t = i / numPoints;
       
       // Damped oscillation: amplitude decreases as t increases
-      const amplitude = height / 3 * Math.exp(-3 * t);
-      const frequency = 8;
+      const amplitude = height / 3 * Math.exp(-2.5 * t);
+      const frequency = 6;
       const oscillation = amplitude * Math.sin(t * frequency * Math.PI);
       
       // Center line with oscillation
@@ -37,16 +37,13 @@ export const ConvergenceGraph = ({ progress }: ConvergenceGraphProps) => {
     return points.join(' ');
   }, []);
 
-  // Calculate the visible portion of the path based on progress
-  const pathLength = 500; // Approximate path length
-  const visibleLength = progress * pathLength;
-
   return (
-    <div className="mt-4 relative">
+    <div className="w-full relative">
       <svg 
         viewBox={`0 0 ${width} ${height}`} 
-        className="w-full max-w-[280px] mx-auto"
+        className="w-full"
         style={{ height: '60px' }}
+        preserveAspectRatio="none"
       >
         {/* Grid lines */}
         <line 
@@ -55,8 +52,8 @@ export const ConvergenceGraph = ({ progress }: ConvergenceGraphProps) => {
           x2={width - padding} 
           y2={height / 2} 
           stroke="hsl(var(--primary))" 
-          strokeOpacity={0.2}
-          strokeDasharray="4 4"
+          strokeOpacity={0.15}
+          strokeDasharray="8 8"
         />
         
         {/* Convergence path - background */}
@@ -83,19 +80,19 @@ export const ConvergenceGraph = ({ progress }: ConvergenceGraphProps) => {
           }}
         />
         
-        {/* Current point indicator */}
+        {/* Start point indicator */}
         <motion.circle
-          cx={padding + progress * (width - 2 * padding)}
+          cx={padding}
           cy={height / 2}
-          r={4}
+          r={5}
           fill="hsl(var(--primary))"
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 0.5 }}
           animate={{ 
             opacity: [0.5, 1, 0.5],
-            r: [3, 5, 3]
+            r: [4, 6, 4]
           }}
           transition={{ 
-            duration: 1,
+            duration: 1.5,
             repeat: Infinity,
             ease: "easeInOut"
           }}
@@ -104,20 +101,41 @@ export const ConvergenceGraph = ({ progress }: ConvergenceGraphProps) => {
           }}
         />
         
+        {/* Current progress point */}
+        <motion.circle
+          cx={padding + progress * (width - 2 * padding)}
+          cy={height / 2}
+          r={4}
+          fill="hsl(var(--accent))"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: [0.6, 1, 0.6],
+            r: [3, 5, 3]
+          }}
+          transition={{ 
+            duration: 0.8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          style={{
+            filter: 'drop-shadow(0 0 6px hsl(var(--accent)))',
+          }}
+        />
+        
         {/* End point - convergence target */}
         <circle
           cx={width - padding}
           cy={height / 2}
-          r={3}
+          r={4}
           fill="none"
           stroke="hsl(var(--primary))"
           strokeOpacity={0.5}
-          strokeWidth={1}
+          strokeWidth={1.5}
         />
       </svg>
       
       {/* Label */}
-      <div className="text-xs text-primary/60 mt-1 font-mono tracking-wide text-center">
+      <div className="text-xs text-primary/60 mt-2 font-mono tracking-wide text-center">
         convergence
       </div>
     </div>
