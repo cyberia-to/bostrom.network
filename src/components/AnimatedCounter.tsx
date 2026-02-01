@@ -20,7 +20,7 @@ interface StatBlockProps {
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
   <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[200px] flex flex-col justify-center">
-    <div className="text-xs font-orbitron text-accent mb-4 uppercase tracking-widest text-center">
+    <div className="text-lg md:text-xl font-orbitron text-accent mb-4 uppercase tracking-widest text-center text-glow-accent">
       {label}
     </div>
     <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center">
@@ -106,7 +106,7 @@ export const AnimatedCounter = () => {
             
             {/* SPEED Block */}
             <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[200px] flex flex-col justify-center">
-              <div className="text-xs font-orbitron text-accent mb-4 uppercase tracking-widest text-center">
+              <div className="text-lg md:text-xl font-orbitron text-accent mb-4 uppercase tracking-widest text-center text-glow-accent">
                 Speed
               </div>
               
