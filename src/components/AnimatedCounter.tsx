@@ -78,7 +78,7 @@ export const AnimatedCounter = () => {
 
   // Use real data or fallback to defaults
   const weightsPerSecond = bostromStats?.weightsPerSecond ?? 70000;
-  const particles = bostromStats?.particles ?? 0;
+  const cyberlinks = bostromStats?.cyberlinks ?? 0;
   const negentropy = bostromStats?.negentropy ?? 0;
 
   return (
@@ -99,8 +99,8 @@ export const AnimatedCounter = () => {
             {/* SIZE Block */}
             <StatBlock
               label="Size"
-              value={formatNumber(particles)}
-              subtitle="total particles"
+              value={formatNumber(cyberlinks)}
+              subtitle="total cyberlinks"
               isLoading={isLoading}
             />
             
