@@ -16,23 +16,27 @@ interface StatBlockProps {
   value: string | number;
   subtitle: string;
   isLoading?: boolean;
+  children?: React.ReactNode;
 }
 
-const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary flex-1 min-w-[280px] max-w-[320px]">
-    <div className="text-xs font-orbitron text-accent mb-2 uppercase tracking-widest text-center">
-      {label}
+const StatBlock = ({ label, value, subtitle, isLoading, children }: StatBlockProps) => (
+  <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[280px] flex flex-col justify-between">
+    <div>
+      <div className="text-xs font-orbitron text-accent mb-4 uppercase tracking-widest text-center">
+        {label}
+      </div>
+      <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center">
+        {isLoading ? (
+          <span className="animate-pulse">...</span>
+        ) : (
+          value
+        )}
+      </div>
+      <div className="text-xs text-muted-foreground mt-3 font-play text-center">
+        {subtitle}
+      </div>
     </div>
-    <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center">
-      {isLoading ? (
-        <span className="animate-pulse">...</span>
-      ) : (
-        value
-      )}
-    </div>
-    <div className="text-xs text-muted-foreground mt-3 font-play text-center">
-      {subtitle}
-    </div>
+    {children && <div className="mt-auto">{children}</div>}
   </div>
 );
 
@@ -92,7 +96,7 @@ export const AnimatedCounter = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row items-center justify-center gap-6"
+          className="flex flex-col md:flex-row items-stretch justify-center gap-6"
         >
           {/* SIZE Block */}
           <StatBlock
@@ -102,14 +106,14 @@ export const AnimatedCounter = () => {
             isLoading={isLoading}
           />
           
-          {/* SPEED Block (main counter) */}
-          <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary">
-            <div className="text-xs font-orbitron text-accent mb-2 uppercase tracking-widest text-center">
+          {/* SPEED Block */}
+          <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[280px] flex flex-col">
+            <div className="text-xs font-orbitron text-accent mb-4 uppercase tracking-widest text-center">
               Speed
             </div>
             
             {/* Fixed slots container */}
-            <div className="flex justify-center items-center text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary">
+            <div className="flex justify-center items-center text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary">
               {chars.map((char, index) => {
                 const isLeadingZero = leadingZeroPositions.has(index);
                 return (
@@ -137,7 +141,9 @@ export const AnimatedCounter = () => {
             </div>
             
             {/* Convergence visualization */}
-            <ConvergenceGraph progress={progress} />
+            <div className="mt-auto">
+              <ConvergenceGraph progress={progress} />
+            </div>
           </div>
           
           {/* QUALITY Block */}
