@@ -705,7 +705,7 @@ export const CyberlinkVisualizer = () => {
           <h2 className="text-3xl md:text-4xl font-orbitron font-bold text-glow-primary mb-4">
             Create Cyberlink
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-[hsl(180,100%,50%)] max-w-2xl mx-auto">
             Connect knowledge particles and watch the graph reorganize in real-time
           </p>
         </motion.div>
