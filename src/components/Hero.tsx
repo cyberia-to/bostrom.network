@@ -52,7 +52,7 @@ export const Hero = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-xl md:text-2xl lg:text-3xl mb-8 max-w-2xl mx-auto font-orbitron text-accent text-glow-accent"
         >
-          fastest on-chain probabilistic model
+          fastest on-chain collective model
         </motion.p>
 
         <motion.div
