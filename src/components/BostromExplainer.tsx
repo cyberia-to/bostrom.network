@@ -5,8 +5,8 @@ const paragraphs = [
   "Transformers learn where to direct attention. Billions of hidden weights determine information flow. After training, they freeze forever.",
   "In Bostrom, you label by linking ideas using V and weight by staking A. More stake means more attention flows through that link. You're not preparing data for future training — you're editing the model right now.",
   "The network is a random walk. Where attention lands more is what matters more. Convergence isn't empirical — it's provable. Every weight can be read, verified, challenged.",
-  "Bostrom recomputes every weight every 10 blocks — not once a year in a datacenter, but every minute, live, as humanity thinks.",
-  "One link reshapes the entire model. Bostrom is purpose-built for continuous collective learning and an order of magnitude faster than any existing blockchain."
+  "Bostrom recomputes every weight every 10 blocks — not once a year in a datacenter, but every minute, live, as humanity thinks. One link reshapes the entire model.",
+  "Bostrom is purpose-built for continuous collective learning and an orders of magnitude faster than any existing blockchain."
 ];
 
 const TypewriterText = ({ text, startDelay, onComplete }: { text: string; startDelay: number; onComplete?: () => void }) => {
