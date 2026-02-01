@@ -3,21 +3,29 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Zap, Link2, CheckCircle, XCircle } from 'lucide-react';
+import bostromLogo from '@/assets/bostrom-logo.png';
 
-interface Particle {
-  id: number;
+interface BackgroundNode {
   x: number;
   y: number;
   vx: number;
   vy: number;
-  weight: number;
+  radius: number;
   color: string;
-  connections: number[]; // IDs of connected particles
 }
 
-interface Edge {
+interface BackgroundEdge {
   from: number;
   to: number;
+}
+
+interface LabeledParticle {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  angle: number;
+  color: string;
 }
 
 interface CyberlinkResult {
@@ -27,19 +35,38 @@ interface CyberlinkResult {
   timestamp: number;
 }
 
-const NEON_COLORS = [
-  'hsl(210, 100%, 50%)', // blue (like reference)
+const BG_COLORS = [
   'hsl(130, 100%, 50%)', // acid green
   'hsl(180, 100%, 50%)', // cyan
+  'hsl(300, 100%, 60%)', // magenta
+  'hsl(60, 100%, 50%)',  // yellow
+  'hsl(30, 100%, 50%)',  // orange
+];
+
+const LABELED_PARTICLES: LabeledParticle[] = [
+  { id: 'triangle', label: 'triangle', x: 0, y: 0, angle: -Math.PI / 2, color: 'hsl(180, 100%, 50%)' },
+  { id: 'pink', label: 'pink', x: 0, y: 0, angle: -Math.PI / 2 + (2 * Math.PI / 5), color: 'hsl(300, 100%, 60%)' },
+  { id: 'angle', label: 'angle', x: 0, y: 0, angle: -Math.PI / 2 + (4 * Math.PI / 5), color: 'hsl(130, 100%, 50%)' },
+  { id: 'shape', label: 'shape', x: 0, y: 0, angle: -Math.PI / 2 + (6 * Math.PI / 5), color: 'hsl(60, 100%, 50%)' },
+  { id: 'neon', label: 'neon', x: 0, y: 0, angle: -Math.PI / 2 + (8 * Math.PI / 5), color: 'hsl(30, 100%, 50%)' },
+];
+
+// Connections: all to core, plus neon→pink, angle→shape
+const PARTICLE_CONNECTIONS = [
+  { from: 'neon', to: 'pink' },
+  { from: 'angle', to: 'shape' },
 ];
 
 export const CyberlinkVisualizer = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particlesRef = useRef<Particle[]>([]);
-  const edgesRef = useRef<Edge[]>([]);
-  const animationRef = useRef<number>();
+  const bgCanvasRef = useRef<HTMLCanvasElement>(null);
+  const graphCanvasRef = useRef<HTMLCanvasElement>(null);
+  const bgNodesRef = useRef<BackgroundNode[]>([]);
+  const bgEdgesRef = useRef<BackgroundEdge[]>([]);
+  const bgAnimationRef = useRef<number>();
+  const graphAnimationRef = useRef<number>();
+  const particlesRef = useRef<LabeledParticle[]>([...LABELED_PARTICLES]);
+  const mouseRef = useRef({ x: 0, y: 0 });
   const isRebalancingRef = useRef(false);
-  const rebalanceStartTimeRef = useRef(0);
   
   const [toText, setToText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -48,275 +75,296 @@ export const CyberlinkVisualizer = () => {
   const [results, setResults] = useState<CyberlinkResult[]>([]);
   const [showResult, setShowResult] = useState<boolean | null>(null);
 
-  // Initialize particles with connections
+  // Initialize background nodes (like KnowledgeGraph)
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = bgCanvasRef.current;
     if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
     const resize = () => {
       const container = canvas.parentElement;
       if (!container) return;
       canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
-      
-      initParticles();
+      initBgNodes();
     };
 
-    const initParticles = () => {
-      const count = 50;
-      particlesRef.current = [];
-      edgesRef.current = [];
-      
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      
-      // Create particles with varying weights (bigger = more connections)
-      for (let i = 0; i < count; i++) {
-        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
-        const radius = 60 + Math.random() * 180;
-        const weight = Math.random() * 1.5 + 0.3; // Weight affects size and gravity
-        
-        particlesRef.current.push({
-          id: i,
-          x: centerX + Math.cos(angle) * radius,
-          y: centerY + Math.sin(angle) * radius,
-          vx: 0,
-          vy: 0,
-          weight,
-          color: NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)],
-          connections: [],
+    const initBgNodes = () => {
+      const nodeCount = Math.min(80, Math.floor((canvas.width * canvas.height) / 8000));
+      bgNodesRef.current = [];
+      bgEdgesRef.current = [];
+
+      for (let i = 0; i < nodeCount; i++) {
+        bgNodesRef.current.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          radius: Math.random() * 2 + 1,
+          color: BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)],
         });
       }
-      
-      // Create edges - heavier particles have more connections
-      for (let i = 0; i < count; i++) {
-        const p = particlesRef.current[i];
-        const connectionCount = Math.floor(p.weight * 4) + 1; // More weight = more connections
-        
-        for (let c = 0; c < connectionCount; c++) {
-          // Connect to nearby particles preferentially
-          let bestTarget = -1;
-          let bestDist = Infinity;
-          
-          for (let j = 0; j < count; j++) {
-            if (i === j || p.connections.includes(j)) continue;
-            
-            const other = particlesRef.current[j];
-            const dx = other.x - p.x;
-            const dy = other.y - p.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            
-            // Prefer closer and heavier particles
-            const score = dist / (other.weight + 0.5);
-            if (score < bestDist && Math.random() > 0.3) {
-              bestDist = score;
-              bestTarget = j;
-            }
-          }
-          
-          if (bestTarget >= 0 && !p.connections.includes(bestTarget)) {
-            p.connections.push(bestTarget);
-            particlesRef.current[bestTarget].connections.push(i);
-            edgesRef.current.push({ from: i, to: bestTarget });
+
+      // Create edges between nearby nodes
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          if (Math.random() < 0.08) {
+            bgEdgesRef.current.push({ from: i, to: j });
           }
         }
       }
     };
 
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+
+    const animate = () => {
+      if (!ctx || !canvas) return;
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const nodes = bgNodesRef.current;
+      const edges = bgEdgesRef.current;
+      const mouse = mouseRef.current;
+
+      // Update and draw nodes
+      nodes.forEach((node) => {
+        // Mouse attraction
+        const dx = mouse.x - node.x;
+        const dy = mouse.y - node.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150 && dist > 0) {
+          node.vx += (dx / dist) * 0.015;
+          node.vy += (dy / dist) * 0.015;
+        }
+
+        // Update position
+        node.x += node.vx;
+        node.y += node.vy;
+
+        // Damping
+        node.vx *= 0.99;
+        node.vy *= 0.99;
+
+        // Bounce off edges
+        if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+        if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+
+        // Keep in bounds
+        node.x = Math.max(0, Math.min(canvas.width, node.x));
+        node.y = Math.max(0, Math.min(canvas.height, node.y));
+      });
+
+      // Draw edges
+      edges.forEach((edge) => {
+        const from = nodes[edge.from];
+        const to = nodes[edge.to];
+        const dist = Math.sqrt((from.x - to.x) ** 2 + (from.y - to.y) ** 2);
+
+        if (dist < 150) {
+          const alpha = (1 - dist / 150) * 0.25;
+          ctx.strokeStyle = `rgba(0, 255, 65, ${alpha})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(from.x, from.y);
+          ctx.lineTo(to.x, to.y);
+          ctx.stroke();
+        }
+      });
+
+      // Draw nodes with minimal glow
+      nodes.forEach((node) => {
+        // Small glow
+        const gradient = ctx.createRadialGradient(
+          node.x, node.y, 0,
+          node.x, node.y, node.radius * 2
+        );
+        gradient.addColorStop(0, node.color);
+        gradient.addColorStop(0.6, node.color.replace(')', ', 0.2)').replace('hsl', 'hsla'));
+        gradient.addColorStop(1, 'transparent');
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius * 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Core
+        ctx.fillStyle = node.color;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      bgAnimationRef.current = requestAnimationFrame(animate);
+    };
+
     resize();
     window.addEventListener('resize', resize);
-    
+    canvas.addEventListener('mousemove', handleMouseMove);
+    animate();
+
     return () => {
       window.removeEventListener('resize', resize);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      if (bgAnimationRef.current) {
+        cancelAnimationFrame(bgAnimationRef.current);
       }
     };
   }, []);
 
-  // Animation loop
+  // Graph animation (central core + 5 labeled particles)
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = graphCanvasRef.current;
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const animate = () => {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const coreImage = new Image();
+    coreImage.src = bostromLogo;
 
+    const resize = () => {
+      const container = canvas.parentElement;
+      if (!container) return;
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const orbitRadius = Math.min(canvas.width, canvas.height) * 0.32;
       const particles = particlesRef.current;
-      const edges = edgesRef.current;
       const isRebalancing = isRebalancingRef.current;
-      
-      // Draw curved edges between particles (like reference image)
-      ctx.lineCap = 'round';
-      edges.forEach((edge) => {
-        const from = particles[edge.from];
-        const to = particles[edge.to];
-        if (!from || !to) return;
+
+      // Update particle positions
+      particles.forEach((p, i) => {
+        if (isRebalancing) {
+          p.angle += 0.05 + Math.random() * 0.02;
+        } else {
+          p.angle += 0.002;
+        }
+        p.x = centerX + Math.cos(p.angle) * orbitRadius;
+        p.y = centerY + Math.sin(p.angle) * orbitRadius;
+      });
+
+      // Draw connections from particles to core
+      particles.forEach((p) => {
+        const gradient = ctx.createLinearGradient(centerX, centerY, p.x, p.y);
+        gradient.addColorStop(0, 'hsla(130, 100%, 50%, 0.3)');
+        gradient.addColorStop(1, p.color.replace(')', ', 0.5)').replace('hsl', 'hsla'));
         
-        const dx = to.x - from.x;
-        const dy = to.y - from.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        // Curve control point
-        const midX = (from.x + to.x) / 2;
-        const midY = (from.y + to.y) / 2;
-        const perpX = -dy / dist * 20;
-        const perpY = dx / dist * 20;
-        
-        const alpha = Math.min(0.7, (from.weight + to.weight) * 0.3);
-        ctx.strokeStyle = `hsla(130, 100%, 50%, ${alpha})`;
-        ctx.lineWidth = Math.max(1, (from.weight + to.weight) * 1.5);
-        
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(from.x, from.y);
-        ctx.quadraticCurveTo(midX + perpX, midY + perpY, to.x, to.y);
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(p.x, p.y);
         ctx.stroke();
       });
 
-      // Physics simulation
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      
-      // Rebalancing intensity
-      const rebalanceMultiplier = isRebalancing ? 15 : 1;
-      
-      particles.forEach((p, i) => {
-        // Gravity towards center (proportional to weight)
-        const toCenterX = centerX - p.x;
-        const toCenterY = centerY - p.y;
-        const distToCenter = Math.sqrt(toCenterX * toCenterX + toCenterY * toCenterY);
+      // Draw inter-particle connections (neon→pink, angle→shape)
+      PARTICLE_CONNECTIONS.forEach((conn) => {
+        const fromP = particles.find(p => p.id === conn.from);
+        const toP = particles.find(p => p.id === conn.to);
+        if (!fromP || !toP) return;
+
+        const gradient = ctx.createLinearGradient(fromP.x, fromP.y, toP.x, toP.y);
+        gradient.addColorStop(0, fromP.color.replace(')', ', 0.6)').replace('hsl', 'hsla'));
+        gradient.addColorStop(1, toP.color.replace(')', ', 0.6)').replace('hsl', 'hsla'));
         
-        // Heavier particles stay closer to center
-        const targetDist = 150 - p.weight * 30;
-        const centerForce = (distToCenter - targetDist) * 0.0005 * rebalanceMultiplier;
-        p.vx += (toCenterX / distToCenter) * centerForce;
-        p.vy += (toCenterY / distToCenter) * centerForce;
-        
-        // Attraction/repulsion between connected particles
-        p.connections.forEach((connId) => {
-          const other = particles[connId];
-          if (!other) return;
-          
-          const dx = other.x - p.x;
-          const dy = other.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          // Spring force - heavier particles pull stronger
-          const idealDist = 60 + (p.weight + other.weight) * 20;
-          const springForce = (dist - idealDist) * 0.002 * other.weight * rebalanceMultiplier;
-          
-          p.vx += (dx / dist) * springForce;
-          p.vy += (dy / dist) * springForce;
-        });
-        
-        // Repulsion from all nearby particles
-        particles.forEach((other, j) => {
-          if (i === j) return;
-          
-          const dx = other.x - p.x;
-          const dy = other.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist < 80) {
-            const repelForce = (80 - dist) * 0.001 * rebalanceMultiplier;
-            p.vx -= (dx / dist) * repelForce;
-            p.vy -= (dy / dist) * repelForce;
-          }
-        });
-        
-        // Damping
-        const damping = isRebalancing ? 0.92 : 0.97;
-        p.vx *= damping;
-        p.vy *= damping;
-        
-        p.x += p.vx;
-        p.y += p.vy;
-        
-        // Keep in bounds
-        p.x = Math.max(30, Math.min(canvas.width - 30, p.x));
-        p.y = Math.max(30, Math.min(canvas.height - 30, p.y));
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(fromP.x, fromP.y);
+        ctx.lineTo(toP.x, toP.y);
+        ctx.stroke();
       });
 
-      // Draw particles (bigger = heavier weight) - 3D sphere effect
+      // Draw core (Bostrom logo)
+      const coreSize = Math.min(canvas.width, canvas.height) * 0.18;
+      if (coreImage.complete) {
+        // Glow behind core
+        const coreGlow = ctx.createRadialGradient(centerX, centerY, coreSize * 0.3, centerX, centerY, coreSize * 0.8);
+        coreGlow.addColorStop(0, 'hsla(130, 100%, 50%, 0.2)');
+        coreGlow.addColorStop(1, 'transparent');
+        ctx.fillStyle = coreGlow;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, coreSize * 0.8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.drawImage(
+          coreImage,
+          centerX - coreSize / 2,
+          centerY - coreSize / 2,
+          coreSize,
+          coreSize
+        );
+      }
+
+      // Draw labeled particles (small glow)
       particles.forEach((p) => {
-        const size = 5 + p.weight * 10;
-        
-        // Outer glow
-        const glowGradient = ctx.createRadialGradient(p.x, p.y, size * 0.8, p.x, p.y, size * 3);
-        glowGradient.addColorStop(0, p.color.replace(')', ', 0.4)').replace('hsl', 'hsla'));
+        const size = 12;
+
+        // Minimal glow
+        const glowGradient = ctx.createRadialGradient(p.x, p.y, size * 0.5, p.x, p.y, size * 1.5);
+        glowGradient.addColorStop(0, p.color.replace(')', ', 0.3)').replace('hsl', 'hsla'));
         glowGradient.addColorStop(1, 'transparent');
         
         ctx.fillStyle = glowGradient;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, size * 3, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, size * 1.5, 0, Math.PI * 2);
         ctx.fill();
 
-        // Main sphere with 3D gradient (light from top-left)
+        // 3D sphere
         const sphereGradient = ctx.createRadialGradient(
-          p.x - size * 0.35, p.y - size * 0.35, size * 0.1,
+          p.x - size * 0.3, p.y - size * 0.3, size * 0.1,
           p.x, p.y, size
         );
-        sphereGradient.addColorStop(0, 'hsl(210, 100%, 75%)'); // bright highlight
-        sphereGradient.addColorStop(0.3, 'hsl(210, 100%, 55%)'); // mid tone
-        sphereGradient.addColorStop(0.7, 'hsl(210, 100%, 45%)'); // base color
-        sphereGradient.addColorStop(1, 'hsl(210, 100%, 25%)'); // dark edge
+        sphereGradient.addColorStop(0, 'hsl(0, 0%, 90%)');
+        sphereGradient.addColorStop(0.3, p.color);
+        sphereGradient.addColorStop(1, p.color.replace('100%', '30%').replace('60%', '20%'));
         
         ctx.fillStyle = sphereGradient;
         ctx.beginPath();
         ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
         ctx.fill();
-        
-        // Specular highlight (small bright spot)
-        const highlightGradient = ctx.createRadialGradient(
-          p.x - size * 0.4, p.y - size * 0.4, 0,
-          p.x - size * 0.4, p.y - size * 0.4, size * 0.5
-        );
-        highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-        highlightGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.3)');
-        highlightGradient.addColorStop(1, 'transparent');
-        
-        ctx.fillStyle = highlightGradient;
-        ctx.beginPath();
-        ctx.arc(p.x - size * 0.4, p.y - size * 0.4, size * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Secondary reflection (bottom-right subtle glow)
-        const reflectionGradient = ctx.createRadialGradient(
-          p.x + size * 0.3, p.y + size * 0.3, 0,
-          p.x + size * 0.3, p.y + size * 0.3, size * 0.4
-        );
-        reflectionGradient.addColorStop(0, 'rgba(100, 180, 255, 0.3)');
-        reflectionGradient.addColorStop(1, 'transparent');
-        
-        ctx.fillStyle = reflectionGradient;
-        ctx.beginPath();
-        ctx.arc(p.x + size * 0.3, p.y + size * 0.3, size * 0.4, 0, Math.PI * 2);
-        ctx.fill();
+
+        // Label
+        ctx.font = '11px Orbitron, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(p.label, p.x, p.y + size + 16);
       });
 
-      animationRef.current = requestAnimationFrame(animate);
+      graphAnimationRef.current = requestAnimationFrame(animate);
     };
 
+    resize();
+    window.addEventListener('resize', resize);
     animate();
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      window.removeEventListener('resize', resize);
+      if (graphAnimationRef.current) {
+        cancelAnimationFrame(graphAnimationRef.current);
       }
     };
   }, []);
 
-  // Link counter - runs during rebalancing, stops at 3M
+  // Link counter
   useEffect(() => {
     if (!isCounterRunning) return;
     
     const interval = setInterval(() => {
       setLinkCount(prev => {
-        const increment = Math.floor(Math.random() * 1200) + 800; // ~70,000/sec at 60fps
+        const increment = Math.floor(Math.random() * 1200) + 800;
         const next = prev + increment;
         if (next >= 3000000) {
           setIsCounterRunning(false);
@@ -329,57 +377,11 @@ export const CyberlinkVisualizer = () => {
     return () => clearInterval(interval);
   }, [isCounterRunning]);
 
-  // Reorganize particles - intense rebalancing
   const reorganizeParticles = useCallback(() => {
     isRebalancingRef.current = true;
-    rebalanceStartTimeRef.current = Date.now();
-    
-    // Start counter from 0
     setLinkCount(0);
     setIsCounterRunning(true);
     
-    particlesRef.current.forEach((p) => {
-      // Randomize weights dramatically
-      p.weight = Math.random() * 1.5 + 0.3;
-      
-      // Strong impulses for chaotic movement
-      p.vx += (Math.random() - 0.5) * 20;
-      p.vy += (Math.random() - 0.5) * 20;
-      
-      // Change some colors
-      if (Math.random() > 0.5) {
-        p.color = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
-      }
-    });
-    
-    // Some edges get rewired
-    const edges = edgesRef.current;
-    for (let i = edges.length - 1; i >= 0; i--) {
-      if (Math.random() > 0.7) {
-        const edge = edges[i];
-        const fromP = particlesRef.current[edge.from];
-        const toP = particlesRef.current[edge.to];
-        if (fromP && toP) {
-          fromP.connections = fromP.connections.filter(c => c !== edge.to);
-          toP.connections = toP.connections.filter(c => c !== edge.from);
-        }
-        edges.splice(i, 1);
-      }
-    }
-    
-    // Add some new random edges
-    const particles = particlesRef.current;
-    for (let i = 0; i < 10; i++) {
-      const a = Math.floor(Math.random() * particles.length);
-      const b = Math.floor(Math.random() * particles.length);
-      if (a !== b && !particles[a].connections.includes(b)) {
-        particles[a].connections.push(b);
-        particles[b].connections.push(a);
-        edges.push({ from: a, to: b });
-      }
-    }
-    
-    // Stop rebalancing after 2 seconds
     setTimeout(() => {
       isRebalancingRef.current = false;
     }, 2000);
@@ -391,14 +393,10 @@ export const CyberlinkVisualizer = () => {
 
     setIsProcessing(true);
     setShowResult(null);
-
-    // Start intense rebalancing
     reorganizeParticles();
     
-    // Wait for rebalancing to complete
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Generate result
     const result = Math.random() > 0.3;
     setShowResult(result);
     
@@ -415,8 +413,15 @@ export const CyberlinkVisualizer = () => {
 
   return (
     <section className="py-20 relative overflow-hidden min-h-[700px]">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
+      {/* Background canvas (like main page) */}
+      <canvas
+        ref={bgCanvasRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ background: 'transparent' }}
+      />
+      
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background pointer-events-none" />
       
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
@@ -435,10 +440,10 @@ export const CyberlinkVisualizer = () => {
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-8 items-center">
-          {/* Visualization Canvas */}
-          <div className="relative aspect-square max-h-[500px] rounded-xl border border-primary/30 overflow-hidden box-glow-primary">
+          {/* Graph Canvas */}
+          <div className="relative aspect-square max-h-[500px] rounded-xl border border-primary/30 overflow-hidden box-glow-primary bg-background/50 backdrop-blur-sm">
             <canvas
-              ref={canvasRef}
+              ref={graphCanvasRef}
               className="w-full h-full"
               style={{ background: 'transparent' }}
             />
@@ -524,7 +529,6 @@ export const CyberlinkVisualizer = () => {
                       fill="hsla(300, 100%, 60%, 0.1)"
                     />
                   </svg>
-                  {/* Inner glow */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-4 h-4 rounded-full bg-[hsl(300,100%,60%)] blur-md opacity-60" />
                   </div>
@@ -589,15 +593,15 @@ export const CyberlinkVisualizer = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-card/30 rounded-lg p-4 border border-secondary/30">
-                <div className="text-xs text-muted-foreground mb-1">Graph Edges</div>
+                <div className="text-xs text-muted-foreground mb-1">Connections</div>
                 <div className="font-orbitron text-secondary text-glow-secondary">
-                  {edgesRef.current.length}
+                  {5 + PARTICLE_CONNECTIONS.length}
                 </div>
               </div>
               <div className="bg-card/30 rounded-lg p-4 border border-accent/30">
                 <div className="text-xs text-muted-foreground mb-1">Knowledge Particles</div>
                 <div className="font-orbitron text-accent text-glow-accent">
-                  {particlesRef.current.length}
+                  6
                 </div>
               </div>
             </div>
