@@ -97,7 +97,7 @@ export const AnimatedCounter = () => {
               {isLoading ? (
                 <span className="animate-pulse">Loading stats...</span>
               ) : (
-                <>~{formatNumber(weightsPerSecond)} per second • ~{formatNumber(Math.round(weightsPerMinute / 1000000))}M per minute</>
+                <>~{formatNumber(weightsPerSecond)} weights per second</>
               )}
             </div>
             
