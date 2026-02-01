@@ -82,7 +82,7 @@ export const AnimatedCounter = () => {
   const negentropy = bostromStats?.negentropy ?? 0;
 
   return (
-    <section className="py-16 relative overflow-hidden">
+    <section className="py-4 md:py-6 relative overflow-hidden -mt-4">
       {/* Background glow */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
       
