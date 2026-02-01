@@ -159,8 +159,7 @@ export const TokenSection = () => {
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
               The native token of Bostrom network. Stake BOOT to secure the network, 
-              mint cyberlinks, and participate in governance. Fair genesis distribution 
-              ensures decentralized ownership.
+              mint hydrogen, and participate in governance.
             </p>
 
             {/* Live Price Block */}
