@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
+import { ConvergenceGraph } from './ConvergenceGraph';
+
+const MAX_COUNT = 3_000_000;
 
 export const AnimatedCounter = () => {
   const { count } = useWeightCounter();
@@ -7,6 +10,9 @@ export const AnimatedCounter = () => {
   const formatNumber = (num: number): string => {
     return num.toLocaleString('en-US');
   };
+
+  // Calculate progress towards 3M
+  const progress = Math.min(count / MAX_COUNT, 1);
 
   return (
     <section className="py-16 relative overflow-hidden">
@@ -31,9 +37,9 @@ export const AnimatedCounter = () => {
             <div className="text-xs text-muted-foreground mt-3 font-play">
               ~70,000 per second • ~3M per minute
             </div>
-            <div className="text-xs text-primary/60 mt-2 font-mono tracking-wide">
-              convergence
-            </div>
+            
+            {/* Convergence visualization */}
+            <ConvergenceGraph progress={progress} />
           </div>
         </motion.div>
       </div>
