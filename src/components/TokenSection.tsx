@@ -81,17 +81,6 @@ export const TokenSection = () => {
       loading: isLoading,
     },
     { 
-      label: 'Fully Diluted Valuation', 
-      value: fullyDilutedValuation !== null ? `$${formatLargeNumber(fullyDilutedValuation)}` : null,
-      loading: isLoading,
-    },
-    { 
-      label: 'Staking APR', 
-      value: stakingApr !== null ? `${stakingApr.toFixed(2)}%` : null,
-      loading: isLoading,
-      highlight: true,
-    },
-    { 
       label: 'Circulating Supply', 
       value: circulatingSupply !== null ? `${formatSupply(circulatingSupply)} BOOT` : null,
       loading: isLoading,
@@ -208,15 +197,9 @@ export const TokenSection = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`p-4 rounded-xl border ${
-                    stat.highlight 
-                      ? 'border-secondary bg-secondary/10' 
-                      : 'border-border bg-card/50'
-                  }`}
+                  className="p-4 rounded-xl border border-border bg-card/50"
                 >
-                  <div className={`text-lg md:text-xl font-orbitron font-bold ${
-                    stat.highlight ? 'text-secondary' : 'text-primary'
-                  }`}>
+                  <div className="text-lg md:text-xl font-orbitron font-bold text-primary">
                     {stat.loading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
                     ) : stat.value !== null ? (
