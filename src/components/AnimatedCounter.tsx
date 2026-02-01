@@ -16,27 +16,23 @@ interface StatBlockProps {
   value: string | number;
   subtitle: string;
   isLoading?: boolean;
-  children?: React.ReactNode;
 }
 
-const StatBlock = ({ label, value, subtitle, isLoading, children }: StatBlockProps) => (
-  <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[280px] flex flex-col justify-between">
-    <div>
-      <div className="text-xs font-orbitron text-accent mb-4 uppercase tracking-widest text-center">
-        {label}
-      </div>
-      <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center">
-        {isLoading ? (
-          <span className="animate-pulse">...</span>
-        ) : (
-          value
-        )}
-      </div>
-      <div className="text-xs text-muted-foreground mt-3 font-play text-center">
-        {subtitle}
-      </div>
+const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
+  <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[200px] flex flex-col justify-center">
+    <div className="text-xs font-orbitron text-accent mb-4 uppercase tracking-widest text-center">
+      {label}
     </div>
-    {children && <div className="mt-auto">{children}</div>}
+    <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center">
+      {isLoading ? (
+        <span className="animate-pulse">...</span>
+      ) : (
+        value
+      )}
+    </div>
+    <div className="text-xs text-muted-foreground mt-3 font-play text-center">
+      {subtitle}
+    </div>
   </div>
 );
 
@@ -96,63 +92,66 @@ export const AnimatedCounter = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row items-stretch justify-center gap-6"
+          className="flex flex-col items-center gap-6"
         >
-          {/* SIZE Block */}
-          <StatBlock
-            label="Size"
-            value={formatNumber(particles)}
-            subtitle="total particles"
-            isLoading={isLoading}
-          />
-          
-          {/* SPEED Block */}
-          <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[280px] flex flex-col">
-            <div className="text-xs font-orbitron text-accent mb-4 uppercase tracking-widest text-center">
-              Speed
+          {/* Stats blocks row */}
+          <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 w-full">
+            {/* SIZE Block */}
+            <StatBlock
+              label="Size"
+              value={formatNumber(particles)}
+              subtitle="total particles"
+              isLoading={isLoading}
+            />
+            
+            {/* SPEED Block */}
+            <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[200px] flex flex-col justify-center">
+              <div className="text-xs font-orbitron text-accent mb-4 uppercase tracking-widest text-center">
+                Speed
+              </div>
+              
+              {/* Fixed slots container */}
+              <div className="flex justify-center items-center text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary">
+                {chars.map((char, index) => {
+                  const isLeadingZero = leadingZeroPositions.has(index);
+                  return (
+                    <div 
+                      key={index}
+                      className={`flex items-center justify-center ${
+                        char === ',' 
+                          ? 'w-[0.4em]' 
+                          : 'w-[0.75em]'
+                      } ${isLeadingZero ? 'opacity-0' : ''}`}
+                      style={{ height: '1.2em' }}
+                    >
+                      {char}
+                    </div>
+                  );
+                })}
+              </div>
+              
+              <div className="text-xs text-muted-foreground mt-3 font-play text-center">
+                {isLoading ? (
+                  <span className="animate-pulse">Loading stats...</span>
+                ) : (
+                  <>~{formatNumber(weightsPerSecond)} weights per second</>
+                )}
+              </div>
             </div>
             
-            {/* Fixed slots container */}
-            <div className="flex justify-center items-center text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary">
-              {chars.map((char, index) => {
-                const isLeadingZero = leadingZeroPositions.has(index);
-                return (
-                  <div 
-                    key={index}
-                    className={`flex items-center justify-center ${
-                      char === ',' 
-                        ? 'w-[0.4em]' 
-                        : 'w-[0.75em]'
-                    } ${isLeadingZero ? 'opacity-0' : ''}`}
-                    style={{ height: '1.2em' }}
-                  >
-                    {char}
-                  </div>
-                );
-              })}
-            </div>
-            
-            <div className="text-xs text-muted-foreground mt-3 font-play text-center">
-              {isLoading ? (
-                <span className="animate-pulse">Loading stats...</span>
-              ) : (
-                <>~{formatNumber(weightsPerSecond)} weights per second</>
-              )}
-            </div>
-            
-            {/* Convergence visualization */}
-            <div className="mt-auto">
-              <ConvergenceGraph progress={progress} />
-            </div>
+            {/* QUALITY Block */}
+            <StatBlock
+              label="Quality"
+              value={formatNumber(negentropy)}
+              subtitle="negentropy"
+              isLoading={isLoading}
+            />
           </div>
           
-          {/* QUALITY Block */}
-          <StatBlock
-            label="Quality"
-            value={formatNumber(negentropy)}
-            subtitle="negentropy"
-            isLoading={isLoading}
-          />
+          {/* Convergence line spanning all blocks */}
+          <div className="w-full max-w-[1008px]">
+            <ConvergenceGraph progress={progress} />
+          </div>
         </motion.div>
       </div>
     </section>
