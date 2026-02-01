@@ -80,6 +80,7 @@ export const CyberlinkVisualizer = () => {
   const [showResult, setShowResult] = useState<boolean | null>(null);
   const [selectedParticles, setSelectedParticles] = useState<string[]>([]);
   const [particleConnections, setParticleConnections] = useState<ParticleConnection[]>([...INITIAL_CONNECTIONS]);
+  const [particleCount, setParticleCount] = useState(LABELED_PARTICLES.length);
   const connectionsRef = useRef<ParticleConnection[]>([...INITIAL_CONNECTIONS]);
   const selectedParticlesRef = useRef<string[]>([]);
 
@@ -487,6 +488,7 @@ export const CyberlinkVisualizer = () => {
       color: BG_COLORS[particlesRef.current.length % BG_COLORS.length],
     };
     particlesRef.current.push(newParticle);
+    setParticleCount(particlesRef.current.length);
     
     reorganizeParticles();
     
@@ -697,13 +699,13 @@ export const CyberlinkVisualizer = () => {
               <div className="bg-card/30 rounded-lg p-4 border border-secondary/30">
                 <div className="text-xs text-muted-foreground mb-1">Connections</div>
                 <div className="font-orbitron text-secondary text-glow-secondary">
-                  {5 + particleConnections.length}
+                  {particleCount + particleConnections.length}
                 </div>
               </div>
               <div className="bg-card/30 rounded-lg p-4 border border-accent/30">
                 <div className="text-xs text-muted-foreground mb-1">Knowledge Particles</div>
                 <div className="font-orbitron text-accent text-glow-accent">
-                  6
+                  {particleCount + 1}
                 </div>
               </div>
             </div>
