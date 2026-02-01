@@ -86,11 +86,6 @@ export const TokenSection = () => {
       loading: isLoading,
     },
     { 
-      label: '24h Trading Volume', 
-      value: volume24h !== null ? `$${formatLargeNumber(volume24h)}` : null,
-      loading: isLoading,
-    },
-    { 
       label: 'Staking APR', 
       value: stakingApr !== null ? `${stakingApr.toFixed(2)}%` : null,
       loading: isLoading,
