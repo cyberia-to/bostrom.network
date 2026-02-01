@@ -559,6 +559,40 @@ export const CyberlinkVisualizer = () => {
     requestAnimationFrame(animateDraw);
   }, []);
 
+  // Trigger rebalance without drawing animation
+  const triggerRebalance = useCallback(() => {
+    // Skip if already animating
+    if (linkAnimationRef.current) return;
+    
+    linkAnimationRef.current = {
+      fromId: '',
+      toId: '',
+      progress: 0,
+      phase: 'rebalancing'
+    };
+    
+    // Calculate target angles for equal distribution
+    const particles = particlesRef.current;
+    const angleStep = (Math.PI * 2) / particles.length;
+    particles.forEach((p, i) => {
+      targetAnglesRef.current.set(p.id, -Math.PI / 2 + i * angleStep);
+    });
+    
+    // Stop rebalancing after 2 seconds
+    setTimeout(() => {
+      linkAnimationRef.current = null;
+    }, 2000);
+  }, []);
+
+  // Auto-rebalance every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      triggerRebalance();
+    }, 60000); // 60 seconds
+    
+    return () => clearInterval(interval);
+  }, [triggerRebalance]);
+
   const reorganizeParticles = useCallback(() => {
     // This is now handled by startLinkAnimation
   }, []);
