@@ -249,7 +249,7 @@ export const TokenSection = () => {
                 href="https://app.osmosis.zone/assets/ibc/FE2CD1E6828EC0FAB8AF39BAC45BC25B965BA67CCBC50C13A14BD610B0D1E2C4"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-10 py-3 bg-primary text-primary-foreground font-orbitron font-bold rounded-lg hover:scale-105 transition-transform"
+                className="px-10 py-3 bg-accent text-accent-foreground font-orbitron font-bold rounded-lg hover:scale-105 transition-transform"
               >
                 BUY
               </a>
