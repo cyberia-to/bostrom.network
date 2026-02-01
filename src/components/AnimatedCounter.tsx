@@ -69,8 +69,8 @@ export const AnimatedCounter = () => {
           className="text-center"
         >
           <div className="inline-block p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary">
-            <div className="text-sm font-play text-muted-foreground mb-2 uppercase tracking-wider">
-              Weights Per Second
+            <div className="text-xs font-orbitron text-accent mb-2 uppercase tracking-widest">
+              Speed
             </div>
             
             {/* Fixed slots container */}
