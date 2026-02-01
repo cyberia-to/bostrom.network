@@ -421,8 +421,15 @@ export const CyberlinkVisualizer = () => {
     setLinkCount(0);
     setIsCounterRunning(true);
     
+    // After animation, redistribute particles evenly around the orbit
     setTimeout(() => {
       isRebalancingRef.current = false;
+      const particles = particlesRef.current;
+      const count = particles.length;
+      particles.forEach((p, i) => {
+        // Evenly distribute starting from top (-PI/2)
+        p.angle = -Math.PI / 2 + (2 * Math.PI * i) / count;
+      });
     }, 2000);
   }, []);
 
