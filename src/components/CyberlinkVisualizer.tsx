@@ -671,28 +671,6 @@ export const CyberlinkVisualizer = () => {
               </Button>
             </form>
 
-            {/* Recent links */}
-            {results.length > 0 && (
-              <div className="space-y-2">
-                <h3 className="text-sm font-play text-muted-foreground">Recent Cyberlinks</h3>
-                <div className="space-y-2 max-h-[200px] overflow-y-auto">
-                  {results.map((r, i) => (
-                    <motion.div
-                      key={r.timestamp}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      className="flex items-center gap-2 text-sm bg-card/30 rounded-lg px-3 py-2 border border-primary/20"
-                    >
-                      <span className="text-muted-foreground truncate flex-1">{r.from}</span>
-                      <Link2 className="w-3 h-3 text-primary flex-shrink-0" />
-                      <span className="text-muted-foreground truncate flex-1">{r.to}</span>
-                      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${r.result ? 'bg-primary' : 'bg-destructive'}`} />
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-4">
