@@ -6,33 +6,6 @@ import { useMemo } from 'react';
 const MAX_COUNT = 3_000_000;
 const DIGIT_SLOTS = 7; // Fixed number of digit slots
 
-interface DigitSlotProps {
-  char: string;
-}
-
-const DigitSlot = ({ char }: DigitSlotProps) => {
-  const isComma = char === ',';
-  
-  return (
-    <span 
-      className={`inline-flex items-center justify-center ${isComma ? 'w-[0.35em]' : 'w-[0.65em]'} h-[1.2em] overflow-hidden`}
-    >
-      <motion.span
-        key={char}
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ 
-          duration: 0.12,
-          ease: "easeOut"
-        }}
-        className="inline-block"
-      >
-        {char}
-      </motion.span>
-    </span>
-  );
-};
-
 export const AnimatedCounter = () => {
   const { count } = useWeightCounter();
 
@@ -40,11 +13,10 @@ export const AnimatedCounter = () => {
   const progress = Math.min(count / MAX_COUNT, 1);
   
   // Format with leading zeros to always have 7 digits
-  const chars = useMemo(() => {
+  const formattedNumber = useMemo(() => {
     const paddedNumber = count.toString().padStart(DIGIT_SLOTS, '0');
     // Insert commas: X,XXX,XXX format
-    const formatted = paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return formatted.split('');
+    return paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }, [count]);
 
   return (
@@ -64,10 +36,11 @@ export const AnimatedCounter = () => {
             <div className="text-sm font-play text-muted-foreground mb-2 uppercase tracking-wider">
               Weight Per Second
             </div>
-            <div className="text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary tabular-nums flex justify-center items-center">
-              {chars.map((char, index) => (
-                <DigitSlot key={`slot-${index}`} char={char} />
-              ))}
+            <div 
+              className="text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary"
+              style={{ fontVariantNumeric: 'tabular-nums' }}
+            >
+              {formattedNumber}
             </div>
             <div className="text-xs text-muted-foreground mt-3 font-play">
               ~70,000 per second • ~3M per minute
