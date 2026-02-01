@@ -61,6 +61,19 @@ export const BostromExplainer = () => {
   return (
     <section ref={sectionRef} className="py-8 md:py-12 pb-4 md:pb-6 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-8"
+        >
+          <h2 className="text-4xl md:text-5xl font-orbitron font-bold text-glow-secondary text-secondary">
+            HOW?
+          </h2>
+        </motion.div>
+
         {/* Terminal Container */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -74,21 +87,6 @@ export const BostromExplainer = () => {
             {/* Scanline effect */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
               <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,255,65,0.03)_50%)] bg-[length:100%_4px]" />
-            </div>
-            
-            {/* Terminal Header */}
-            <div className="flex items-center gap-2 px-4 py-2 border-b border-primary/30 bg-primary/5">
-              <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-accent/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-secondary/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-primary/80" />
-              </div>
-              <span className="text-xs font-orbitron text-primary/60 ml-2 tracking-wider">
-                BOSTROM://CORE_FEATURES.SYS
-              </span>
-              <div className="ml-auto flex items-center gap-2">
-                <span className="text-[10px] font-mono text-primary/40 animate-pulse">● LIVE</span>
-              </div>
             </div>
             
             {/* Terminal Content - fixed height to prevent jumping */}
