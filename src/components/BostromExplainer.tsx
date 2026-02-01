@@ -116,11 +116,6 @@ export const BostromExplainer = () => {
                 </div>
               ))}
               
-              {/* Blinking cursor */}
-              <div className="flex items-center gap-2 pt-2">
-                <span className="text-primary/50 font-mono text-sm">&gt;</span>
-                <span className="w-3 h-5 bg-primary animate-pulse" />
-              </div>
             </div>
             
             {/* Corner decorations */}
