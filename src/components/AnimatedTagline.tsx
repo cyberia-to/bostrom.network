@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const words = ['fastest', 'coolest', 'first', 'biggest'];
 const staticPart = 'on-chain collective model';
-const specialPhrase = { text: 'BIG BADASS GRAPH', duration: 10000 };
+const specialPhrase = { text: 'BIG BADASS GRAPH', duration: 30000 };
 
 export const AnimatedTagline = () => {
   const [wordIndex, setWordIndex] = useState(0);
@@ -24,7 +24,7 @@ export const AnimatedTagline = () => {
       } else {
         setWordIndex((prev) => prev + 1);
       }
-    }, 1000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [wordIndex, isSpecial]);
