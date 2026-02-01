@@ -12,11 +12,12 @@ export const AnimatedCounter = () => {
   // Calculate progress towards 3M
   const progress = Math.min(count / MAX_COUNT, 1);
   
-  // Format with leading zeros to always have 7 digits
-  const formattedNumber = useMemo(() => {
+  // Format with leading zeros to always have 7 digits, then split into chars
+  const chars = useMemo(() => {
     const paddedNumber = count.toString().padStart(DIGIT_SLOTS, '0');
     // Insert commas: X,XXX,XXX format
-    return paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const formatted = paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return formatted.split('');
   }, [count]);
 
   return (
@@ -36,12 +37,24 @@ export const AnimatedCounter = () => {
             <div className="text-sm font-play text-muted-foreground mb-2 uppercase tracking-wider">
               Weight Per Second
             </div>
-            <div 
-              className="text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary"
-              style={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {formattedNumber}
+            
+            {/* Fixed slots container */}
+            <div className="flex justify-center items-center text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary">
+              {chars.map((char, index) => (
+                <div 
+                  key={index}
+                  className={`flex items-center justify-center ${
+                    char === ',' 
+                      ? 'w-[0.4em]' 
+                      : 'w-[0.75em]'
+                  }`}
+                  style={{ height: '1.2em' }}
+                >
+                  {char}
+                </div>
+              ))}
             </div>
+            
             <div className="text-xs text-muted-foreground mt-3 font-play">
               ~70,000 per second • ~3M per minute
             </div>
