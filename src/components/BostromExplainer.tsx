@@ -43,7 +43,7 @@ const TypewriterText = ({ text, startDelay, onComplete }: { text: string; startD
 
 export const BostromExplainer = () => {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
   const [currentLine, setCurrentLine] = useState(-1);
 
   useEffect(() => {
