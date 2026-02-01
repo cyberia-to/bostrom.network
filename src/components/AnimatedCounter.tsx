@@ -1,8 +1,40 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
 import { ConvergenceGraph } from './ConvergenceGraph';
 
 const MAX_COUNT = 3_000_000;
+const TOTAL_DIGITS = 9; // Maximum digits for 3,000,000 formatted: "3,000,000"
+
+interface DigitSlotProps {
+  char: string;
+  index: number;
+}
+
+const DigitSlot = ({ char, index }: DigitSlotProps) => {
+  const isComma = char === ',';
+  
+  return (
+    <span 
+      className={`inline-block ${isComma ? 'w-[0.3em]' : 'w-[0.6em]'} text-center relative overflow-hidden`}
+    >
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={`${index}-${char}`}
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 20, opacity: 0 }}
+          transition={{ 
+            duration: 0.15,
+            ease: "easeOut"
+          }}
+          className="inline-block"
+        >
+          {char}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+};
 
 export const AnimatedCounter = () => {
   const { count } = useWeightCounter();
@@ -13,6 +45,9 @@ export const AnimatedCounter = () => {
 
   // Calculate progress towards 3M
   const progress = Math.min(count / MAX_COUNT, 1);
+  
+  const formattedNumber = formatNumber(count);
+  const chars = formattedNumber.split('');
 
   return (
     <section className="py-16 relative overflow-hidden">
@@ -31,8 +66,10 @@ export const AnimatedCounter = () => {
             <div className="text-sm font-play text-muted-foreground mb-2 uppercase tracking-wider">
               Weight Per Second
             </div>
-            <div className="text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary tabular-nums">
-              {formatNumber(count)}
+            <div className="text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary tabular-nums flex justify-center items-center">
+              {chars.map((char, index) => (
+                <DigitSlot key={index} char={char} index={index} />
+              ))}
             </div>
             <div className="text-xs text-muted-foreground mt-3 font-play">
               ~70,000 per second • ~3M per minute
