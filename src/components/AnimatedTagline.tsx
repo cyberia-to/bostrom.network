@@ -1,46 +1,68 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const phrases = [
-  { text: 'fastest on-chain collective model', duration: 1000 },
-  { text: 'coolest on-chain collective model', duration: 1000 },
-  { text: 'first on-chain collective model', duration: 1000 },
-  { text: 'biggest on-chain collective model', duration: 1000 },
-  { text: 'BIG BADASS GRAPH', duration: 10000, special: true },
-];
+const words = ['fastest', 'coolest', 'first', 'biggest'];
+const staticPart = 'on-chain collective model';
+const specialPhrase = { text: 'BIG BADASS GRAPH', duration: 10000 };
 
 export const AnimatedTagline = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [isSpecial, setIsSpecial] = useState(false);
 
   useEffect(() => {
-    const currentPhrase = phrases[currentIndex];
+    if (isSpecial) {
+      const timer = setTimeout(() => {
+        setIsSpecial(false);
+        setWordIndex(0);
+      }, specialPhrase.duration);
+      return () => clearTimeout(timer);
+    }
+
     const timer = setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % phrases.length);
-    }, currentPhrase.duration);
+      if (wordIndex === words.length - 1) {
+        setIsSpecial(true);
+      } else {
+        setWordIndex((prev) => prev + 1);
+      }
+    }, 1000);
 
     return () => clearTimeout(timer);
-  }, [currentIndex]);
+  }, [wordIndex, isSpecial]);
 
-  const currentPhrase = phrases[currentIndex];
+  if (isSpecial) {
+    return (
+      <div className="h-12 md:h-14 lg:h-16 flex items-center justify-center overflow-hidden">
+        <motion.p
+          key="special"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className="text-xl md:text-2xl lg:text-3xl max-w-2xl mx-auto font-orbitron text-center text-neon-yellow animate-starlight font-bold"
+        >
+          {specialPhrase.text}
+        </motion.p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-12 md:h-14 lg:h-16 flex items-center justify-center overflow-hidden">
-      <AnimatePresence mode="wait">
-        <motion.p
-          key={currentIndex}
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.9 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className={`text-xl md:text-2xl lg:text-3xl max-w-2xl mx-auto font-orbitron text-center ${
-            currentPhrase.special
-              ? 'text-neon-yellow animate-starlight font-bold'
-              : 'text-accent text-glow-accent'
-          }`}
-        >
-          {currentPhrase.text}
-        </motion.p>
-      </AnimatePresence>
+      <p className="text-xl md:text-2xl lg:text-3xl max-w-2xl mx-auto font-orbitron text-center text-accent text-glow-accent">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={wordIndex}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="inline-block"
+          >
+            {words[wordIndex]}
+          </motion.span>
+        </AnimatePresence>
+        {' '}{staticPart}
+      </p>
     </div>
   );
 };
