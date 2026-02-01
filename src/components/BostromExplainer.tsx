@@ -67,7 +67,7 @@ export const BostromExplainer = () => {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto relative"
+          className="max-w-[1008px] mx-auto relative"
         >
           {/* Terminal Frame */}
           <div className="relative border border-primary/40 rounded-lg bg-black/80 backdrop-blur-sm overflow-hidden">
