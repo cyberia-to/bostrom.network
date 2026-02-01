@@ -422,7 +422,7 @@ export const CyberlinkVisualizer = () => {
         );
       }
 
-      // Draw labeled particles (small glow)
+      // Draw labeled particles with star-like glow
       const selected = selectedParticlesRef.current;
       particles.forEach((p) => {
         const size = 12;
@@ -446,14 +446,16 @@ export const CyberlinkVisualizer = () => {
           ctx.fill();
         }
 
-        // Minimal glow
-        const glowGradient = ctx.createRadialGradient(p.x, p.y, size * 0.5, p.x, p.y, size * 1.5);
-        glowGradient.addColorStop(0, p.color.replace(')', ', 0.3)').replace('hsl', 'hsla'));
-        glowGradient.addColorStop(1, 'transparent');
+        // Star-like glow (outer soft glow like background stars)
+        const outerGlow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 4);
+        outerGlow.addColorStop(0, p.color);
+        outerGlow.addColorStop(0.2, p.color.replace(')', ', 0.4)').replace('hsl', 'hsla'));
+        outerGlow.addColorStop(0.5, p.color.replace(')', ', 0.15)').replace('hsl', 'hsla'));
+        outerGlow.addColorStop(1, 'transparent');
         
-        ctx.fillStyle = glowGradient;
+        ctx.fillStyle = outerGlow;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, size * 1.5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, size * 4, 0, Math.PI * 2);
         ctx.fill();
 
         // 3D sphere
