@@ -11,19 +11,6 @@ const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
 };
 
-const formatLargeNumber = (num: number): string => {
-  if (num >= 1_000_000_000) {
-    return (num / 1_000_000_000).toFixed(2) + 'B';
-  }
-  if (num >= 1_000_000) {
-    return (num / 1_000_000).toFixed(2) + 'M';
-  }
-  if (num >= 1_000) {
-    return (num / 1_000).toFixed(2) + 'K';
-  }
-  return num.toLocaleString('en-US');
-};
-
 interface StatBlockProps {
   label: string;
   value: string | number;
@@ -32,18 +19,18 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-6 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary min-w-[180px]">
-    <div className="text-xs font-orbitron text-accent mb-2 uppercase tracking-widest">
+  <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary flex-1 min-w-[280px] max-w-[320px]">
+    <div className="text-xs font-orbitron text-accent mb-2 uppercase tracking-widest text-center">
       {label}
     </div>
-    <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary">
+    <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
         value
       )}
     </div>
-    <div className="text-xs text-muted-foreground mt-2 font-play">
+    <div className="text-xs text-muted-foreground mt-3 font-play text-center">
       {subtitle}
     </div>
   </div>
@@ -110,7 +97,7 @@ export const AnimatedCounter = () => {
           {/* SIZE Block */}
           <StatBlock
             label="Size"
-            value={formatLargeNumber(particles)}
+            value={formatNumber(particles)}
             subtitle="total particles"
             isLoading={isLoading}
           />
@@ -156,7 +143,7 @@ export const AnimatedCounter = () => {
           {/* QUALITY Block */}
           <StatBlock
             label="Quality"
-            value={formatLargeNumber(negentropy)}
+            value={formatNumber(negentropy)}
             subtitle="negentropy"
             isLoading={isLoading}
           />
