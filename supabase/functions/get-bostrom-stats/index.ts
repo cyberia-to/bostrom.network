@@ -10,28 +10,51 @@ Deno.serve(async (req) => {
   }
 
   try {
-    console.log('Fetching Bostrom graph stats...');
+    console.log('Fetching Bostrom graph stats and negentropy...');
     
-    const response = await fetch(
-      'https://lcd.bostrom.cybernode.ai/cyber/graph/v1beta1/graph_stats',
-      {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      }
-    );
+    // Fetch both endpoints in parallel
+    const [graphResponse, negentropyResponse] = await Promise.all([
+      fetch(
+        'https://lcd.bostrom.cybernode.ai/cyber/graph/v1beta1/graph_stats',
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
+      ),
+      fetch(
+        'https://lcd.bostrom.cybernode.ai/cyber/rank/v1beta1/negentropy',
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
+      ),
+    ]);
 
-    if (!response.ok) {
-      console.error('Bostrom API error:', response.status, response.statusText);
-      throw new Error(`Bostrom API responded with status ${response.status}`);
+    if (!graphResponse.ok) {
+      console.error('Bostrom graph API error:', graphResponse.status, graphResponse.statusText);
+      throw new Error(`Bostrom graph API responded with status ${graphResponse.status}`);
     }
 
-    const data = await response.json();
-    console.log('Bostrom stats received:', data);
+    if (!negentropyResponse.ok) {
+      console.error('Bostrom negentropy API error:', negentropyResponse.status, negentropyResponse.statusText);
+      throw new Error(`Bostrom negentropy API responded with status ${negentropyResponse.status}`);
+    }
 
-    const particles = parseInt(data.particles, 10);
-    const cyberlinks = parseInt(data.cyberlinks, 10);
+    const [graphData, negentropyData] = await Promise.all([
+      graphResponse.json(),
+      negentropyResponse.json(),
+    ]);
+    
+    console.log('Bostrom stats received:', graphData);
+    console.log('Negentropy received:', negentropyData);
+
+    const particles = parseInt(graphData.particles, 10);
+    const cyberlinks = parseInt(graphData.cyberlinks, 10);
+    const negentropy = parseInt(negentropyData.negentropy, 10);
     
     // Speed calculation: total particles / 50 seconds (10 blocks)
     const weightsPerSecond = Math.round(particles / 50);
@@ -40,6 +63,7 @@ Deno.serve(async (req) => {
     const result = {
       particles,
       cyberlinks,
+      negentropy,
       weightsPerSecond,
       weightsPerMinute,
     };

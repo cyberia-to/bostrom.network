@@ -11,6 +11,44 @@ const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
 };
 
+const formatLargeNumber = (num: number): string => {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(2) + 'B';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(2) + 'M';
+  }
+  if (num >= 1_000) {
+    return (num / 1_000).toFixed(2) + 'K';
+  }
+  return num.toLocaleString('en-US');
+};
+
+interface StatBlockProps {
+  label: string;
+  value: string | number;
+  subtitle: string;
+  isLoading?: boolean;
+}
+
+const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
+  <div className="p-6 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary min-w-[180px]">
+    <div className="text-xs font-orbitron text-accent mb-2 uppercase tracking-widest">
+      {label}
+    </div>
+    <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary">
+      {isLoading ? (
+        <span className="animate-pulse">...</span>
+      ) : (
+        value
+      )}
+    </div>
+    <div className="text-xs text-muted-foreground mt-2 font-play">
+      {subtitle}
+    </div>
+  </div>
+);
+
 export const AnimatedCounter = () => {
   const { count } = useWeightCounter();
   const { data: bostromStats, isLoading } = useBostromStats();
@@ -53,7 +91,8 @@ export const AnimatedCounter = () => {
 
   // Use real data or fallback to defaults
   const weightsPerSecond = bostromStats?.weightsPerSecond ?? 70000;
-  const weightsPerMinute = bostromStats?.weightsPerMinute ?? 4200000;
+  const particles = bostromStats?.particles ?? 0;
+  const negentropy = bostromStats?.negentropy ?? 0;
 
   return (
     <section className="py-16 relative overflow-hidden">
@@ -66,10 +105,19 @@ export const AnimatedCounter = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center"
+          className="flex flex-col md:flex-row items-center justify-center gap-6"
         >
-          <div className="inline-block p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary">
-            <div className="text-xs font-orbitron text-accent mb-2 uppercase tracking-widest">
+          {/* SIZE Block */}
+          <StatBlock
+            label="Size"
+            value={formatLargeNumber(particles)}
+            subtitle="total particles"
+            isLoading={isLoading}
+          />
+          
+          {/* SPEED Block (main counter) */}
+          <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary">
+            <div className="text-xs font-orbitron text-accent mb-2 uppercase tracking-widest text-center">
               Speed
             </div>
             
@@ -93,7 +141,7 @@ export const AnimatedCounter = () => {
               })}
             </div>
             
-            <div className="text-xs text-muted-foreground mt-3 font-play">
+            <div className="text-xs text-muted-foreground mt-3 font-play text-center">
               {isLoading ? (
                 <span className="animate-pulse">Loading stats...</span>
               ) : (
@@ -104,6 +152,14 @@ export const AnimatedCounter = () => {
             {/* Convergence visualization */}
             <ConvergenceGraph progress={progress} />
           </div>
+          
+          {/* QUALITY Block */}
+          <StatBlock
+            label="Quality"
+            value={formatLargeNumber(negentropy)}
+            subtitle="negentropy"
+            isLoading={isLoading}
+          />
         </motion.div>
       </div>
     </section>
