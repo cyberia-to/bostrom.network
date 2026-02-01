@@ -448,15 +448,6 @@ export const CyberlinkVisualizer = () => {
               style={{ background: 'transparent' }}
             />
             
-            {/* Live counter overlay */}
-            <div className="absolute top-4 left-4 bg-card/80 backdrop-blur-sm rounded-lg px-4 py-2 border border-primary/30">
-              <div className="text-xs text-muted-foreground">
-                {isCounterRunning ? 'Rebalancing...' : 'Ready'}
-              </div>
-              <div className="text-lg font-orbitron text-primary text-glow-primary tabular-nums">
-                {linkCount.toLocaleString()}
-              </div>
-            </div>
 
             {/* Processing overlay */}
             <AnimatePresence>
