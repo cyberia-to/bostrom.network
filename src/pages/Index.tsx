@@ -1,8 +1,8 @@
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
-import { CyberlinkVisualizer } from '@/components/CyberlinkVisualizer';
+// import { CyberlinkVisualizer } from '@/components/CyberlinkVisualizer';
 import { AnimatedCounter } from '@/components/AnimatedCounter';
-import { Features } from '@/components/Features';
+// import { Features } from '@/components/Features';
 import { TokenSection } from '@/components/TokenSection';
 import { Ecosystem } from '@/components/Ecosystem';
 import { Footer } from '@/components/Footer';
@@ -14,9 +14,9 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        <CyberlinkVisualizer />
+        {/* <CyberlinkVisualizer /> */}
         <AnimatedCounter />
-        <Features />
+        {/* <Features /> */}
         <TokenSection />
         <Ecosystem />
       </main>
