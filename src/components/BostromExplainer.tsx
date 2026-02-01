@@ -84,7 +84,7 @@ export const BostromExplainer = () => {
                 <div className="w-2.5 h-2.5 rounded-full bg-primary/80" />
               </div>
               <span className="text-xs font-orbitron text-primary/60 ml-2 tracking-wider">
-                BOSTROM://CORE_MANIFESTO.SYS
+                BOSTROM://CORE_FEATURES.SYS
               </span>
               <div className="ml-auto flex items-center gap-2">
                 <span className="text-[10px] font-mono text-primary/40 animate-pulse">● LIVE</span>
