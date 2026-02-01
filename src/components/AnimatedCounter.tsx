@@ -1,37 +1,34 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
 import { ConvergenceGraph } from './ConvergenceGraph';
+import { useMemo } from 'react';
 
 const MAX_COUNT = 3_000_000;
-const TOTAL_DIGITS = 9; // Maximum digits for 3,000,000 formatted: "3,000,000"
+const DIGIT_SLOTS = 7; // Fixed number of digit slots
 
 interface DigitSlotProps {
   char: string;
-  index: number;
 }
 
-const DigitSlot = ({ char, index }: DigitSlotProps) => {
+const DigitSlot = ({ char }: DigitSlotProps) => {
   const isComma = char === ',';
   
   return (
     <span 
-      className={`inline-block ${isComma ? 'w-[0.3em]' : 'w-[0.6em]'} text-center relative overflow-hidden`}
+      className={`inline-flex items-center justify-center ${isComma ? 'w-[0.35em]' : 'w-[0.65em]'} h-[1.2em] overflow-hidden`}
     >
-      <AnimatePresence mode="popLayout" initial={false}>
-        <motion.span
-          key={`${index}-${char}`}
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 20, opacity: 0 }}
-          transition={{ 
-            duration: 0.15,
-            ease: "easeOut"
-          }}
-          className="inline-block"
-        >
-          {char}
-        </motion.span>
-      </AnimatePresence>
+      <motion.span
+        key={char}
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ 
+          duration: 0.12,
+          ease: "easeOut"
+        }}
+        className="inline-block"
+      >
+        {char}
+      </motion.span>
     </span>
   );
 };
@@ -39,15 +36,16 @@ const DigitSlot = ({ char, index }: DigitSlotProps) => {
 export const AnimatedCounter = () => {
   const { count } = useWeightCounter();
 
-  const formatNumber = (num: number): string => {
-    return num.toLocaleString('en-US');
-  };
-
   // Calculate progress towards 3M
   const progress = Math.min(count / MAX_COUNT, 1);
   
-  const formattedNumber = formatNumber(count);
-  const chars = formattedNumber.split('');
+  // Format with leading zeros to always have 7 digits
+  const chars = useMemo(() => {
+    const paddedNumber = count.toString().padStart(DIGIT_SLOTS, '0');
+    // Insert commas: X,XXX,XXX format
+    const formatted = paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return formatted.split('');
+  }, [count]);
 
   return (
     <section className="py-16 relative overflow-hidden">
@@ -68,7 +66,7 @@ export const AnimatedCounter = () => {
             </div>
             <div className="text-5xl md:text-7xl font-orbitron font-bold text-primary text-glow-primary tabular-nums flex justify-center items-center">
               {chars.map((char, index) => (
-                <DigitSlot key={index} char={char} index={index} />
+                <DigitSlot key={`slot-${index}`} char={char} />
               ))}
             </div>
             <div className="text-xs text-muted-foreground mt-3 font-play">
