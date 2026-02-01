@@ -551,7 +551,7 @@ export const CyberlinkVisualizer = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
-                  className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-card/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-[hsl(300,100%,60%)]/50"
+                  className="absolute bottom-4 left-0 right-0 mx-auto w-fit bg-card/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-[hsl(300,100%,60%)]/50"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2">
