@@ -495,6 +495,18 @@ export const CyberlinkVisualizer = () => {
 
     setIsProcessing(true);
     setShowResult(null);
+    
+    // Add new particle on the LEFT side of the graph (angle = PI)
+    const newParticle: LabeledParticle = {
+      id: `particle-${Date.now()}`,
+      label: toText.trim(),
+      x: 0,
+      y: 0,
+      angle: Math.PI, // Left side of the orbit
+      color: BG_COLORS[particlesRef.current.length % BG_COLORS.length],
+    };
+    particlesRef.current.push(newParticle);
+    
     reorganizeParticles();
     
     await new Promise(resolve => setTimeout(resolve, 2000));
