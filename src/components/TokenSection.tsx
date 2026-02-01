@@ -3,15 +3,38 @@ import bostromLogo from '@/assets/bostrom-logo.png';
 import { useBootPrice } from '@/hooks/useBootPrice';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
-const formatPrice = (price: number): string => {
-  if (price < 0.00001) {
-    return price.toExponential(2);
-  } else if (price < 0.01) {
-    return price.toFixed(6);
-  } else if (price < 1) {
-    return price.toFixed(4);
+// Format price with subscript notation for small numbers (CoinGecko style)
+// e.g., 0.00000000127 becomes 0.0₉127 where ₉ indicates 9 zeros
+const formatPriceWithSubscript = (price: number): React.ReactNode => {
+  if (price >= 0.01) {
+    return price < 1 ? price.toFixed(4) : price.toFixed(2);
   }
-  return price.toFixed(2);
+  
+  // Convert to string to count leading zeros after decimal
+  const priceStr = price.toFixed(20);
+  const match = priceStr.match(/^0\.(0+)(\d+)/);
+  
+  if (match) {
+    const zeroCount = match[1].length;
+    // Get significant digits (up to 4)
+    const significantDigits = match[2].slice(0, 4);
+    
+    // Unicode subscript digits
+    const subscriptDigits: Record<string, string> = {
+      '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+      '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉'
+    };
+    
+    const subscriptNumber = zeroCount.toString().split('').map(d => subscriptDigits[d]).join('');
+    
+    return (
+      <>
+        0.0<span className="text-[0.7em] align-baseline">{subscriptNumber}</span>{significantDigits}
+      </>
+    );
+  }
+  
+  return price.toExponential(2);
 };
 
 const formatLargeNumber = (num: number): string => {
@@ -157,7 +180,7 @@ export const TokenSection = () => {
                     {isLoading ? (
                       <span className="animate-pulse">Loading...</span>
                     ) : price !== null ? (
-                      `$${formatPrice(price)}`
+                      <>${formatPriceWithSubscript(price)}</>
                     ) : (
                       <span className="text-muted-foreground text-xl">Unavailable</span>
                     )}
