@@ -4,7 +4,6 @@ import { Menu, X } from 'lucide-react';
 import bostromLogo from '@/assets/bostrom-logo.png';
 
 const navLinks = [
-  { label: 'Features', href: '#features' },
   { label: '$BOOT', href: '#token' },
   { label: 'Ecosystem', href: '#ecosystem' },
   { label: 'Docs', href: 'https://cyber.page/bostrom', external: true },
