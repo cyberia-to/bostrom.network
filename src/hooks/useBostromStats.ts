@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 interface BostromStats {
   particles: number;
   cyberlinks: number;
+  negentropy: number;
   weightsPerSecond: number;
   weightsPerMinute: number;
 }
