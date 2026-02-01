@@ -31,6 +31,9 @@ export const AnimatedCounter = () => {
             <div className="text-xs text-muted-foreground mt-3 font-play">
               ~70,000 per second • ~3M per minute
             </div>
+            <div className="text-xs text-primary/60 mt-2 font-mono tracking-wide">
+              convergence
+            </div>
           </div>
         </motion.div>
       </div>
