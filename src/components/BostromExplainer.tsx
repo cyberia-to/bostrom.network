@@ -91,27 +91,30 @@ export const BostromExplainer = () => {
               </div>
             </div>
             
-            {/* Terminal Content */}
+            {/* Terminal Content - fixed height to prevent jumping */}
             <div className="p-6 md:p-8 space-y-6">
               {paragraphs.map((text, index) => (
-                <div key={index} className="flex gap-3">
+                <div key={index} className="flex gap-3 min-h-[3.5rem] md:min-h-[2rem]">
                   <span className="text-primary/50 font-mono text-sm shrink-0 mt-1">
                     [{String(index + 1).padStart(2, '0')}]
                   </span>
-                  <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-play min-h-[1.75rem]">
-                    {index <= currentLine ? (
-                      index === currentLine ? (
-                        <TypewriterText 
-                          text={text} 
-                          startDelay={0}
-                          onComplete={() => handleLineComplete(index)}
-                        />
-                      ) : (
-                        text
-                      )
-                    ) : (
-                      <span className="opacity-0">{text}</span>
-                    )}
+                  <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-play relative">
+                    {/* Invisible text to reserve space */}
+                    <span className="invisible">{text}</span>
+                    {/* Visible animated text overlay */}
+                    <span className="absolute inset-0">
+                      {index <= currentLine ? (
+                        index === currentLine ? (
+                          <TypewriterText 
+                            text={text} 
+                            startDelay={0}
+                            onComplete={() => handleLineComplete(index)}
+                          />
+                        ) : (
+                          text
+                        )
+                      ) : null}
+                    </span>
                   </p>
                 </div>
               ))}
