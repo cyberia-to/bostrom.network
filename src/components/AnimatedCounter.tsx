@@ -1,13 +1,19 @@
 import { motion } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
+import { useBostromStats } from '@/hooks/useBostromStats';
 import { ConvergenceGraph } from './ConvergenceGraph';
 import { useMemo } from 'react';
 
 const MAX_COUNT = 3_000_000;
 const DIGIT_SLOTS = 7; // Fixed number of digit slots
 
+const formatNumber = (num: number): string => {
+  return num.toLocaleString('en-US');
+};
+
 export const AnimatedCounter = () => {
   const { count } = useWeightCounter();
+  const { data: bostromStats, isLoading } = useBostromStats();
 
   // Calculate progress towards 3M
   const progress = Math.min(count / MAX_COUNT, 1);
@@ -19,6 +25,10 @@ export const AnimatedCounter = () => {
     const formatted = paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return formatted.split('');
   }, [count]);
+
+  // Use real data or fallback to defaults
+  const weightsPerSecond = bostromStats?.weightsPerSecond ?? 70000;
+  const weightsPerMinute = bostromStats?.weightsPerMinute ?? 4200000;
 
   return (
     <section className="py-16 relative overflow-hidden">
@@ -56,7 +66,11 @@ export const AnimatedCounter = () => {
             </div>
             
             <div className="text-xs text-muted-foreground mt-3 font-play">
-              ~70,000 per second • ~3M per minute
+              {isLoading ? (
+                <span className="animate-pulse">Loading stats...</span>
+              ) : (
+                <>~{formatNumber(weightsPerSecond)} per second • ~{formatNumber(Math.round(weightsPerMinute / 1000000))}M per minute</>
+              )}
             </div>
             
             {/* Convergence visualization */}
