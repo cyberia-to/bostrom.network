@@ -72,13 +72,6 @@ export const CyberlinkVisualizer = () => {
   const particlesRef = useRef<LabeledParticle[]>([...LABELED_PARTICLES]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const isRebalancingRef = useRef(false);
-  const linkAnimationRef = useRef<{
-    fromId: string;
-    toId: string;
-    progress: number; // 0 to 1
-    phase: 'drawing' | 'rebalancing';
-  } | null>(null);
-  const targetAnglesRef = useRef<Map<string, number>>(new Map());
   
   const [toText, setToText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -268,106 +261,18 @@ export const CyberlinkVisualizer = () => {
       const centerY = canvas.height / 2;
       const orbitRadius = Math.min(canvas.width, canvas.height) * 0.32;
       const particles = particlesRef.current;
+      const isRebalancing = isRebalancingRef.current;
 
       // Update particle positions
-      const linkAnim = linkAnimationRef.current;
-      const isRebalancing = linkAnim?.phase === 'rebalancing';
-      
       particles.forEach((p, i) => {
         if (isRebalancing) {
-          // Smoothly interpolate to target angle
-          const targetAngle = targetAnglesRef.current.get(p.id);
-          if (targetAngle !== undefined) {
-            // Normalize angles for smooth interpolation
-            let diff = targetAngle - p.angle;
-            while (diff > Math.PI) diff -= Math.PI * 2;
-            while (diff < -Math.PI) diff += Math.PI * 2;
-            p.angle += diff * 0.05; // Smooth easing
-          }
+          p.angle += 0.05 + Math.random() * 0.02;
         } else {
           p.angle += 0.002;
         }
         p.x = centerX + Math.cos(p.angle) * orbitRadius;
         p.y = centerY + Math.sin(p.angle) * orbitRadius;
       });
-
-      // Draw animated link being created
-      if (linkAnim && linkAnim.phase === 'drawing') {
-        const fromP = particles.find(p => p.id === linkAnim.fromId);
-        const toP = particles.find(p => p.id === linkAnim.toId);
-        
-        if (fromP && toP) {
-          const progress = linkAnim.progress;
-          
-          // Phase 1: Draw from source to center (0 to 0.5)
-          // Phase 2: Draw from center to target (0.5 to 1)
-          ctx.lineWidth = 3;
-          ctx.lineCap = 'round';
-          
-          if (progress <= 0.5) {
-            // Drawing from source to center
-            const segmentProgress = progress * 2;
-            const endX = fromP.x + (centerX - fromP.x) * segmentProgress;
-            const endY = fromP.y + (centerY - fromP.y) * segmentProgress;
-            
-            const gradient = ctx.createLinearGradient(fromP.x, fromP.y, endX, endY);
-            gradient.addColorStop(0, fromP.color);
-            gradient.addColorStop(1, 'hsl(300, 100%, 60%)');
-            
-            ctx.strokeStyle = gradient;
-            ctx.beginPath();
-            ctx.moveTo(fromP.x, fromP.y);
-            ctx.lineTo(endX, endY);
-            ctx.stroke();
-            
-            // Glowing particle at the end
-            const glowGradient = ctx.createRadialGradient(endX, endY, 0, endX, endY, 15);
-            glowGradient.addColorStop(0, 'hsl(300, 100%, 60%)');
-            glowGradient.addColorStop(0.5, 'hsla(300, 100%, 60%, 0.5)');
-            glowGradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = glowGradient;
-            ctx.beginPath();
-            ctx.arc(endX, endY, 15, 0, Math.PI * 2);
-            ctx.fill();
-          } else {
-            // First segment complete - draw it
-            const gradient1 = ctx.createLinearGradient(fromP.x, fromP.y, centerX, centerY);
-            gradient1.addColorStop(0, fromP.color);
-            gradient1.addColorStop(1, 'hsl(300, 100%, 60%)');
-            
-            ctx.strokeStyle = gradient1;
-            ctx.beginPath();
-            ctx.moveTo(fromP.x, fromP.y);
-            ctx.lineTo(centerX, centerY);
-            ctx.stroke();
-            
-            // Drawing from center to target
-            const segmentProgress = (progress - 0.5) * 2;
-            const endX = centerX + (toP.x - centerX) * segmentProgress;
-            const endY = centerY + (toP.y - centerY) * segmentProgress;
-            
-            const gradient2 = ctx.createLinearGradient(centerX, centerY, endX, endY);
-            gradient2.addColorStop(0, 'hsl(300, 100%, 60%)');
-            gradient2.addColorStop(1, toP.color);
-            
-            ctx.strokeStyle = gradient2;
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.lineTo(endX, endY);
-            ctx.stroke();
-            
-            // Glowing particle at the end
-            const glowGradient = ctx.createRadialGradient(endX, endY, 0, endX, endY, 15);
-            glowGradient.addColorStop(0, 'hsl(300, 100%, 60%)');
-            glowGradient.addColorStop(0.5, 'hsla(300, 100%, 60%, 0.5)');
-            glowGradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = glowGradient;
-            ctx.beginPath();
-            ctx.arc(endX, endY, 15, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-      }
 
       // Draw connections from particles to core
       particles.forEach((p) => {
@@ -422,7 +327,7 @@ export const CyberlinkVisualizer = () => {
         );
       }
 
-      // Draw labeled particles with star-like glow
+      // Draw labeled particles (small glow)
       const selected = selectedParticlesRef.current;
       particles.forEach((p) => {
         const size = 12;
@@ -446,16 +351,14 @@ export const CyberlinkVisualizer = () => {
           ctx.fill();
         }
 
-        // Star-like glow (outer soft glow like background stars)
-        const outerGlow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 4);
-        outerGlow.addColorStop(0, p.color);
-        outerGlow.addColorStop(0.2, p.color.replace(')', ', 0.4)').replace('hsl', 'hsla'));
-        outerGlow.addColorStop(0.5, p.color.replace(')', ', 0.15)').replace('hsl', 'hsla'));
-        outerGlow.addColorStop(1, 'transparent');
+        // Minimal glow
+        const glowGradient = ctx.createRadialGradient(p.x, p.y, size * 0.5, p.x, p.y, size * 1.5);
+        glowGradient.addColorStop(0, p.color.replace(')', ', 0.3)').replace('hsl', 'hsla'));
+        glowGradient.addColorStop(1, 'transparent');
         
-        ctx.fillStyle = outerGlow;
+        ctx.fillStyle = glowGradient;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, size * 4, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, size * 1.5, 0, Math.PI * 2);
         ctx.fill();
 
         // 3D sphere
@@ -513,90 +416,14 @@ export const CyberlinkVisualizer = () => {
     return () => clearInterval(interval);
   }, [isCounterRunning]);
 
-  const startLinkAnimation = useCallback((fromId: string, toId: string) => {
-    linkAnimationRef.current = {
-      fromId,
-      toId,
-      progress: 0,
-      phase: 'drawing'
-    };
-
-    // Animate the drawing phase
-    const drawDuration = 1500; // ms
-    const startTime = Date.now();
-    
-    const animateDraw = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / drawDuration, 1);
-      
-      if (linkAnimationRef.current) {
-        linkAnimationRef.current.progress = progress;
-      }
-      
-      if (progress < 1) {
-        requestAnimationFrame(animateDraw);
-      } else {
-        // Drawing complete, start rebalancing
-        linkAnimationRef.current = {
-          fromId,
-          toId,
-          progress: 0,
-          phase: 'rebalancing'
-        };
-        
-        // Calculate target angles for equal distribution
-        const particles = particlesRef.current;
-        const angleStep = (Math.PI * 2) / particles.length;
-        particles.forEach((p, i) => {
-          targetAnglesRef.current.set(p.id, -Math.PI / 2 + i * angleStep);
-        });
-        
-        // Stop rebalancing after 2 seconds
-        setTimeout(() => {
-          linkAnimationRef.current = null;
-        }, 2000);
-      }
-    };
-    
-    requestAnimationFrame(animateDraw);
-  }, []);
-
-  // Trigger rebalance without drawing animation
-  const triggerRebalance = useCallback(() => {
-    // Skip if already animating
-    if (linkAnimationRef.current) return;
-    
-    linkAnimationRef.current = {
-      fromId: '',
-      toId: '',
-      progress: 0,
-      phase: 'rebalancing'
-    };
-    
-    // Calculate target angles for equal distribution
-    const particles = particlesRef.current;
-    const angleStep = (Math.PI * 2) / particles.length;
-    particles.forEach((p, i) => {
-      targetAnglesRef.current.set(p.id, -Math.PI / 2 + i * angleStep);
-    });
-    
-    // Stop rebalancing after 2 seconds
-    setTimeout(() => {
-      linkAnimationRef.current = null;
-    }, 2000);
-  }, []);
-
-  // Auto-rebalance every minute
-  useEffect(() => {
-    const interval = setInterval(() => {
-      triggerRebalance();
-    }, 60000); // 60 seconds
-    
-    return () => clearInterval(interval);
-  }, [triggerRebalance]);
-
   const reorganizeParticles = useCallback(() => {
-    // This is now handled by startLinkAnimation
+    isRebalancingRef.current = true;
+    setLinkCount(0);
+    setIsCounterRunning(true);
+    
+    setTimeout(() => {
+      isRebalancingRef.current = false;
+    }, 2000);
   }, []);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -647,18 +474,13 @@ export const CyberlinkVisualizer = () => {
     );
 
     if (!exists) {
-      // Start the link animation
-      startLinkAnimation(from, to);
-      
-      // Add connection after drawing animation completes
-      setTimeout(() => {
-        const newConnection = { from, to };
-        setParticleConnections(prev => [...prev, newConnection]);
-      }, 1500);
+      const newConnection = { from, to };
+      setParticleConnections(prev => [...prev, newConnection]);
+      reorganizeParticles();
     }
 
     setSelectedParticles([]);
-  }, [selectedParticles, particleConnections, startLinkAnimation]);
+  }, [selectedParticles, particleConnections, reorganizeParticles]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -707,7 +529,7 @@ export const CyberlinkVisualizer = () => {
           <h2 className="text-3xl md:text-4xl font-orbitron font-bold text-glow-primary mb-4">
             Create Cyberlink
           </h2>
-          <p className="text-lg md:text-xl text-[hsl(180,100%,50%)] max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             Connect knowledge particles and watch the graph reorganize in real-time
           </p>
         </motion.div>
