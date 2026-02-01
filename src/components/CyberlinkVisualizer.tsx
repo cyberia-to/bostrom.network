@@ -288,24 +288,6 @@ export const CyberlinkVisualizer = () => {
         ctx.stroke();
       });
 
-      // Draw inter-particle connections
-      connectionsRef.current.forEach((conn) => {
-        const fromP = particles.find(p => p.id === conn.from);
-        const toP = particles.find(p => p.id === conn.to);
-        if (!fromP || !toP) return;
-
-        const gradient = ctx.createLinearGradient(fromP.x, fromP.y, toP.x, toP.y);
-        gradient.addColorStop(0, fromP.color.replace(')', ', 0.6)').replace('hsl', 'hsla'));
-        gradient.addColorStop(1, toP.color.replace(')', ', 0.6)').replace('hsl', 'hsla'));
-        
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(fromP.x, fromP.y);
-        ctx.lineTo(toP.x, toP.y);
-        ctx.stroke();
-      });
-
       // Draw core (Bostrom logo)
       const coreSize = Math.min(canvas.width, canvas.height) * 0.18;
       if (coreImage.complete) {
@@ -326,6 +308,24 @@ export const CyberlinkVisualizer = () => {
           coreSize
         );
       }
+
+      // Draw inter-particle connections (after core so they're visible)
+      connectionsRef.current.forEach((conn) => {
+        const fromP = particles.find(p => p.id === conn.from);
+        const toP = particles.find(p => p.id === conn.to);
+        if (!fromP || !toP) return;
+
+        const gradient = ctx.createLinearGradient(fromP.x, fromP.y, toP.x, toP.y);
+        gradient.addColorStop(0, fromP.color.replace(')', ', 0.8)').replace('hsl', 'hsla'));
+        gradient.addColorStop(1, toP.color.replace(')', ', 0.8)').replace('hsl', 'hsla'));
+        
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(fromP.x, fromP.y);
+        ctx.lineTo(toP.x, toP.y);
+        ctx.stroke();
+      });
 
       // Draw labeled particles (small glow)
       const selected = selectedParticlesRef.current;
