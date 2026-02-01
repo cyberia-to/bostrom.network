@@ -51,8 +51,13 @@ const LABELED_PARTICLES: LabeledParticle[] = [
   { id: 'neon', label: 'neon', x: 0, y: 0, angle: -Math.PI / 2 + (8 * Math.PI / 5), color: 'hsl(30, 100%, 50%)' },
 ];
 
-// Connections: all to core, plus neon→pink, angle→shape
-const PARTICLE_CONNECTIONS = [
+interface ParticleConnection {
+  from: string;
+  to: string;
+}
+
+// Initial connections: neon→pink, angle→shape
+const INITIAL_CONNECTIONS: ParticleConnection[] = [
   { from: 'neon', to: 'pink' },
   { from: 'angle', to: 'shape' },
 ];
@@ -74,6 +79,20 @@ export const CyberlinkVisualizer = () => {
   const [isCounterRunning, setIsCounterRunning] = useState(false);
   const [results, setResults] = useState<CyberlinkResult[]>([]);
   const [showResult, setShowResult] = useState<boolean | null>(null);
+  const [selectedParticles, setSelectedParticles] = useState<string[]>([]);
+  const [particleConnections, setParticleConnections] = useState<ParticleConnection[]>([...INITIAL_CONNECTIONS]);
+  const connectionsRef = useRef<ParticleConnection[]>([...INITIAL_CONNECTIONS]);
+  const selectedParticlesRef = useRef<string[]>([]);
+
+  // Sync connections ref with state
+  useEffect(() => {
+    connectionsRef.current = particleConnections;
+  }, [particleConnections]);
+
+  // Sync selected particles ref with state
+  useEffect(() => {
+    selectedParticlesRef.current = selectedParticles;
+  }, [selectedParticles]);
 
   // Initialize background nodes (like KnowledgeGraph)
   useEffect(() => {
@@ -269,8 +288,8 @@ export const CyberlinkVisualizer = () => {
         ctx.stroke();
       });
 
-      // Draw inter-particle connections (neon→pink, angle→shape)
-      PARTICLE_CONNECTIONS.forEach((conn) => {
+      // Draw inter-particle connections
+      connectionsRef.current.forEach((conn) => {
         const fromP = particles.find(p => p.id === conn.from);
         const toP = particles.find(p => p.id === conn.to);
         if (!fromP || !toP) return;
@@ -309,8 +328,28 @@ export const CyberlinkVisualizer = () => {
       }
 
       // Draw labeled particles (small glow)
+      const selected = selectedParticlesRef.current;
       particles.forEach((p) => {
         const size = 12;
+        const isSelected = selected.includes(p.id);
+
+        // Selection ring (if selected)
+        if (isSelected) {
+          ctx.strokeStyle = 'hsl(300, 100%, 60%)';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, size + 6, 0, Math.PI * 2);
+          ctx.stroke();
+          
+          // Pulsing glow for selected
+          const pulseGlow = ctx.createRadialGradient(p.x, p.y, size, p.x, p.y, size * 2.5);
+          pulseGlow.addColorStop(0, 'hsla(300, 100%, 60%, 0.4)');
+          pulseGlow.addColorStop(1, 'transparent');
+          ctx.fillStyle = pulseGlow;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, size * 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         // Minimal glow
         const glowGradient = ctx.createRadialGradient(p.x, p.y, size * 0.5, p.x, p.y, size * 1.5);
@@ -339,7 +378,7 @@ export const CyberlinkVisualizer = () => {
         // Label
         ctx.font = '11px Orbitron, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = isSelected ? 'hsl(300, 100%, 60%)' : '#ffffff';
         ctx.fillText(p.label, p.x, p.y + size + 16);
       });
 
@@ -386,6 +425,62 @@ export const CyberlinkVisualizer = () => {
       isRebalancingRef.current = false;
     }, 2000);
   }, []);
+
+  const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = graphCanvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const clickX = (e.clientX - rect.left) * scaleX;
+    const clickY = (e.clientY - rect.top) * scaleY;
+
+    const particles = particlesRef.current;
+    const clickRadius = 25; // Hit area for particles
+
+    // Check if clicked on a particle
+    for (const p of particles) {
+      const dist = Math.sqrt((clickX - p.x) ** 2 + (clickY - p.y) ** 2);
+      if (dist < clickRadius) {
+        setSelectedParticles(prev => {
+          if (prev.includes(p.id)) {
+            // Deselect if already selected
+            return prev.filter(id => id !== p.id);
+          } else if (prev.length < 2) {
+            // Add to selection (max 2)
+            return [...prev, p.id];
+          } else {
+            // Replace first selection
+            return [prev[1], p.id];
+          }
+        });
+        return;
+      }
+    }
+
+    // Clicked on empty space - clear selection
+    setSelectedParticles([]);
+  }, []);
+
+  const handleCreateLink = useCallback(() => {
+    if (selectedParticles.length !== 2) return;
+
+    const [from, to] = selectedParticles;
+    
+    // Check if connection already exists
+    const exists = particleConnections.some(
+      conn => (conn.from === from && conn.to === to) || (conn.from === to && conn.to === from)
+    );
+
+    if (!exists) {
+      const newConnection = { from, to };
+      setParticleConnections(prev => [...prev, newConnection]);
+      reorganizeParticles();
+    }
+
+    setSelectedParticles([]);
+  }, [selectedParticles, particleConnections, reorganizeParticles]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -444,9 +539,51 @@ export const CyberlinkVisualizer = () => {
           <div className="relative aspect-square max-h-[500px] rounded-xl border border-primary/30 overflow-hidden box-glow-primary bg-background/50 backdrop-blur-sm">
             <canvas
               ref={graphCanvasRef}
-              className="w-full h-full"
+              className="w-full h-full cursor-pointer"
               style={{ background: 'transparent' }}
+              onClick={handleCanvasClick}
             />
+
+            {/* Selected particles info & create link button */}
+            <AnimatePresence>
+              {selectedParticles.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-card/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-[hsl(300,100%,60%)]/50"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-[hsl(300,100%,60%)] font-orbitron">
+                        {selectedParticles[0]}
+                      </span>
+                      {selectedParticles.length === 2 && (
+                        <>
+                          <Link2 className="w-4 h-4 text-[hsl(300,100%,60%)]" />
+                          <span className="text-sm text-[hsl(300,100%,60%)] font-orbitron">
+                            {selectedParticles[1]}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    {selectedParticles.length === 2 && (
+                      <Button
+                        size="sm"
+                        onClick={handleCreateLink}
+                        className="font-orbitron bg-[hsl(300,100%,60%)] hover:bg-[hsl(300,100%,50%)] text-white"
+                      >
+                        <Zap className="w-3 h-3 mr-1" />
+                        Cyberlink
+                      </Button>
+                    )}
+                  </div>
+                  {selectedParticles.length === 1 && (
+                    <p className="text-xs text-muted-foreground mt-1">Select another particle</p>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
             
 
             {/* Processing overlay */}
@@ -586,7 +723,7 @@ export const CyberlinkVisualizer = () => {
               <div className="bg-card/30 rounded-lg p-4 border border-secondary/30">
                 <div className="text-xs text-muted-foreground mb-1">Connections</div>
                 <div className="font-orbitron text-secondary text-glow-secondary">
-                  {5 + PARTICLE_CONNECTIONS.length}
+                  {5 + particleConnections.length}
                 </div>
               </div>
               <div className="bg-card/30 rounded-lg p-4 border border-accent/30">
