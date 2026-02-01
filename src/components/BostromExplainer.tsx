@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
 
 const paragraphs = [
   "Transformers learn where to direct attention. Billions of hidden weights determine information flow. After training, they freeze forever.",
@@ -8,9 +9,57 @@ const paragraphs = [
   "One link reshapes the entire model. Bostrom is purpose-built for continuous collective learning and an order of magnitude faster than any existing blockchain."
 ];
 
-export const BostromExplainer = () => {
+const TypewriterText = ({ text, startDelay, onComplete }: { text: string; startDelay: number; onComplete?: () => void }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let currentIndex = 0;
+      const interval = setInterval(() => {
+        if (currentIndex <= text.length) {
+          setDisplayedText(text.slice(0, currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(interval);
+          setIsComplete(true);
+          onComplete?.();
+        }
+      }, 8); // Super fast typing - 8ms per character
+
+      return () => clearInterval(interval);
+    }, startDelay);
+
+    return () => clearTimeout(timer);
+  }, [text, startDelay, onComplete]);
+
   return (
-    <section className="py-8 md:py-12 bg-background relative overflow-hidden">
+    <span>
+      {displayedText}
+      {!isComplete && <span className="inline-block w-2 h-4 bg-primary animate-pulse ml-0.5" />}
+    </span>
+  );
+};
+
+export const BostromExplainer = () => {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const [currentLine, setCurrentLine] = useState(-1);
+
+  useEffect(() => {
+    if (isInView && currentLine === -1) {
+      setCurrentLine(0);
+    }
+  }, [isInView, currentLine]);
+
+  const handleLineComplete = (index: number) => {
+    if (index < paragraphs.length - 1) {
+      setTimeout(() => setCurrentLine(index + 1), 150);
+    }
+  };
+
+  return (
+    <section ref={sectionRef} className="py-8 md:py-12 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
         {/* Terminal Container */}
         <motion.div
@@ -45,21 +94,26 @@ export const BostromExplainer = () => {
             {/* Terminal Content */}
             <div className="p-6 md:p-8 space-y-6">
               {paragraphs.map((text, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex gap-3"
-                >
+                <div key={index} className="flex gap-3">
                   <span className="text-primary/50 font-mono text-sm shrink-0 mt-1">
                     [{String(index + 1).padStart(2, '0')}]
                   </span>
-                  <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-play">
-                    {text}
+                  <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-play min-h-[1.75rem]">
+                    {index <= currentLine ? (
+                      index === currentLine ? (
+                        <TypewriterText 
+                          text={text} 
+                          startDelay={0}
+                          onComplete={() => handleLineComplete(index)}
+                        />
+                      ) : (
+                        text
+                      )
+                    ) : (
+                      <span className="opacity-0">{text}</span>
+                    )}
                   </p>
-                </motion.div>
+                </div>
               ))}
               
               {/* Blinking cursor */}
