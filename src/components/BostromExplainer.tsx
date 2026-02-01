@@ -25,7 +25,7 @@ const TypewriterText = ({ text, startDelay, onComplete }: { text: string; startD
           setIsComplete(true);
           onComplete?.();
         }
-      }, 8); // Super fast typing - 8ms per character
+      }, 5); // Super fast typing - 5ms per character
 
       return () => clearInterval(interval);
     }, startDelay);
