@@ -628,28 +628,6 @@ export const CyberlinkVisualizer = () => {
               )}
             </AnimatePresence>
 
-            {/* Result overlay */}
-            <AnimatePresence>
-              {showResult !== null && !isProcessing && (
-                <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                  className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-card/90 backdrop-blur-sm rounded-lg px-6 py-3 border border-primary/30"
-                >
-                  <div className="flex items-center gap-3">
-                    {showResult ? (
-                      <CheckCircle className="w-8 h-8 text-primary" />
-                    ) : (
-                      <XCircle className="w-8 h-8 text-destructive" />
-                    )}
-                    <span className={`font-orbitron text-xl ${showResult ? 'text-primary text-glow-primary' : 'text-destructive'}`}>
-                      {showResult ? 'TRUE' : 'FALSE'}
-                    </span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Input Form */}
