@@ -1,26 +1,8 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useWeightCounter } from '@/hooks/useWeightCounter';
 
 export const AnimatedCounter = () => {
-  const [count, setCount] = useState(0);
-  const maxCount = 3000000;
-  const durationMs = 60000; // 1 minute
-  const intervalMs = 16; // ~60fps
-  const incrementPerInterval = Math.round(maxCount / (durationMs / intervalMs));
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCount(prev => {
-        const next = prev + incrementPerInterval;
-        if (next >= maxCount) {
-          return 0;
-        }
-        return next;
-      });
-    }, intervalMs);
-
-    return () => clearInterval(interval);
-  }, [incrementPerInterval]);
+  const { count } = useWeightCounter();
 
   const formatNumber = (num: number): string => {
     return num.toLocaleString('en-US');

@@ -2,8 +2,9 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Zap, Link2, CheckCircle, XCircle } from 'lucide-react';
+import { Zap, Link2 } from 'lucide-react';
 import bostromLogo from '@/assets/bostrom-logo.png';
+import { triggerRebalance } from '@/hooks/useWeightCounter';
 
 interface BackgroundNode {
   x: number;
@@ -75,8 +76,6 @@ export const CyberlinkVisualizer = () => {
   
   const [toText, setToText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [linkCount, setLinkCount] = useState(0);
-  const [isCounterRunning, setIsCounterRunning] = useState(false);
   const [results, setResults] = useState<CyberlinkResult[]>([]);
   const [showResult, setShowResult] = useState<boolean | null>(null);
   const [selectedParticles, setSelectedParticles] = useState<string[]>([]);
@@ -397,29 +396,11 @@ export const CyberlinkVisualizer = () => {
     };
   }, []);
 
-  // Link counter
-  useEffect(() => {
-    if (!isCounterRunning) return;
-    
-    const interval = setInterval(() => {
-      setLinkCount(prev => {
-        const increment = Math.floor(Math.random() * 1200) + 800;
-        const next = prev + increment;
-        if (next >= 3000000) {
-          setIsCounterRunning(false);
-          return 3000000;
-        }
-        return next;
-      });
-    }, 16);
-    
-    return () => clearInterval(interval);
-  }, [isCounterRunning]);
-
   const reorganizeParticles = useCallback(() => {
     isRebalancingRef.current = true;
-    setLinkCount(0);
-    setIsCounterRunning(true);
+    
+    // Trigger global counter reset (syncs with AnimatedCounter)
+    triggerRebalance();
     
     // After animation, redistribute particles evenly around the orbit
     setTimeout(() => {
@@ -704,11 +685,7 @@ export const CyberlinkVisualizer = () => {
                       <span className="text-muted-foreground truncate flex-1">{r.from}</span>
                       <Link2 className="w-3 h-3 text-primary flex-shrink-0" />
                       <span className="text-muted-foreground truncate flex-1">{r.to}</span>
-                      {r.result ? (
-                        <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-                      ) : (
-                        <XCircle className="w-4 h-4 text-destructive flex-shrink-0" />
-                      )}
+                      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${r.result ? 'bg-primary' : 'bg-destructive'}`} />
                     </motion.div>
                   ))}
                 </div>
