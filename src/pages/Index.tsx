@@ -1,5 +1,6 @@
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
+import { BostromExplainer } from '@/components/BostromExplainer';
 // import { CyberlinkVisualizer } from '@/components/CyberlinkVisualizer';
 import { AnimatedCounter } from '@/components/AnimatedCounter';
 // import { Features } from '@/components/Features';
@@ -14,6 +15,7 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
+        <BostromExplainer />
         {/* <CyberlinkVisualizer /> */}
         <AnimatedCounter />
         {/* <Features /> */}
