@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const words = ['first', 'fastest', 'biggest'];
+const words = ['first', 'biggest', 'fastest'];
 const staticPart = 'on-chain collective model';
 const specialPhrase = { text: 'BIG BADASS GRAPH', duration: 30000 };
 
