@@ -72,6 +72,13 @@ export const CyberlinkVisualizer = () => {
   const particlesRef = useRef<LabeledParticle[]>([...LABELED_PARTICLES]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const isRebalancingRef = useRef(false);
+  const linkAnimationRef = useRef<{
+    fromId: string;
+    toId: string;
+    progress: number; // 0 to 1
+    phase: 'drawing' | 'rebalancing';
+  } | null>(null);
+  const targetAnglesRef = useRef<Map<string, number>>(new Map());
   
   const [toText, setToText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -261,18 +268,106 @@ export const CyberlinkVisualizer = () => {
       const centerY = canvas.height / 2;
       const orbitRadius = Math.min(canvas.width, canvas.height) * 0.32;
       const particles = particlesRef.current;
-      const isRebalancing = isRebalancingRef.current;
 
       // Update particle positions
+      const linkAnim = linkAnimationRef.current;
+      const isRebalancing = linkAnim?.phase === 'rebalancing';
+      
       particles.forEach((p, i) => {
         if (isRebalancing) {
-          p.angle += 0.05 + Math.random() * 0.02;
+          // Smoothly interpolate to target angle
+          const targetAngle = targetAnglesRef.current.get(p.id);
+          if (targetAngle !== undefined) {
+            // Normalize angles for smooth interpolation
+            let diff = targetAngle - p.angle;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            p.angle += diff * 0.05; // Smooth easing
+          }
         } else {
           p.angle += 0.002;
         }
         p.x = centerX + Math.cos(p.angle) * orbitRadius;
         p.y = centerY + Math.sin(p.angle) * orbitRadius;
       });
+
+      // Draw animated link being created
+      if (linkAnim && linkAnim.phase === 'drawing') {
+        const fromP = particles.find(p => p.id === linkAnim.fromId);
+        const toP = particles.find(p => p.id === linkAnim.toId);
+        
+        if (fromP && toP) {
+          const progress = linkAnim.progress;
+          
+          // Phase 1: Draw from source to center (0 to 0.5)
+          // Phase 2: Draw from center to target (0.5 to 1)
+          ctx.lineWidth = 3;
+          ctx.lineCap = 'round';
+          
+          if (progress <= 0.5) {
+            // Drawing from source to center
+            const segmentProgress = progress * 2;
+            const endX = fromP.x + (centerX - fromP.x) * segmentProgress;
+            const endY = fromP.y + (centerY - fromP.y) * segmentProgress;
+            
+            const gradient = ctx.createLinearGradient(fromP.x, fromP.y, endX, endY);
+            gradient.addColorStop(0, fromP.color);
+            gradient.addColorStop(1, 'hsl(300, 100%, 60%)');
+            
+            ctx.strokeStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(fromP.x, fromP.y);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+            
+            // Glowing particle at the end
+            const glowGradient = ctx.createRadialGradient(endX, endY, 0, endX, endY, 15);
+            glowGradient.addColorStop(0, 'hsl(300, 100%, 60%)');
+            glowGradient.addColorStop(0.5, 'hsla(300, 100%, 60%, 0.5)');
+            glowGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = glowGradient;
+            ctx.beginPath();
+            ctx.arc(endX, endY, 15, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            // First segment complete - draw it
+            const gradient1 = ctx.createLinearGradient(fromP.x, fromP.y, centerX, centerY);
+            gradient1.addColorStop(0, fromP.color);
+            gradient1.addColorStop(1, 'hsl(300, 100%, 60%)');
+            
+            ctx.strokeStyle = gradient1;
+            ctx.beginPath();
+            ctx.moveTo(fromP.x, fromP.y);
+            ctx.lineTo(centerX, centerY);
+            ctx.stroke();
+            
+            // Drawing from center to target
+            const segmentProgress = (progress - 0.5) * 2;
+            const endX = centerX + (toP.x - centerX) * segmentProgress;
+            const endY = centerY + (toP.y - centerY) * segmentProgress;
+            
+            const gradient2 = ctx.createLinearGradient(centerX, centerY, endX, endY);
+            gradient2.addColorStop(0, 'hsl(300, 100%, 60%)');
+            gradient2.addColorStop(1, toP.color);
+            
+            ctx.strokeStyle = gradient2;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+            
+            // Glowing particle at the end
+            const glowGradient = ctx.createRadialGradient(endX, endY, 0, endX, endY, 15);
+            glowGradient.addColorStop(0, 'hsl(300, 100%, 60%)');
+            glowGradient.addColorStop(0.5, 'hsla(300, 100%, 60%, 0.5)');
+            glowGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = glowGradient;
+            ctx.beginPath();
+            ctx.arc(endX, endY, 15, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
 
       // Draw connections from particles to core
       particles.forEach((p) => {
@@ -416,14 +511,56 @@ export const CyberlinkVisualizer = () => {
     return () => clearInterval(interval);
   }, [isCounterRunning]);
 
-  const reorganizeParticles = useCallback(() => {
-    isRebalancingRef.current = true;
-    setLinkCount(0);
-    setIsCounterRunning(true);
+  const startLinkAnimation = useCallback((fromId: string, toId: string) => {
+    linkAnimationRef.current = {
+      fromId,
+      toId,
+      progress: 0,
+      phase: 'drawing'
+    };
+
+    // Animate the drawing phase
+    const drawDuration = 1500; // ms
+    const startTime = Date.now();
     
-    setTimeout(() => {
-      isRebalancingRef.current = false;
-    }, 2000);
+    const animateDraw = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / drawDuration, 1);
+      
+      if (linkAnimationRef.current) {
+        linkAnimationRef.current.progress = progress;
+      }
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateDraw);
+      } else {
+        // Drawing complete, start rebalancing
+        linkAnimationRef.current = {
+          fromId,
+          toId,
+          progress: 0,
+          phase: 'rebalancing'
+        };
+        
+        // Calculate target angles for equal distribution
+        const particles = particlesRef.current;
+        const angleStep = (Math.PI * 2) / particles.length;
+        particles.forEach((p, i) => {
+          targetAnglesRef.current.set(p.id, -Math.PI / 2 + i * angleStep);
+        });
+        
+        // Stop rebalancing after 2 seconds
+        setTimeout(() => {
+          linkAnimationRef.current = null;
+        }, 2000);
+      }
+    };
+    
+    requestAnimationFrame(animateDraw);
+  }, []);
+
+  const reorganizeParticles = useCallback(() => {
+    // This is now handled by startLinkAnimation
   }, []);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -474,13 +611,18 @@ export const CyberlinkVisualizer = () => {
     );
 
     if (!exists) {
-      const newConnection = { from, to };
-      setParticleConnections(prev => [...prev, newConnection]);
-      reorganizeParticles();
+      // Start the link animation
+      startLinkAnimation(from, to);
+      
+      // Add connection after drawing animation completes
+      setTimeout(() => {
+        const newConnection = { from, to };
+        setParticleConnections(prev => [...prev, newConnection]);
+      }, 1500);
     }
 
     setSelectedParticles([]);
-  }, [selectedParticles, particleConnections, reorganizeParticles]);
+  }, [selectedParticles, particleConnections, startLinkAnimation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
