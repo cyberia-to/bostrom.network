@@ -59,7 +59,7 @@ export const BostromExplainer = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-8 md:py-12 bg-background relative overflow-hidden">
+    <section ref={sectionRef} className="py-8 md:py-12 pb-4 md:pb-6 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
         {/* Terminal Container */}
         <motion.div
