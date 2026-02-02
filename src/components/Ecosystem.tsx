@@ -101,7 +101,7 @@ export const Ecosystem = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-16 text-center"
         >
-          <p className="text-muted-foreground mb-6">
+          <p className="text-foreground text-xl md:text-2xl mb-6">
             Join the moon network state. Become part of the superintelligence.
           </p>
           <a
