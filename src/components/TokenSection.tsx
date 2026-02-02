@@ -51,14 +51,7 @@ const formatLargeNumber = (num: number): string => {
 };
 
 const formatSupply = (num: number): string => {
-  if (num >= 1e12) {
-    return `${(num / 1e12).toFixed(0)}T`;
-  } else if (num >= 1e9) {
-    return `${(num / 1e9).toFixed(0)}B`;
-  } else if (num >= 1e6) {
-    return `${(num / 1e6).toFixed(0)}M`;
-  }
-  return num.toLocaleString();
+  return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
 };
 
 export const TokenSection = () => {
@@ -74,21 +67,28 @@ export const TokenSection = () => {
     isLoading 
   } = useBootPrice();
 
+  const BootLogo = () => (
+    <img src={bostromLogo} alt="BOOT" className="inline-block w-6 h-6 ml-2 align-middle" />
+  );
+
   const liveStats = [
     { 
       label: 'Market Cap', 
       value: marketCap !== null ? `$${formatLargeNumber(marketCap)}` : null,
       loading: isLoading,
+      showLogo: false,
     },
     { 
       label: 'Circulating Supply', 
-      value: circulatingSupply !== null ? `${formatSupply(circulatingSupply)} BOOT` : null,
+      value: circulatingSupply !== null ? formatSupply(circulatingSupply) : null,
       loading: isLoading,
+      showLogo: true,
     },
     { 
       label: 'Total Supply', 
-      value: totalSupply !== null ? `${formatSupply(totalSupply)} BOOT` : null,
+      value: totalSupply !== null ? formatSupply(totalSupply) : null,
       loading: isLoading,
+      showLogo: true,
     },
   ];
 
@@ -175,11 +175,14 @@ export const TokenSection = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="p-6 rounded-xl border border-border bg-card/50"
                 >
-                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary whitespace-nowrap">
+                  <div className="text-xl md:text-2xl font-orbitron font-bold text-primary flex items-center justify-center">
                     {stat.loading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
                     ) : stat.value !== null ? (
-                      stat.value
+                      <>
+                        {stat.value}
+                        {stat.showLogo && <BootLogo />}
+                      </>
                     ) : (
                       <span className="text-muted-foreground text-sm">N/A</span>
                     )}
