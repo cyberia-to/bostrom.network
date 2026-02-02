@@ -98,50 +98,26 @@ export const TokenSection = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Token Visual */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex justify-center"
-          >
-            <div className="relative">
-              {/* Orbital rings */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-80 h-80 border border-primary/20 rounded-full animate-spin" style={{ animationDuration: '20s' }} />
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-64 h-64 border border-secondary/20 rounded-full animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-48 h-48 border border-accent/20 rounded-full animate-spin" style={{ animationDuration: '10s' }} />
-              </div>
-              
-              {/* Main token */}
-              <div className="relative z-10 w-40 h-40 flex items-center justify-center">
-                <img
-                  src={bostromLogo}
-                  alt="BOOT Token"
-                  className="w-32 h-32 animate-pulse-glow"
-                />
-              </div>
-            </div>
-          </motion.div>
-
+        <div className="max-w-4xl mx-auto text-center">
           {/* Token Info */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl md:text-5xl font-orbitron font-bold mb-4">
-              <span className="text-primary text-glow-primary">$BOOT</span>
-              <span className="text-foreground"> TOKEN</span>
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <img
+                src={bostromLogo}
+                alt="BOOT Token"
+                className="w-16 h-16 animate-pulse-glow"
+              />
+              <h2 className="text-4xl md:text-5xl font-orbitron font-bold">
+                <span className="text-primary text-glow-primary">$BOOT</span>
+                <span className="text-foreground"> TOKEN</span>
+              </h2>
+            </div>
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               The native token of Bostrom network. Stake BOOT to secure the network, 
               mint hydrogen, and participate in governance.
             </p>
@@ -189,7 +165,7 @@ export const TokenSection = () => {
             </motion.div>
 
             {/* Live Stats Grid from CoinGecko */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               {liveStats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
@@ -199,7 +175,7 @@ export const TokenSection = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="p-6 rounded-xl border border-border bg-card/50"
                 >
-                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary">
+                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary whitespace-nowrap">
                     {stat.loading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
                     ) : stat.value !== null ? (
@@ -214,7 +190,7 @@ export const TokenSection = () => {
             </div>
 
             {/* CTA */}
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 justify-center">
               <a
                 href="https://cyb.ai/"
                 target="_blank"
