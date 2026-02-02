@@ -16,7 +16,7 @@ const ecosystemItems = [
   },
   {
     name: 'Pussy',
-    description: 'Fair token for learning incentives',
+    description: 'Independence sandbox network for play and discover',
     url: 'https://spacepussy.ai/',
     color: 'accent',
   },
