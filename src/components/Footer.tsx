@@ -9,7 +9,7 @@ const XIcon = ({ className }: { className?: string }) => (
 );
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com/cybercongress', label: 'GitHub' },
+  { icon: Github, href: 'https://github.com/cyberia-to/cyb-ts', label: 'GitHub' },
   { icon: Send, href: 'https://t.me/fuckgoogle', label: 'Telegram' },
   { icon: XIcon, href: 'https://x.com/live4cyb', label: 'X' },
 ];
