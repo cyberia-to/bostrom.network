@@ -96,16 +96,18 @@ export const AnimatedCounter = () => {
         >
           {/* Stats blocks row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1008px]">
-            {/* SIZE Block */}
-            <StatBlock
-              label="Size"
-              value={formatNumber(cyberlinks)}
-              subtitle="total cyberlinks"
-              isLoading={isLoading}
-            />
+            {/* SIZE Block - order 2 on mobile, 1 on desktop */}
+            <div className="order-2 sm:order-1">
+              <StatBlock
+                label="Size"
+                value={formatNumber(cyberlinks)}
+                subtitle="total cyberlinks"
+                isLoading={isLoading}
+              />
+            </div>
             
-            {/* SPEED Block */}
-            <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col">
+            {/* SPEED Block - order 1 on mobile (first), 2 on desktop (center) */}
+            <div className="order-1 sm:order-2 p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col">
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-auto uppercase tracking-widest text-center text-glow-accent pt-2">
                 Speed
               </div>
@@ -139,13 +141,15 @@ export const AnimatedCounter = () => {
               </div>
             </div>
             
-            {/* QUALITY Block */}
-            <StatBlock
-              label="Quality"
-              value={formatNumber(negentropy)}
-              subtitle="negentropy"
-              isLoading={isLoading}
-            />
+            {/* QUALITY Block - order 3 on both */}
+            <div className="order-3">
+              <StatBlock
+                label="Quality"
+                value={formatNumber(negentropy)}
+                subtitle="negentropy"
+                isLoading={isLoading}
+              />
+            </div>
           </div>
           
           {/* Convergence line spanning all blocks */}
