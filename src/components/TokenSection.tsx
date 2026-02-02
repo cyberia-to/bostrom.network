@@ -74,7 +74,7 @@ export const TokenSection = () => {
   const liveStats = [
     { 
       label: 'Market Cap', 
-      value: marketCap !== null ? `$${formatLargeNumber(marketCap)}` : null,
+      value: marketCap !== null ? `$${formatSupply(marketCap)}` : null,
       loading: isLoading,
       showLogo: false,
     },
