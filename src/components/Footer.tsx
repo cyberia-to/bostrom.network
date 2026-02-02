@@ -18,21 +18,16 @@ export const Footer = () => {
   return (
     <footer className="py-8 md:py-12 border-t border-border">
       <div className="container mx-auto px-6">
-        {/* Main row - all items aligned */}
-        <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-between">
+        {/* Top row - logo and social */}
+        <div className="flex items-center justify-between mb-4 md:mb-6">
           {/* Logo */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3">
             <img src={bostromLogo} alt="Bostrom" className="w-8 h-8" />
             <span className="font-orbitron font-bold text-primary">BOSTROM</span>
           </div>
 
-          {/* Tagline - centered and flexible */}
-          <p className="text-muted-foreground text-center text-sm md:text-base font-play flex-1 max-w-xl">
-            Named after Nick Bostrom. Building the bootloader of superintelligence.
-          </p>
-
           {/* Social Links */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3">
             {socialLinks.map((link) => (
               <a
                 key={link.label}
@@ -48,9 +43,14 @@ export const Footer = () => {
           </div>
         </div>
 
+        {/* Tagline */}
+        <p className="text-muted-foreground text-center text-sm font-play mb-6">
+          Named after Nick Bostrom. Building the bootloader of superintelligence.
+        </p>
+
         {/* Copyright */}
-        <div className="mt-6 md:mt-8 pt-6 md:pt-8 border-t border-border/50 text-center">
-          <p className="text-xs md:text-sm text-muted-foreground font-play">
+        <div className="pt-6 border-t border-border/50 text-center">
+          <p className="text-xs text-muted-foreground font-play">
             © {new Date().getFullYear()} Bostrom Network. Open source.
           </p>
         </div>
