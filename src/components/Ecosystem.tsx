@@ -18,7 +18,7 @@ const ecosystemItems = [
     name: 'Pussy',
     description: 'Independence sandbox network for play and discover',
     url: 'https://spacepussy.ai/',
-    color: 'accent',
+    color: 'pink',
   },
   {
     name: 'GitHub',
@@ -32,6 +32,7 @@ const colorStyles = {
   primary: 'border-primary/30 hover:border-primary group-hover:text-primary',
   secondary: 'border-secondary/30 hover:border-secondary group-hover:text-secondary',
   accent: 'border-accent/30 hover:border-accent group-hover:text-accent',
+  pink: 'border-pink-500/30 hover:border-pink-500 group-hover:text-pink-500',
 };
 
 export const Ecosystem = () => {
