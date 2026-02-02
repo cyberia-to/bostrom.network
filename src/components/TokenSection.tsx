@@ -182,7 +182,10 @@ export const TokenSection = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="p-6 rounded-xl border border-border bg-card/50"
                 >
-                  <h2 className="text-lg md:text-xl font-orbitron font-bold text-cyan-400 mb-2 drop-shadow-[0_0_10px_#00FFFF]">
+                  <h2 
+                    className="text-lg md:text-xl font-orbitron font-bold text-cyan-300 mb-2"
+                    style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
+                  >
                     {stat.label}
                   </h2>
                   <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center gap-3">
