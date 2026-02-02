@@ -19,8 +19,8 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 min-h-[160px] md:h-[200px] flex flex-col justify-center">
-    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-2 md:mb-4 uppercase tracking-widest text-center text-glow-accent">
+  <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 min-h-[160px] md:h-[200px] flex flex-col">
+    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-auto uppercase tracking-widest text-center text-glow-accent pt-2">
       {label}
     </div>
     <div className="text-[clamp(1rem,4vw,2.25rem)] font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap">
@@ -30,7 +30,7 @@ const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
         value
       )}
     </div>
-    <div className="text-[10px] sm:text-xs text-muted-foreground mt-2 md:mt-3 font-play text-center">
+    <div className="text-[10px] sm:text-xs text-muted-foreground mt-auto font-play text-center pb-2">
       {subtitle}
     </div>
   </div>
@@ -105,8 +105,8 @@ export const AnimatedCounter = () => {
             />
             
             {/* SPEED Block */}
-            <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col justify-center">
-              <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-2 md:mb-4 uppercase tracking-widest text-center text-glow-accent">
+            <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col">
+              <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-auto uppercase tracking-widest text-center text-glow-accent pt-2">
                 Speed
               </div>
               
@@ -130,7 +130,7 @@ export const AnimatedCounter = () => {
                 })}
               </div>
               
-              <div className="text-[10px] sm:text-xs text-muted-foreground mt-2 md:mt-3 font-play text-center">
+              <div className="text-[10px] sm:text-xs text-muted-foreground mt-auto font-play text-center pb-2">
                 {isLoading ? (
                   <span className="animate-pulse">Loading stats...</span>
                 ) : (
