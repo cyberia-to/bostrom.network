@@ -48,7 +48,7 @@ export const Ecosystem = () => {
           <h2 className="text-4xl md:text-5xl font-orbitron font-bold mb-4 text-glow-secondary text-secondary">
             ECOSYSTEM
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-foreground max-w-2xl mx-auto">
             Explore the interconnected network of superintelligence tools and resources
           </p>
         </motion.div>
