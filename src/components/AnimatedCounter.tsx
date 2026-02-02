@@ -19,18 +19,18 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[200px] flex flex-col justify-center">
-    <div className="text-lg md:text-xl font-orbitron text-accent mb-4 uppercase tracking-widest text-center text-glow-accent">
+  <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 min-h-[160px] md:h-[200px] flex flex-col justify-center">
+    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-2 md:mb-4 uppercase tracking-widest text-center text-glow-accent">
       {label}
     </div>
-    <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center">
+    <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center break-all">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
         value
       )}
     </div>
-    <div className="text-xs text-muted-foreground mt-3 font-play text-center">
+    <div className="text-[10px] sm:text-xs text-muted-foreground mt-2 md:mt-3 font-play text-center">
       {subtitle}
     </div>
   </div>
@@ -95,7 +95,7 @@ export const AnimatedCounter = () => {
           className="flex flex-col items-center gap-6"
         >
           {/* Stats blocks row */}
-          <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1008px]">
             {/* SIZE Block */}
             <StatBlock
               label="Size"
@@ -105,13 +105,13 @@ export const AnimatedCounter = () => {
             />
             
             {/* SPEED Block */}
-            <div className="p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full md:w-[320px] h-[200px] flex flex-col justify-center">
-              <div className="text-lg md:text-xl font-orbitron text-accent mb-4 uppercase tracking-widest text-center text-glow-accent">
+            <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col justify-center">
+              <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-2 md:mb-4 uppercase tracking-widest text-center text-glow-accent">
                 Speed
               </div>
               
               {/* Fixed slots container */}
-              <div className="flex justify-center items-center text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary">
+              <div className="flex justify-center items-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-orbitron font-bold text-primary text-glow-primary">
                 {chars.map((char, index) => {
                   const isLeadingZero = leadingZeroPositions.has(index);
                   return (
@@ -119,8 +119,8 @@ export const AnimatedCounter = () => {
                       key={index}
                       className={`flex items-center justify-center ${
                         char === ',' 
-                          ? 'w-[0.4em]' 
-                          : 'w-[0.75em]'
+                          ? 'w-[0.3em] sm:w-[0.4em]' 
+                          : 'w-[0.6em] sm:w-[0.75em]'
                       } ${isLeadingZero ? 'opacity-0' : ''}`}
                       style={{ height: '1.2em' }}
                     >
@@ -130,7 +130,7 @@ export const AnimatedCounter = () => {
                 })}
               </div>
               
-              <div className="text-xs text-muted-foreground mt-3 font-play text-center">
+              <div className="text-[10px] sm:text-xs text-muted-foreground mt-2 md:mt-3 font-play text-center">
                 {isLoading ? (
                   <span className="animate-pulse">Loading stats...</span>
                 ) : (

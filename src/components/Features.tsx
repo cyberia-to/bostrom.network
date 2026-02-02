@@ -262,7 +262,7 @@ const FeatureCard = ({ feature, index, isComplete }: { feature: Feature; index: 
   );
 
   const cardClasses = `
-    relative p-4 rounded-xl border-2 bg-card/50 backdrop-blur-sm
+    relative p-3 md:p-4 rounded-xl border-2 bg-card/50 backdrop-blur-sm
     transition-all duration-300 ${feature.url ? 'cursor-pointer' : 'cursor-default'}
     ${colorClasses[feature.color]}
     ${glowClasses[feature.color]}
@@ -331,7 +331,7 @@ export const Features = () => {
           </TabsList>
 
           <TabsContent value="done" className="mt-0">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-3 md:gap-4">
               {doneFeatures.map((feature, index) => (
                 <FeatureCard key={feature.title} feature={feature} index={index} isComplete={true} />
               ))}
@@ -339,7 +339,7 @@ export const Features = () => {
           </TabsContent>
 
           <TabsContent value="progress" className="mt-0">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
               {inProgressFeatures.map((feature, index) => (
                 <FeatureCard key={feature.title} feature={feature} index={index} isComplete={false} />
               ))}

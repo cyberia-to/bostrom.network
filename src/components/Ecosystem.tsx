@@ -63,7 +63,7 @@ export const Ecosystem = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {ecosystemItems.map((item, index) => (
             <motion.a
               key={item.name}
@@ -75,18 +75,18 @@ export const Ecosystem = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className={`
-                group p-6 rounded-xl border bg-card/50 backdrop-blur-sm
+                group p-4 md:p-6 rounded-xl border bg-card/50 backdrop-blur-sm
                 transition-all duration-300 hover:scale-105
                 ${colorStyles[item.color as keyof typeof colorStyles]}
               `}
             >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className={`font-orbitron font-bold text-xl text-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`}>
+              <div className="flex items-center justify-between mb-2 md:mb-4">
+                <h3 className={`font-orbitron font-bold text-base md:text-xl text-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`}>
                   {item.name}
                 </h3>
-                <ExternalLink className={`w-5 h-5 text-muted-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`} />
+                <ExternalLink className={`w-4 h-4 md:w-5 md:h-5 text-muted-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`} />
               </div>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-xs md:text-sm">
                 {item.description}
               </p>
             </motion.a>
