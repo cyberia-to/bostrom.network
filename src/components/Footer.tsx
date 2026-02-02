@@ -1,9 +1,9 @@
-import { Github, Twitter, MessageCircle } from 'lucide-react';
+import { Github, Send, MessageCircle } from 'lucide-react';
 import bostromLogo from '@/assets/bostrom-logo.png';
 
 const socialLinks = [
   { icon: Github, href: 'https://github.com/cybercongress', label: 'GitHub' },
-  { icon: Twitter, href: 'https://twitter.com/cyber_devs', label: 'Twitter' },
+  { icon: Send, href: 'https://t.me/fuckgoogle', label: 'Telegram' },
   { icon: MessageCircle, href: 'https://t.me/fuckgoogle', label: 'Telegram' },
 ];
 
