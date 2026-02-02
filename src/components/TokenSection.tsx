@@ -165,7 +165,7 @@ export const TokenSection = () => {
             </motion.div>
 
             {/* Live Stats Grid from CoinGecko */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="flex flex-col gap-4 mb-8">
               {liveStats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
@@ -175,7 +175,8 @@ export const TokenSection = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="p-6 rounded-xl border border-border bg-card/50"
                 >
-                  <div className="text-xl md:text-2xl font-orbitron font-bold text-primary flex items-center justify-center">
+                  <div className="text-sm text-muted-foreground mb-2">{stat.label}</div>
+                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center">
                     {stat.loading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
                     ) : stat.value !== null ? (
@@ -187,7 +188,6 @@ export const TokenSection = () => {
                       <span className="text-muted-foreground text-sm">N/A</span>
                     )}
                   </div>
-                  <div className="text-sm text-muted-foreground mt-2">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
