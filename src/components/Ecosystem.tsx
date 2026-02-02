@@ -10,7 +10,7 @@ const ecosystemItems = [
   },
   {
     name: 'Cyber',
-    description: 'Production network for superintelligence',
+    description: 'Community knowledge graph for type I civilization',
     url: 'https://cyber.page/',
     color: 'secondary',
   },
