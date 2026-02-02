@@ -42,15 +42,7 @@ export const Footer = () => {
 
         <div className="mt-8 pt-8 border-t border-border/50 text-center">
           <p className="text-sm text-muted-foreground font-play">
-            © {new Date().getFullYear()} Bostrom Network. Open source. Built by{' '}
-            <a
-              href="https://github.com/cybercongress"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              cyber~Congress
-            </a>
+            © {new Date().getFullYear()} Bostrom Network. Open source.
           </p>
         </div>
       </div>
