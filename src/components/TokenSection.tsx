@@ -52,6 +52,12 @@ const formatLargeNumber = (num: number): string => {
 };
 
 const formatSupply = (num: number): string => {
+  // For mobile-friendly display, use abbreviated format for very large numbers
+  if (num >= 1e12) {
+    return `${(num / 1e12).toFixed(2)}T`;
+  } else if (num >= 1e9) {
+    return `${(num / 1e9).toFixed(2)}B`;
+  }
   return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
 };
 
@@ -188,13 +194,13 @@ export const TokenSection = () => {
                   >
                     {stat.label}
                   </h2>
-                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center gap-3">
+                  <div className="text-lg sm:text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
                     {stat.loading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
                     ) : stat.value !== null ? (
                       <>
                         {stat.showLogo && <BootLogo />}
-                        {stat.value}
+                        <span className="whitespace-nowrap">{stat.value}</span>
                         {stat.showLogo && <span className="text-primary">BOOT</span>}
                       </>
                     ) : (
@@ -205,13 +211,13 @@ export const TokenSection = () => {
               ))}
             </div>
 
-            {/* CTA */}
-            <div className="flex flex-wrap gap-4 justify-center">
+            {/* CTA - 3 buttons in a row, BUY in the middle */}
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-md mx-auto">
               <a
                 href="https://cyb.ai/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 border border-primary text-primary font-orbitron font-bold rounded-lg hover:bg-primary/10 transition-colors"
+                className="px-3 sm:px-6 py-3 border border-primary text-primary font-orbitron font-bold text-sm sm:text-base rounded-lg hover:bg-primary/10 transition-colors text-center"
               >
                 ORACLE
               </a>
@@ -219,7 +225,7 @@ export const TokenSection = () => {
                 href="https://app.osmosis.zone/assets/ibc/FE2CD1E6828EC0FAB8AF39BAC45BC25B965BA67CCBC50C13A14BD610B0D1E2C4"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-10 py-3 bg-accent text-accent-foreground font-orbitron font-bold rounded-lg hover:scale-105 transition-transform"
+                className="px-3 sm:px-10 py-3 bg-accent text-accent-foreground font-orbitron font-bold text-sm sm:text-base rounded-lg hover:scale-105 transition-transform text-center"
               >
                 BUY
               </a>
@@ -227,7 +233,7 @@ export const TokenSection = () => {
                 href="https://cyb.ai/senate"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 border border-primary text-primary font-orbitron font-bold rounded-lg hover:bg-primary/10 transition-colors"
+                className="px-3 sm:px-6 py-3 border border-primary text-primary font-orbitron font-bold text-sm sm:text-base rounded-lg hover:bg-primary/10 transition-colors text-center"
               >
                 SENATE
               </a>
