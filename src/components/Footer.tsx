@@ -16,9 +16,9 @@ const socialLinks = [
 
 export const Footer = () => {
   return (
-    <footer className="py-12 border-t border-border">
+    <footer className="py-8 md:py-12 border-t border-border">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
             <img src={bostromLogo} alt="Bostrom" className="w-8 h-8" />
@@ -26,12 +26,12 @@ export const Footer = () => {
           </div>
 
           {/* Tagline */}
-          <p className="text-muted-foreground text-center font-play">
+          <p className="text-muted-foreground text-center text-sm md:text-base font-play order-3 md:order-2">
             Named after Nick Bostrom. Building the bootloader of superintelligence.
           </p>
 
           {/* Social Links */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 order-2 md:order-3">
             {socialLinks.map((link) => (
               <a
                 key={link.label}
