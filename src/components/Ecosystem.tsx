@@ -24,7 +24,7 @@ const ecosystemItems = [
     name: 'GitHub',
     description: 'Open source code and contributions',
     url: 'https://github.com/cybercongress/cyber-ts',
-    color: 'primary',
+    color: 'white',
   },
 ];
 
@@ -33,6 +33,7 @@ const colorStyles = {
   secondary: 'border-secondary/30 hover:border-secondary group-hover:text-secondary',
   accent: 'border-accent/30 hover:border-accent group-hover:text-accent',
   pink: 'border-accent/30 hover:border-accent',
+  white: 'border-foreground/30 hover:border-foreground',
 };
 
 const textColorStyles = {
@@ -40,6 +41,7 @@ const textColorStyles = {
   secondary: 'group-hover:text-secondary',
   accent: 'group-hover:text-accent',
   pink: 'group-hover:text-accent',
+  white: 'group-hover:text-foreground group-hover:text-glow-primary',
 };
 
 export const Ecosystem = () => {
