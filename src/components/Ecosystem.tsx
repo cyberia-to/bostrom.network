@@ -39,7 +39,7 @@ const textColorStyles = {
   primary: 'group-hover:text-primary',
   secondary: 'group-hover:text-secondary',
   accent: 'group-hover:text-accent',
-  pink: 'text-accent',
+  pink: 'group-hover:text-accent',
 };
 
 export const Ecosystem = () => {
