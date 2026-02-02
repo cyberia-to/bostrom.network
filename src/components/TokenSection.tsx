@@ -116,7 +116,6 @@ export const TokenSection = () => {
               />
               <h2 className="text-4xl md:text-5xl font-orbitron font-bold">
                 <span className="text-primary text-glow-primary">$BOOT</span>
-                <span className="text-foreground"> TOKEN</span>
               </h2>
             </div>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
