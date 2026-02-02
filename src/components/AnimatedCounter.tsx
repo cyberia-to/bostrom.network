@@ -23,7 +23,7 @@ const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
     <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-2 md:mb-4 uppercase tracking-widest text-center text-glow-accent">
       {label}
     </div>
-    <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-orbitron font-bold text-primary text-glow-primary text-center break-all">
+    <div className="text-[clamp(1rem,4vw,2.25rem)] font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
@@ -111,7 +111,7 @@ export const AnimatedCounter = () => {
               </div>
               
               {/* Fixed slots container */}
-              <div className="flex justify-center items-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-orbitron font-bold text-primary text-glow-primary">
+              <div className="flex justify-center items-center text-[clamp(1rem,4vw,2.25rem)] font-orbitron font-bold text-primary text-glow-primary whitespace-nowrap">
                 {chars.map((char, index) => {
                   const isLeadingZero = leadingZeroPositions.has(index);
                   return (
