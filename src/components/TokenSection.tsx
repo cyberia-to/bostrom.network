@@ -118,7 +118,7 @@ export const TokenSection = () => {
                 <span className="text-primary text-glow-primary">$BOOT</span>
               </h2>
             </div>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-foreground mb-8 max-w-2xl mx-auto">
               The native token of Bostrom network. Stake BOOT to secure the network, 
               mint hydrogen, and participate in governance.
             </p>
