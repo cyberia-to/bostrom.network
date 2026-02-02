@@ -32,7 +32,14 @@ const colorStyles = {
   primary: 'border-primary/30 hover:border-primary group-hover:text-primary',
   secondary: 'border-secondary/30 hover:border-secondary group-hover:text-secondary',
   accent: 'border-accent/30 hover:border-accent group-hover:text-accent',
-  pink: 'border-pink-500/30 hover:border-pink-500 group-hover:text-pink-500',
+  pink: 'border-accent/30 hover:border-accent',
+};
+
+const textColorStyles = {
+  primary: 'group-hover:text-primary',
+  secondary: 'group-hover:text-secondary',
+  accent: 'group-hover:text-accent',
+  pink: 'text-accent',
 };
 
 export const Ecosystem = () => {
@@ -72,10 +79,10 @@ export const Ecosystem = () => {
               `}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-orbitron font-bold text-xl text-foreground group-hover:text-primary transition-colors">
+                <h3 className={`font-orbitron font-bold text-xl text-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`}>
                   {item.name}
                 </h3>
-                <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                <ExternalLink className={`w-5 h-5 text-muted-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`} />
               </div>
               <p className="text-muted-foreground text-sm">
                 {item.description}
