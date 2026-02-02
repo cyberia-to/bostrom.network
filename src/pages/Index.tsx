@@ -5,6 +5,7 @@ import { BostromExplainer } from '@/components/BostromExplainer';
 import { AnimatedCounter } from '@/components/AnimatedCounter';
 // import { Features } from '@/components/Features';
 import { TokenSection } from '@/components/TokenSection';
+import { Science } from '@/components/Science';
 import { Ecosystem } from '@/components/Ecosystem';
 import { Footer } from '@/components/Footer';
 import { MusicPlayer } from '@/components/MusicPlayer';
@@ -20,6 +21,7 @@ const Index = () => {
         <AnimatedCounter />
         {/* <Features /> */}
         <TokenSection />
+        <Science />
         <Ecosystem />
       </main>
       <Footer />
