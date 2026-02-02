@@ -197,9 +197,9 @@ export const TokenSection = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="p-4 rounded-xl border border-border bg-card/50"
+                  className="p-6 rounded-xl border border-border bg-card/50"
                 >
-                  <div className="text-lg md:text-xl font-orbitron font-bold text-primary">
+                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary">
                     {stat.loading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
                     ) : stat.value !== null ? (
@@ -208,7 +208,7 @@ export const TokenSection = () => {
                       <span className="text-muted-foreground text-sm">N/A</span>
                     )}
                   </div>
-                  <div className="text-xs text-muted-foreground mt-1">{stat.label}</div>
+                  <div className="text-sm text-muted-foreground mt-2">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
