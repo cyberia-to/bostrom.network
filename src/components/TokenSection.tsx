@@ -67,8 +67,8 @@ export const TokenSection = () => {
     isLoading 
   } = useBootPrice();
 
-  const BootLogo = ({ className = "h-[1em] w-auto" }: { className?: string }) => (
-    <img src={bostromLogo} alt="BOOT" className={`inline-block align-middle ${className}`} />
+  const BootLogo = () => (
+    <img src={bostromLogo} alt="BOOT" className="inline-block h-8 md:h-10 w-auto" />
   );
 
   const liveStats = [
