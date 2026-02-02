@@ -34,12 +34,6 @@ const colorStyles = {
   accent: 'border-accent/30 hover:border-accent group-hover:text-accent',
 };
 
-const descriptionColors = {
-  primary: 'text-primary',
-  secondary: 'text-secondary',
-  accent: 'text-accent',
-};
-
 export const Ecosystem = () => {
   return (
     <section id="ecosystem" className="py-24 relative">
@@ -82,7 +76,7 @@ export const Ecosystem = () => {
                 </h3>
                 <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </div>
-              <p className={`text-sm ${descriptionColors[item.color as keyof typeof descriptionColors]}`}>
+              <p className="text-muted-foreground text-sm">
                 {item.description}
               </p>
             </motion.a>
