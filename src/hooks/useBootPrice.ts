@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
+interface PriceHistoryPoint {
+  timestamp: number;
+  price: number;
+}
+
 interface BootPriceData {
   price: number | null;
   priceChange24h: number | null;
@@ -10,6 +15,7 @@ interface BootPriceData {
   circulatingSupply: number | null;
   totalSupply: number | null;
   stakingApr: number | null;
+  priceHistory: PriceHistoryPoint[] | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -24,6 +30,7 @@ export const useBootPrice = (): BootPriceData => {
     circulatingSupply: null,
     totalSupply: null,
     stakingApr: null,
+    priceHistory: null,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +57,7 @@ export const useBootPrice = (): BootPriceData => {
             circulatingSupply: responseData.circulatingSupply,
             totalSupply: responseData.totalSupply,
             stakingApr: responseData.stakingApr,
+            priceHistory: responseData.priceHistory,
           });
         } else {
           throw new Error(responseData?.error || 'Failed to fetch price');

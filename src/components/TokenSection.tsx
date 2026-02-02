@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import bostromLogo from '@/assets/bostrom-logo.png';
 import { useBootPrice } from '@/hooks/useBootPrice';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { PriceChart } from './PriceChart';
 
 // Format price with subscript notation for small numbers (CoinGecko style)
 // e.g., 0.00000000127 becomes 0.0₉127 where ₉ indicates 9 zeros
@@ -64,6 +65,7 @@ export const TokenSection = () => {
     circulatingSupply, 
     totalSupply,
     stakingApr,
+    priceHistory,
     isLoading 
   } = useBootPrice();
 
@@ -162,6 +164,12 @@ export const TokenSection = () => {
                   </div>
                 )}
               </div>
+              
+              {/* Price Chart */}
+              <PriceChart 
+                data={priceHistory} 
+                isPositive={(priceChange24h ?? 0) >= 0} 
+              />
             </motion.div>
 
             {/* Live Stats Grid from CoinGecko */}
