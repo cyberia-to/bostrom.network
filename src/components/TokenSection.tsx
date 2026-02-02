@@ -67,8 +67,8 @@ export const TokenSection = () => {
     isLoading 
   } = useBootPrice();
 
-  const BootLogo = () => (
-    <img src={bostromLogo} alt="BOOT" className="inline-block w-6 h-6 ml-2 align-middle" />
+  const BootLogo = ({ className = "h-[1em] w-auto" }: { className?: string }) => (
+    <img src={bostromLogo} alt="BOOT" className={`inline-block align-middle ${className}`} />
   );
 
   const liveStats = [
@@ -176,13 +176,14 @@ export const TokenSection = () => {
                   className="p-6 rounded-xl border border-border bg-card/50"
                 >
                   <div className="text-sm text-muted-foreground mb-2">{stat.label}</div>
-                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center">
+                  <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center gap-3">
                     {stat.loading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
                     ) : stat.value !== null ? (
                       <>
-                        {stat.value}
                         {stat.showLogo && <BootLogo />}
+                        {stat.value}
+                        {stat.showLogo && <span className="text-primary">BOOT</span>}
                       </>
                     ) : (
                       <span className="text-muted-foreground text-sm">N/A</span>
