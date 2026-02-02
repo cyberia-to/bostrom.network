@@ -27,7 +27,7 @@ export const Science = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="max-w-3xl mx-auto text-center"
         >
-          <p className="text-xl text-muted-foreground">
+        <p className="text-xl text-foreground">
             The scientific foundation behind decentralized superintelligence
           </p>
         </motion.div>
