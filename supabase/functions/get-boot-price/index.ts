@@ -12,6 +12,7 @@ interface TokenData {
   circulatingSupply: number | null;
   totalSupply: number | null;
   stakingApr: number | null;
+  priceHistory: { timestamp: number; price: number }[] | null;
 }
 
 Deno.serve(async (req) => {
@@ -32,6 +33,7 @@ Deno.serve(async (req) => {
       circulatingSupply: null,
       totalSupply: null,
       stakingApr: null,
+      priceHistory: null,
     };
 
     // Fetch total supply from Bostrom LCD API (accurate source)
@@ -109,21 +111,23 @@ Deno.serve(async (req) => {
       console.error('Error calculating staking APR:', e);
     }
 
-    // Try CoinGecko for price data
+    // Try CoinGecko for price data and history
     try {
       console.log('Fetching price from CoinGecko...');
-      const response = await fetch(
-        'https://api.coingecko.com/api/v3/coins/bostrom?localization=false&tickers=false&community_data=false&developer_data=false',
-        {
-          headers: {
-            'Accept': 'application/json',
-          },
-        }
-      );
+      const [priceResponse, historyResponse] = await Promise.all([
+        fetch(
+          'https://api.coingecko.com/api/v3/coins/bostrom?localization=false&tickers=false&community_data=false&developer_data=false',
+          { headers: { 'Accept': 'application/json' } }
+        ),
+        fetch(
+          'https://api.coingecko.com/api/v3/coins/bostrom/market_chart?vs_currency=usd&days=7',
+          { headers: { 'Accept': 'application/json' } }
+        )
+      ]);
       
-      if (response.ok) {
-        const data = await response.json();
-        console.log('CoinGecko response received');
+      if (priceResponse.ok) {
+        const data = await priceResponse.json();
+        console.log('CoinGecko price response received');
         
         if (data.market_data) {
           tokenData.price = data.market_data.current_price?.usd || null;
@@ -137,7 +141,24 @@ Deno.serve(async (req) => {
           }
         }
       } else {
-        console.log('CoinGecko request failed with status:', response.status);
+        console.log('CoinGecko price request failed with status:', priceResponse.status);
+      }
+
+      if (historyResponse.ok) {
+        const historyData = await historyResponse.json();
+        console.log('CoinGecko history response received');
+        
+        if (historyData.prices && Array.isArray(historyData.prices)) {
+          // Sample every ~6 hours to reduce data points (keep ~28 points for 7 days)
+          const sampledPrices = historyData.prices.filter((_: any, i: number) => i % 6 === 0);
+          tokenData.priceHistory = sampledPrices.map((p: [number, number]) => ({
+            timestamp: p[0],
+            price: p[1]
+          }));
+          console.log('Price history points:', tokenData.priceHistory?.length ?? 0);
+        }
+      } else {
+        console.log('CoinGecko history request failed with status:', historyResponse.status);
       }
     } catch (e) {
       console.error('CoinGecko fetch error:', e);
