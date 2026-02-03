@@ -56,8 +56,10 @@ const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }
               return (
                 <span
                   key={index}
-                  className={`inline-flex items-center justify-center ${
-                    char === ',' ? 'w-[0.3em] sm:w-[0.32em]' : 'w-[0.6em] sm:w-[0.65em]'
+                  className={`inline-flex items-center justify-center shrink-0 overflow-hidden ${
+                    char === ','
+                      ? 'w-[0.34em] sm:w-[0.36em] md:w-[0.38em] lg:w-[0.4em]'
+                      : 'w-[0.72em] sm:w-[0.78em] md:w-[0.82em] lg:w-[0.85em]'
                   } ${isLeadingZero ? 'opacity-0' : ''}`}
                 >
                   {char}
