@@ -37,7 +37,7 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-4 md:p-5 lg:p-6 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[140px] sm:h-[150px] md:h-[170px] lg:h-[190px] flex flex-col items-center justify-between">
+  <div className="p-4 sm:p-4 md:p-5 lg:p-6 rounded-2xl border border-primary/30 bg-black box-glow-primary w-full h-[140px] sm:h-[150px] md:h-[170px] lg:h-[190px] flex flex-col items-center justify-between">
     <div className="text-xs sm:text-sm md:text-base lg:text-lg font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent shrink-0">
       {label}
     </div>
@@ -92,7 +92,7 @@ export const AnimatedCounter = () => {
             
             {/* SPEED Block - order 2 on mobile (right after convergence), 2 on desktop (center) */}
             <div className="order-2 sm:order-2">
-              <div className="p-4 sm:p-4 md:p-5 lg:p-6 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[140px] sm:h-[150px] md:h-[170px] lg:h-[190px] flex flex-col items-center justify-between">
+              <div className="p-4 sm:p-4 md:p-5 lg:p-6 rounded-2xl border border-primary/30 bg-black box-glow-primary w-full h-[140px] sm:h-[150px] md:h-[170px] lg:h-[190px] flex flex-col items-center justify-between">
                 <div className="text-xs sm:text-sm md:text-base lg:text-lg font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent shrink-0">
                   Speed
                 </div>
