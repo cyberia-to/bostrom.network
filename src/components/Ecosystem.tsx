@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
 // Import logos
+import cybLogo from '@/assets/ecosystem/cyb.png';
 import atomscanLogo from '@/assets/ecosystem/atomscan.png';
 import keplrLogo from '@/assets/ecosystem/keplr.png';
 import coingeckoLogo from '@/assets/ecosystem/coingecko.png';
@@ -16,6 +17,7 @@ const ecosystemItems = [
     description: 'The immortal robot for superintelligence',
     url: 'https://cyb.ai',
     color: 'primary',
+    logo: cybLogo,
   },
   {
     name: 'cyber.page',
