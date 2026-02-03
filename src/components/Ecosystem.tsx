@@ -3,7 +3,7 @@ import { ExternalLink } from 'lucide-react';
 
 const ecosystemItems = [
   {
-    name: 'CYB',
+    name: 'cyb.ai',
     description: 'The immortal robot for superintelligence',
     url: 'https://cyb.ai',
     color: 'primary',
