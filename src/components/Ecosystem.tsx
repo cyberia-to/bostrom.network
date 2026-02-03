@@ -15,7 +15,7 @@ const ecosystemItems = [
     color: 'secondary',
   },
   {
-    name: 'Pussy',
+    name: 'spacepussy.ai',
     description: 'Independence sandbox network for play and discover',
     url: 'https://spacepussy.ai/',
     color: 'pink',
