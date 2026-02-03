@@ -69,7 +69,7 @@ const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }
           <span className="sr-only">{formatNumber(value)}</span>
           <span
             aria-hidden="true"
-            className="inline-flex items-center justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
+            className="inline-flex items-center justify-center text-4xl sm:text-3xl md:text-4xl lg:text-5xl"
           >
             {chars.map((ch, i) => (
               <span
