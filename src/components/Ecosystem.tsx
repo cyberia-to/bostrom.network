@@ -6,7 +6,7 @@ import cybLogo from '@/assets/ecosystem/cyb.png';
 import cyberLogo from '@/assets/ecosystem/cyber.png';
 import spacepussyLogo from '@/assets/ecosystem/spacepussy.png';
 import githubLogo from '@/assets/ecosystem/github.png';
-import atomscanLogo from '@/assets/ecosystem/atomscan.svg';
+import atomscanLogo from '@/assets/ecosystem/atomscan.png';
 import keplrLogo from '@/assets/ecosystem/keplr.png';
 import coingeckoLogo from '@/assets/ecosystem/coingecko.png';
 import coinmarketcapLogo from '@/assets/ecosystem/coinmarketcap.png';
