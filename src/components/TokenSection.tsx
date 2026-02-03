@@ -128,7 +128,7 @@ export const TokenSection = () => {
             </motion.div>
 
             {/* Formula: Price × Supply = Market Cap */}
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 mb-8">
+            <div className="flex flex-col lg:flex-row items-stretch justify-center gap-4 lg:gap-6 mb-8">
               
               {/* Price Block */}
               <motion.div
@@ -136,26 +136,26 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[220px] min-h-[140px] flex flex-col justify-center"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
                 style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
                 <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-3 text-center"
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2 text-center"
                   style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
                 >
                   Price
                 </h3>
-                <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary text-glow-primary text-center">
+                <div className="text-2xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap">
                   {isLoading ? (
                     <span className="animate-pulse">...</span>
                   ) : price !== null ? (
                     <>${formatPriceWithSubscript(price)}</>
                   ) : (
-                    <span className="text-muted-foreground text-xl">N/A</span>
+                    <span className="text-muted-foreground text-lg">N/A</span>
                   )}
                 </div>
                 {!isLoading && priceChange24h !== null && (
-                  <div className={`flex items-center justify-center gap-1 mt-2 ${
+                  <div className={`flex items-center justify-center gap-1 mt-1 ${
                     priceChange24h >= 0 ? 'text-primary' : 'text-red-400'
                   }`}>
                     {priceChange24h >= 0 ? (
@@ -171,7 +171,7 @@ export const TokenSection = () => {
               </motion.div>
 
               {/* Multiplication Sign */}
-              <div className="text-4xl font-orbitron font-bold text-primary text-glow-primary">
+              <div className="text-4xl font-orbitron font-bold text-primary text-glow-primary flex items-center justify-center">
                 ×
               </div>
 
@@ -181,30 +181,31 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="p-6 rounded-xl border-2 border-primary/40 bg-card/50 w-full lg:w-[220px] min-h-[140px] flex flex-col justify-center"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
+                style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
                 <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-3 text-center"
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2 text-center"
                   style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
                 >
                   Total Supply
                 </h3>
-                <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center gap-2">
+                <div className="text-2xl font-orbitron font-bold text-primary flex items-center justify-center gap-2 whitespace-nowrap">
                   {isLoading ? (
                     <span className="animate-pulse text-muted-foreground">...</span>
                   ) : totalSupply !== null ? (
                     <>
                       <BootLogo />
-                      <span className="whitespace-nowrap">{formatSupply(totalSupply)}</span>
+                      <span>{formatSupply(totalSupply)}</span>
                     </>
                   ) : (
-                    <span className="text-muted-foreground text-sm">N/A</span>
+                    <span className="text-muted-foreground text-lg">N/A</span>
                   )}
                 </div>
               </motion.div>
 
               {/* Equals Sign */}
-              <div className="text-4xl font-orbitron font-bold text-primary text-glow-primary">
+              <div className="text-4xl font-orbitron font-bold text-primary text-glow-primary flex items-center justify-center">
                 =
               </div>
 
@@ -214,24 +215,24 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="p-6 rounded-xl border-2 border-pink-500/70 bg-pink-500/5 w-full lg:w-[220px] min-h-[140px] flex flex-col justify-center"
+                className="p-6 rounded-xl border-2 border-pink-500/70 bg-pink-500/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
                 style={{ boxShadow: '0 0 25px rgba(236, 72, 153, 0.3)' }}
               >
                 <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-3 text-center"
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2 text-center"
                   style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
                 >
                   Market Cap
                 </h3>
-                <div className="text-2xl md:text-3xl font-orbitron font-bold text-pink-400 text-center"
+                <div className="text-2xl font-orbitron font-bold text-pink-400 text-center whitespace-nowrap"
                   style={{ textShadow: '0 0 10px rgba(236, 72, 153, 0.6)' }}
                 >
                   {isLoading ? (
                     <span className="animate-pulse text-muted-foreground">...</span>
                   ) : calculatedMarketCap !== null ? (
-                    <span className="whitespace-nowrap">${formatLargeNumber(calculatedMarketCap)}</span>
+                    <span>${formatLargeNumber(calculatedMarketCap)}</span>
                   ) : (
-                    <span className="text-muted-foreground text-sm">N/A</span>
+                    <span className="text-muted-foreground text-lg">N/A</span>
                   )}
                 </div>
               </motion.div>
