@@ -1,6 +1,15 @@
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
+// Import logos
+import atomscanLogo from '@/assets/ecosystem/atomscan.png';
+import keplrLogo from '@/assets/ecosystem/keplr.png';
+import coingeckoLogo from '@/assets/ecosystem/coingecko.png';
+import coinmarketcapLogo from '@/assets/ecosystem/coinmarketcap.png';
+import telegramLogo from '@/assets/ecosystem/telegram.png';
+import xLogo from '@/assets/ecosystem/x.png';
+import discordLogo from '@/assets/ecosystem/discord.svg';
+
 const ecosystemItems = [
   {
     name: 'cyb.ai',
@@ -26,14 +35,70 @@ const ecosystemItems = [
     url: 'https://github.com/cybercongress/cyber-ts',
     color: 'white',
   },
+  {
+    name: 'Atomscan',
+    description: 'Bostrom blockchain explorer',
+    url: 'https://atomscan.com/bostrom',
+    color: 'atomscan',
+    logo: atomscanLogo,
+  },
+  {
+    name: 'Keplr',
+    description: 'Interchain wallet for Cosmos ecosystem',
+    url: 'https://www.keplr.app/',
+    color: 'keplr',
+    logo: keplrLogo,
+  },
+  {
+    name: 'CoinGecko',
+    description: 'BOOT token price and market data',
+    url: 'https://www.coingecko.com/en/coins/bostrom',
+    color: 'coingecko',
+    logo: coingeckoLogo,
+  },
+  {
+    name: 'CoinMarketCap',
+    description: 'BOOT token analytics and rankings',
+    url: 'https://coinmarketcap.com/currencies/bostrom/',
+    color: 'coinmarketcap',
+    logo: coinmarketcapLogo,
+  },
+  {
+    name: 'Telegram',
+    description: 'Join the community chat',
+    url: 'https://t.me/fuckgoogle',
+    color: 'telegram',
+    logo: telegramLogo,
+  },
+  {
+    name: 'X (Twitter)',
+    description: 'Follow for updates and news',
+    url: 'https://x.com/live4cyb',
+    color: 'x',
+    logo: xLogo,
+  },
+  {
+    name: 'Discord',
+    description: 'Developer community and support',
+    url: 'https://discord.gg/ARwv74ZyGH',
+    color: 'discord',
+    logo: discordLogo,
+  },
 ];
 
 const colorStyles = {
-  primary: 'border-primary/30 hover:border-primary group-hover:text-primary',
-  secondary: 'border-secondary/30 hover:border-secondary group-hover:text-secondary',
-  accent: 'border-accent/30 hover:border-accent group-hover:text-accent',
+  primary: 'border-primary/30 hover:border-primary',
+  secondary: 'border-secondary/30 hover:border-secondary',
+  accent: 'border-accent/30 hover:border-accent',
   pink: 'border-accent/30 hover:border-accent',
   white: 'border-foreground/30 hover:border-foreground',
+  atomscan: 'border-[#8B5CF6]/30 hover:border-[#8B5CF6]',
+  keplr: 'border-[#5F38FB]/30 hover:border-[#5F38FB]',
+  coingecko: 'border-[#8DC63F]/30 hover:border-[#8DC63F]',
+  coinmarketcap: 'border-[#3861FB]/30 hover:border-[#3861FB]',
+  telegram: 'border-[#229ED9]/30 hover:border-[#229ED9]',
+  x: 'border-foreground/30 hover:border-foreground',
+  discord: 'border-[#5865F2]/30 hover:border-[#5865F2]',
 };
 
 const textColorStyles = {
@@ -42,6 +107,13 @@ const textColorStyles = {
   accent: 'group-hover:text-accent',
   pink: 'group-hover:text-accent',
   white: 'group-hover:text-foreground group-hover:text-glow-primary',
+  atomscan: 'group-hover:text-[#8B5CF6]',
+  keplr: 'group-hover:text-[#5F38FB]',
+  coingecko: 'group-hover:text-[#8DC63F]',
+  coinmarketcap: 'group-hover:text-[#3861FB]',
+  telegram: 'group-hover:text-[#229ED9]',
+  x: 'group-hover:text-foreground',
+  discord: 'group-hover:text-[#5865F2]',
 };
 
 export const Ecosystem = () => {
@@ -63,7 +135,7 @@ export const Ecosystem = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {ecosystemItems.map((item, index) => (
             <motion.a
               key={item.name}
@@ -73,7 +145,7 @@ export const Ecosystem = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
               className={`
                 group p-4 md:p-6 rounded-xl border bg-card/50 backdrop-blur-sm
                 transition-all duration-300 hover:scale-105
@@ -81,9 +153,18 @@ export const Ecosystem = () => {
               `}
             >
               <div className="flex items-center justify-between mb-2 md:mb-4">
-                <h3 className={`font-orbitron font-bold text-base md:text-xl text-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`}>
-                  {item.name}
-                </h3>
+                <div className="flex items-center gap-2 md:gap-3">
+                  {item.logo && (
+                    <img 
+                      src={item.logo} 
+                      alt={`${item.name} logo`}
+                      className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                    />
+                  )}
+                  <h3 className={`font-orbitron font-bold text-sm md:text-lg text-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`}>
+                    {item.name}
+                  </h3>
+                </div>
                 <ExternalLink className={`w-4 h-4 md:w-5 md:h-5 text-muted-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`} />
               </div>
               <p className="text-muted-foreground text-xs md:text-sm">
