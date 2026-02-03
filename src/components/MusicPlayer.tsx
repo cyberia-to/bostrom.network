@@ -67,40 +67,70 @@ export const MusicPlayer = () => {
 
     let interactionHandler: (() => void) | null = null;
 
-    const tryPlay = () => {
+    const addInteractionListeners = (handler: () => void) => {
+      document.addEventListener('click', handler);
+      document.addEventListener('keydown', handler);
+      document.addEventListener('touchstart', handler);
+    };
+
+    const removeInteractionListeners = (handler: () => void) => {
+      document.removeEventListener('click', handler);
+      document.removeEventListener('keydown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
+
+    const tryPlay = async () => {
       // Don't restart if already playing
       if (!audio.paused) {
         setIsPlaying(true);
         return;
       }
-      
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => setIsPlaying(true))
-          .catch(() => {
-            // Autoplay was prevented by browser, wait for first interaction
-            setIsPlaying(false);
-            interactionHandler = () => {
-              audio.play().then(() => setIsPlaying(true)).catch(() => {});
-              document.removeEventListener('click', interactionHandler!);
-              document.removeEventListener('keydown', interactionHandler!);
-              document.removeEventListener('touchstart', interactionHandler!);
-              interactionHandler = null;
-            };
-            document.addEventListener('click', interactionHandler);
-            document.addEventListener('keydown', interactionHandler);
-            document.addEventListener('touchstart', interactionHandler);
-          });
+
+      // Some browsers block autoplay with sound. Best effort:
+      // 1) try normal play
+      // 2) if blocked -> start muted immediately, then enable sound on first user interaction
+      let startedMuted = false;
+
+      try {
+        await audio.play();
+        setIsPlaying(true);
+        return;
+      } catch {
+        // Autoplay with sound was prevented
       }
+
+      try {
+        startedMuted = true;
+        audio.muted = true;
+        setIsMuted(true);
+        await audio.play();
+        setIsPlaying(true);
+      } catch {
+        setIsPlaying(false);
+      }
+
+      // Always install an interaction handler to either (a) start playback or (b) enable sound
+      // after browsers' autoplay restrictions.
+      interactionHandler = () => {
+        if (audio.paused) {
+          audio.play().then(() => setIsPlaying(true)).catch(() => {});
+        }
+        if (startedMuted) {
+          audio.muted = false;
+          setIsMuted(false);
+        }
+        removeInteractionListeners(interactionHandler!);
+        interactionHandler = null;
+      };
+      addInteractionListeners(interactionHandler);
     };
 
     // Wait for audio to be ready before playing
     if (audio.readyState >= 2) {
-      tryPlay();
+      void tryPlay();
     } else {
       const onCanPlay = () => {
-        tryPlay();
+        void tryPlay();
         audio.removeEventListener('canplay', onCanPlay);
       };
       audio.addEventListener('canplay', onCanPlay);
@@ -114,9 +144,7 @@ export const MusicPlayer = () => {
       audio.removeEventListener('play', onPlay);
       audio.removeEventListener('pause', onPause);
       if (interactionHandler) {
-        document.removeEventListener('click', interactionHandler);
-        document.removeEventListener('keydown', interactionHandler);
-        document.removeEventListener('touchstart', interactionHandler);
+        removeInteractionListeners(interactionHandler);
       }
     };
   }, []);
