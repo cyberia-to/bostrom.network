@@ -2,8 +2,10 @@ import { motion } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
 import { useBostromStats } from '@/hooks/useBostromStats';
 import { ConvergenceGraph } from './ConvergenceGraph';
+import { useMemo } from 'react';
 
 const MAX_COUNT = 3_000_000;
+const DIGIT_SLOTS = 7; // Fixed number of digit slots for stable layout
 
 const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
@@ -17,7 +19,7 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
+  <div className="p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
     <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
       {label}
     </div>
@@ -28,7 +30,7 @@ const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
         value
       )}
     </div>
-    <div className="text-sm sm:text-base md:text-lg text-foreground font-play text-center h-12 md:h-14 flex items-start justify-center">
+    <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-12 md:h-14 flex items-center justify-center">
       {subtitle}
     </div>
   </div>
@@ -40,6 +42,33 @@ export const AnimatedCounter = () => {
 
   // Calculate progress towards 3M
   const progress = Math.min(count / MAX_COUNT, 1);
+
+  // Stable SPEED number layout (fixed slots) so digits don't "jump" on tablet
+  const { chars, leadingZeroPositions } = useMemo(() => {
+    const paddedNumber = count.toString().padStart(DIGIT_SLOTS, '0');
+    const formatted = paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const charArray = formatted.split('');
+
+    const leadingZeros = new Set<number>();
+    let foundNonZero = false;
+
+    for (let i = 0; i < charArray.length; i++) {
+      const ch = charArray[i];
+
+      if (ch === ',') {
+        if (!foundNonZero) leadingZeros.add(i);
+        continue;
+      }
+
+      if (!foundNonZero && ch === '0') {
+        leadingZeros.add(i);
+      } else {
+        foundNonZero = true;
+      }
+    }
+
+    return { chars: charArray, leadingZeroPositions: leadingZeros };
+  }, [count]);
 
   // Use real data or fallback to defaults
   const weightsPerSecond = bostromStats?.weightsPerSecond ?? 70000;
@@ -77,17 +106,29 @@ export const AnimatedCounter = () => {
             </div>
             
             {/* SPEED Block - order 2 on mobile (right after convergence), 2 on desktop (center) */}
-            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
+            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
                 Speed
               </div>
 
               {/* Number line (aligned with SIZE/QUALITY) */}
-              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
-                {formatNumber(count)}
+              <div className="flex justify-center items-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none whitespace-nowrap h-16 md:h-20">
+                {chars.map((char, index) => {
+                  const isLeadingZero = leadingZeroPositions.has(index);
+                  return (
+                    <span
+                      key={index}
+                      className={`inline-flex items-center justify-center ${
+                        char === ',' ? 'w-[0.3em] sm:w-[0.35em]' : 'w-[0.65em] sm:w-[0.75em]'
+                      } ${isLeadingZero ? 'opacity-0' : ''}`}
+                    >
+                      {char}
+                    </span>
+                  );
+                })}
               </div>
               
-              <div className="text-sm sm:text-base md:text-lg text-foreground font-play text-center h-12 md:h-14 flex items-start justify-center">
+              <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-12 md:h-14 flex items-center justify-center">
                 {isLoading ? (
                   <span className="animate-pulse">Loading stats...</span>
                 ) : (
