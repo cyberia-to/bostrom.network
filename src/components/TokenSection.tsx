@@ -79,26 +79,10 @@ export const TokenSection = () => {
     <img src={bostromLogo} alt="BOOT" className="inline-block h-8 md:h-10 w-auto" />
   );
 
-  const liveStats = [
-    { 
-      label: 'Market Cap', 
-      value: marketCap !== null ? `$${formatSupply(marketCap)}` : null,
-      loading: isLoading,
-      showLogo: false,
-    },
-    { 
-      label: 'Circulating Supply', 
-      value: circulatingSupply !== null ? formatSupply(circulatingSupply) : null,
-      loading: isLoading,
-      showLogo: true,
-    },
-    { 
-      label: 'Total Supply', 
-      value: totalSupply !== null ? formatSupply(totalSupply) : null,
-      loading: isLoading,
-      showLogo: true,
-    },
-  ];
+  // Calculate Market Cap locally: Price × Total Supply
+  const calculatedMarketCap = price !== null && totalSupply !== null 
+    ? price * totalSupply 
+    : null;
 
   return (
     <section id="token" className="py-24 relative overflow-hidden">
@@ -129,87 +113,123 @@ export const TokenSection = () => {
               mint hydrogen, and participate in governance.
             </p>
 
-            {/* Live Price Block */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="mb-8 p-6 rounded-xl border-2 border-primary/50 bg-primary/5 box-glow-primary"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm text-muted-foreground font-play mb-1">
-                    Live Price (Osmosis)
-                  </div>
-                  <div className="text-3xl md:text-4xl font-orbitron font-bold text-primary text-glow-primary">
-                    {isLoading ? (
-                      <span className="animate-pulse">Loading...</span>
-                    ) : price !== null ? (
-                      <>${formatPriceWithSubscript(price)}</>
-                    ) : (
-                      <span className="text-muted-foreground text-xl">Unavailable</span>
-                    )}
-                  </div>
+            {/* Formula: Price × Supply = Market Cap */}
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 mb-8">
+              
+              {/* Price Block */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="p-6 rounded-xl border-2 border-primary/50 bg-primary/5 box-glow-primary w-full lg:w-auto lg:min-w-[200px]"
+              >
+                <div className="text-sm text-muted-foreground font-play mb-1">
+                  Price
+                </div>
+                <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary text-glow-primary">
+                  {isLoading ? (
+                    <span className="animate-pulse">...</span>
+                  ) : price !== null ? (
+                    <>${formatPriceWithSubscript(price)}</>
+                  ) : (
+                    <span className="text-muted-foreground text-xl">N/A</span>
+                  )}
                 </div>
                 {!isLoading && priceChange24h !== null && (
-                  <div className={`flex items-center gap-1 px-3 py-2 rounded-lg ${
-                    priceChange24h >= 0 
-                      ? 'bg-green-500/20 text-green-400' 
-                      : 'bg-red-500/20 text-red-400'
+                  <div className={`flex items-center justify-center gap-1 mt-2 ${
+                    priceChange24h >= 0 ? 'text-green-400' : 'text-red-400'
                   }`}>
                     {priceChange24h >= 0 ? (
-                      <TrendingUp className="w-4 h-4" />
+                      <TrendingUp className="w-3 h-3" />
                     ) : (
-                      <TrendingDown className="w-4 h-4" />
+                      <TrendingDown className="w-3 h-3" />
                     )}
-                    <span className="font-mono text-sm font-bold">
+                    <span className="font-mono text-xs font-bold">
                       {priceChange24h >= 0 ? '+' : ''}{priceChange24h.toFixed(2)}%
                     </span>
                   </div>
                 )}
+              </motion.div>
+
+              {/* Multiplication Sign */}
+              <div className="text-4xl font-orbitron font-bold text-primary text-glow-primary">
+                ×
               </div>
-              
-              {/* Price Chart */}
+
+              {/* Supply Block */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="p-6 rounded-xl border border-border bg-card/50 w-full lg:w-auto lg:min-w-[200px]"
+              >
+                <h3 
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2"
+                  style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
+                >
+                  Total Supply
+                </h3>
+                <div className="text-xl md:text-2xl font-orbitron font-bold text-primary flex items-center justify-center gap-2">
+                  {isLoading ? (
+                    <span className="animate-pulse text-muted-foreground">...</span>
+                  ) : totalSupply !== null ? (
+                    <>
+                      <BootLogo />
+                      <span className="whitespace-nowrap">{formatSupply(totalSupply)}</span>
+                    </>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">N/A</span>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* Equals Sign */}
+              <div className="text-4xl font-orbitron font-bold text-primary text-glow-primary">
+                =
+              </div>
+
+              {/* Market Cap Block (calculated locally) */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="p-6 rounded-xl border-2 border-accent/50 bg-accent/5 w-full lg:w-auto lg:min-w-[200px]"
+                style={{ boxShadow: '0 0 20px rgba(0, 255, 0, 0.3)' }}
+              >
+                <h3 
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2"
+                  style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
+                >
+                  Market Cap
+                </h3>
+                <div className="text-2xl md:text-3xl font-orbitron font-bold text-accent">
+                  {isLoading ? (
+                    <span className="animate-pulse text-muted-foreground">...</span>
+                  ) : calculatedMarketCap !== null ? (
+                    <span className="whitespace-nowrap">${formatLargeNumber(calculatedMarketCap)}</span>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">N/A</span>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Price Chart */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="mb-8 p-4 rounded-xl border border-border bg-card/30"
+            >
               <PriceChart 
                 data={priceHistory} 
                 isPositive={(priceChange24h ?? 0) >= 0} 
               />
             </motion.div>
-
-            {/* Live Stats Grid from CoinGecko */}
-            <div className="flex flex-col gap-4 mb-8">
-              {liveStats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="p-6 rounded-xl border border-border bg-card/50"
-                >
-                  <h2 
-                    className="text-lg md:text-xl font-orbitron font-bold text-cyan-300 mb-2"
-                    style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
-                  >
-                    {stat.label}
-                  </h2>
-                  <div className="text-lg sm:text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
-                    {stat.loading ? (
-                      <span className="animate-pulse text-muted-foreground">...</span>
-                    ) : stat.value !== null ? (
-                      <>
-                        {stat.showLogo && <BootLogo />}
-                        <span className="whitespace-nowrap">{stat.value}</span>
-                        {stat.showLogo && <span className="text-primary">BOOT</span>}
-                      </>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">N/A</span>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
 
             {/* CTA - Single BUY button */}
             <div className="flex justify-center">
