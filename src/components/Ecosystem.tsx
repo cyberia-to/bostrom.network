@@ -3,6 +3,7 @@ import { ExternalLink } from 'lucide-react';
 
 // Import logos
 import cybLogo from '@/assets/ecosystem/cyb.png';
+import cyberLogo from '@/assets/ecosystem/cyber.png';
 import spacepussyLogo from '@/assets/ecosystem/spacepussy.png';
 import atomscanLogo from '@/assets/ecosystem/atomscan.png';
 import keplrLogo from '@/assets/ecosystem/keplr.png';
@@ -25,6 +26,7 @@ const ecosystemItems = [
     description: 'Community knowledge graph for type I civilization',
     url: 'https://cyber.page/',
     color: 'secondary',
+    logo: cyberLogo,
   },
   {
     name: 'spacepussy.ai',
