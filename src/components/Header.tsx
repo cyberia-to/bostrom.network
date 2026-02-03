@@ -102,8 +102,8 @@ export const Header = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="lg:hidden fixed inset-0 z-[9999] bg-background/95 backdrop-blur-2xl"
-          style={{ top: 0, left: 0, right: 0, bottom: 0, position: 'fixed' }}
+          className="lg:hidden fixed inset-0 bg-black backdrop-blur-2xl overflow-hidden"
+          style={{ zIndex: 99999 }}
         >
           {/* Menu Header */}
           <div className="container mx-auto px-2 sm:px-6">
