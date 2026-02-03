@@ -174,7 +174,7 @@ export const Ecosystem = () => {
                     {item.name}
                   </h3>
                 </div>
-                <ExternalLink className={`w-4 h-4 md:w-5 md:h-5 text-muted-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`} />
+                <ExternalLink className={`hidden md:block w-5 h-5 text-muted-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`} />
               </div>
               <p className="text-muted-foreground text-xs md:text-sm transition-colors group-hover:text-foreground">
                 {item.description}
