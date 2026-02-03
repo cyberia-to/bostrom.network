@@ -102,8 +102,18 @@ export const Header = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="lg:hidden fixed inset-0 bg-black backdrop-blur-2xl overflow-hidden"
-          style={{ zIndex: 99999 }}
+          className="lg:hidden bg-black backdrop-blur-2xl"
+          style={{ 
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 99999,
+            height: '100vh',
+            width: '100vw',
+            overflowY: 'auto'
+          }}
         >
           {/* Menu Header */}
           <div className="container mx-auto px-2 sm:px-6">
@@ -136,7 +146,7 @@ export const Header = () => {
           <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
           
           {/* Navigation */}
-          <nav className="container mx-auto px-6 py-8 flex flex-col h-[calc(100%-5rem)] overflow-y-auto">
+          <nav className="container mx-auto px-6 py-8 flex flex-col" style={{ minHeight: 'calc(100vh - 5rem)' }}>
             <div className="flex flex-col gap-1">
               {navLinks.map((link, index) => (
                 <motion.a
