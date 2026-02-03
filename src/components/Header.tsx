@@ -40,6 +40,12 @@ export const Header = () => {
             <span className="font-orbitron font-bold text-lg md:text-xl text-primary text-glow-primary">
               BOSTROM
             </span>
+            <span 
+              className="hidden sm:inline font-orbitron font-bold text-sm md:text-base animate-starlight"
+              data-text="BIG BADASS GRAPH"
+            >
+              BIG BADASS GRAPH
+            </span>
           </a>
 
           {/* Desktop Nav */}
