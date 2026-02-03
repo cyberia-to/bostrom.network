@@ -71,7 +71,7 @@ const ecosystemItems = [
     logo: telegramLogo,
   },
   {
-    name: 'X (Twitter)',
+    name: 'X',
     description: 'Follow for updates and news',
     url: 'https://x.com/live4cyb',
     color: 'x',
