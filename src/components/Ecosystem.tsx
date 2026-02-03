@@ -162,11 +162,12 @@ export const Ecosystem = () => {
             >
               <div className="flex items-center justify-between mb-2 md:mb-4">
                 <div className="flex items-center gap-2 md:gap-3">
+                  {/* Logo visible only on desktop */}
                   {item.logo && (
                     <img 
                       src={item.logo} 
                       alt={`${item.name} logo`}
-                      className="w-5 h-5 md:w-6 md:h-6 object-contain rounded-full"
+                      className="hidden md:block w-6 h-6 object-contain rounded-full"
                     />
                   )}
                   <h3 className={`font-orbitron font-bold text-sm md:text-lg text-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`}>
@@ -178,6 +179,16 @@ export const Ecosystem = () => {
               <p className="text-muted-foreground text-xs md:text-sm">
                 {item.description}
               </p>
+              {/* Logo visible only on mobile - at bottom */}
+              {item.logo && (
+                <div className="mt-3 flex justify-center md:hidden">
+                  <img 
+                    src={item.logo} 
+                    alt={`${item.name} logo`}
+                    className="w-8 h-8 object-contain rounded-full"
+                  />
+                </div>
+              )}
             </motion.a>
           ))}
         </div>
