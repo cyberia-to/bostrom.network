@@ -58,7 +58,8 @@ export function FittedText({ text, className, characterClassName }: FittedTextPr
         {text.split("").map((ch, i) => (
           <span
             key={i}
-            className={cn("inline-block w-[1ch] text-center", characterClassName)}
+            className={cn("inline-block w-[1ch] text-center text-primary", characterClassName)}
+            style={{ color: '#00FF41', textShadow: '0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(0, 255, 65, 0.5)' }}
           >
             {ch}
           </span>
