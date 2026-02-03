@@ -139,12 +139,29 @@ export const TokenSection = () => {
                 className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
                 style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
-                <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2 text-center"
-                  style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
-                >
-                  Price
-                </h3>
+                {/* Header row: Price + Change */}
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  <h3 
+                    className="text-lg font-orbitron font-bold text-cyan-300 text-center"
+                    style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
+                  >
+                    Price
+                  </h3>
+                  {!isLoading && priceChange24h !== null && (
+                    <div className={`flex items-center gap-1 ${
+                      priceChange24h >= 0 ? 'text-primary' : 'text-red-400'
+                    }`}>
+                      {priceChange24h >= 0 ? (
+                        <TrendingUp className="w-3 h-3" />
+                      ) : (
+                        <TrendingDown className="w-3 h-3" />
+                      )}
+                      <span className="font-mono text-xs font-bold">
+                        {priceChange24h >= 0 ? '+' : ''}{priceChange24h.toFixed(2)}%
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <div className="text-2xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap">
                   {isLoading ? (
                     <span className="animate-pulse">...</span>
@@ -154,20 +171,6 @@ export const TokenSection = () => {
                     <span className="text-muted-foreground text-lg">N/A</span>
                   )}
                 </div>
-                {!isLoading && priceChange24h !== null && (
-                  <div className={`flex items-center justify-center gap-1 mt-1 ${
-                    priceChange24h >= 0 ? 'text-primary' : 'text-red-400'
-                  }`}>
-                    {priceChange24h >= 0 ? (
-                      <TrendingUp className="w-3 h-3" />
-                    ) : (
-                      <TrendingDown className="w-3 h-3" />
-                    )}
-                    <span className="font-mono text-xs font-bold">
-                      {priceChange24h >= 0 ? '+' : ''}{priceChange24h.toFixed(2)}%
-                    </span>
-                  </div>
-                )}
               </motion.div>
 
               {/* Multiplication Sign */}
