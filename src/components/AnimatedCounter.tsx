@@ -19,11 +19,11 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 min-h-[160px] md:h-[200px] flex flex-col justify-between items-center">
+  <div className="p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 min-h-[160px] md:h-[200px] flex flex-col justify-between items-center overflow-hidden">
     <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent pt-2">
       {label}
     </div>
-    <div className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap flex items-center justify-center flex-1">
+    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap flex items-center justify-center flex-1">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
@@ -112,13 +112,13 @@ export const AnimatedCounter = () => {
             </div>
             
             {/* SPEED Block - order 2 on mobile (right after convergence), 2 on desktop (center) */}
-            <div className="order-2 sm:order-2 p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col">
+            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col overflow-hidden">
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-auto uppercase tracking-widest text-center text-glow-accent pt-2">
                 Speed
               </div>
               
               {/* Fixed slots container */}
-              <div className="flex justify-center items-center text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-primary text-glow-primary whitespace-nowrap">
+              <div className="flex justify-center items-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary whitespace-nowrap">
                 {chars.map((char, index) => {
                   const isLeadingZero = leadingZeroPositions.has(index);
                   return (
