@@ -114,7 +114,7 @@ const textColorStyles = {
   secondary: 'group-hover:text-secondary',
   accent: 'group-hover:text-accent',
   pink: 'group-hover:text-accent',
-  white: 'group-hover:text-foreground group-hover:text-glow-primary',
+  white: 'group-hover:text-foreground group-hover:[text-shadow:0_0_10px_rgba(255,255,255,0.8)]',
   atomscan: 'group-hover:text-[#8B5CF6]',
   keplr: 'group-hover:text-[#5F38FB]',
   coingecko: 'group-hover:text-[#8DC63F]',
