@@ -30,7 +30,7 @@ const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
         value
       )}
     </div>
-    <div className="text-sm sm:text-base md:text-lg text-muted-foreground font-play text-center pb-2">
+    <div className="text-sm sm:text-base md:text-lg text-foreground font-play text-center pb-2">
       {subtitle}
     </div>
   </div>
@@ -137,7 +137,7 @@ export const AnimatedCounter = () => {
                 })}
               </div>
               
-              <div className="text-sm sm:text-base md:text-lg text-muted-foreground mt-auto font-play text-center pb-2">
+              <div className="text-sm sm:text-base md:text-lg text-foreground mt-auto font-play text-center pb-2">
                 {isLoading ? (
                   <span className="animate-pulse">Loading stats...</span>
                 ) : (
