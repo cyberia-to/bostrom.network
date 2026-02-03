@@ -244,9 +244,10 @@ export const TokenSection = () => {
                 href="https://app.osmosis.zone/assets/ibc/FE2CD1E6828EC0FAB8AF39BAC45BC25B965BA67CCBC50C13A14BD610B0D1E2C4"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-16 sm:px-24 py-4 sm:py-5 bg-accent text-accent-foreground font-orbitron font-bold text-lg sm:text-xl rounded-lg hover:scale-105 transition-transform text-center"
+                className="px-16 sm:px-24 py-4 sm:py-5 bg-pink-500 text-black font-orbitron font-bold text-lg sm:text-xl rounded-lg hover:scale-105 hover:bg-pink-400 transition-all text-center flex items-center gap-2 justify-center"
+                style={{ boxShadow: '0 0 30px rgba(236, 72, 153, 0.5)' }}
               >
-                BUY $BOOT
+                BUY <img src={bostromLogo} alt="BOOT" className="h-6 sm:h-7 w-auto" /> BOOT
               </a>
             </div>
           </motion.div>
