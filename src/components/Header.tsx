@@ -102,12 +102,16 @@ export const Header = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="lg:hidden fixed inset-0 top-16 md:top-20 z-50 bg-background"
+          className="lg:hidden fixed inset-0 top-0 z-[100]"
+          style={{ backgroundColor: 'hsl(0 0% 0%)' }}
         >
-          {/* Gradient background effect */}
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-accent/5" />
+          {/* Header area spacer */}
+          <div className="h-16 md:h-20" />
           
-          <nav className="relative container mx-auto px-6 py-8 flex flex-col h-full">
+          {/* Gradient background effect */}
+          <div className="absolute inset-0 top-16 md:top-20 bg-gradient-to-b from-primary/10 via-transparent to-accent/10 pointer-events-none" />
+          
+          <nav className="relative container mx-auto px-6 pt-20 md:pt-24 pb-8 flex flex-col h-full overflow-y-auto">
             {/* Navigation links */}
             <div className="flex flex-col gap-2">
               {navLinks.map((link, index) => (
