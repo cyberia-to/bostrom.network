@@ -3,6 +3,7 @@ import { ExternalLink } from 'lucide-react';
 
 // Import logos
 import cybLogo from '@/assets/ecosystem/cyb.png';
+import spacepussyLogo from '@/assets/ecosystem/spacepussy.png';
 import atomscanLogo from '@/assets/ecosystem/atomscan.png';
 import keplrLogo from '@/assets/ecosystem/keplr.png';
 import coingeckoLogo from '@/assets/ecosystem/coingecko.png';
@@ -30,6 +31,7 @@ const ecosystemItems = [
     description: 'Independence sandbox network for play and discover',
     url: 'https://spacepussy.ai/',
     color: 'pink',
+    logo: spacepussyLogo,
   },
   {
     name: 'GitHub',
