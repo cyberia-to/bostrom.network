@@ -17,7 +17,7 @@ import discordLogo from '@/assets/ecosystem/discord.svg';
 const ecosystemItems = [
   {
     name: 'cy',
-    description: 'CLI tool for Bostrom blockchain interactions',
+    description: 'tool for agents',
     url: 'https://github.com/cyber-prophet/cy',
     color: 'cyan',
     emoji: '💎',
