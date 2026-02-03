@@ -16,6 +16,13 @@ import discordLogo from '@/assets/ecosystem/discord.svg';
 
 const ecosystemItems = [
   {
+    name: 'cy',
+    description: 'CLI tool for Bostrom blockchain interactions',
+    url: 'https://github.com/cyber-prophet/cy',
+    color: 'cyan',
+    emoji: '💎',
+  },
+  {
     name: 'cyb.ai',
     description: 'The immortal robot for superintelligence',
     url: 'https://cyb.ai',
@@ -100,6 +107,7 @@ const colorStyles = {
   accent: 'border-accent/30 hover:border-accent',
   pink: 'border-accent/30 hover:border-accent',
   white: 'border-foreground/30 hover:border-foreground',
+  cyan: 'border-secondary/30 hover:border-secondary',
   atomscan: 'border-[#8B5CF6]/30 hover:border-[#8B5CF6]',
   keplr: 'border-[#5F38FB]/30 hover:border-[#5F38FB]',
   coingecko: 'border-[#8DC63F]/30 hover:border-[#8DC63F]',
@@ -115,6 +123,7 @@ const textColorStyles = {
   accent: 'group-hover:text-accent',
   pink: 'group-hover:text-accent',
   white: 'group-hover:text-foreground group-hover:[text-shadow:0_0_10px_rgba(255,255,255,0.8)]',
+  cyan: 'group-hover:text-secondary',
   atomscan: 'group-hover:text-[#8B5CF6]',
   keplr: 'group-hover:text-[#5F38FB]',
   coingecko: 'group-hover:text-[#8DC63F]',
@@ -162,14 +171,16 @@ export const Ecosystem = () => {
             >
               <div className="flex items-center justify-between mb-2 md:mb-4">
                 <div className="flex items-center gap-2 md:gap-3">
-                  {/* Logo visible only on desktop */}
-                  {item.logo && (
+                  {/* Logo or emoji visible only on desktop */}
+                  {'emoji' in item && item.emoji ? (
+                    <span className="hidden md:block text-2xl">{item.emoji}</span>
+                  ) : 'logo' in item && item.logo ? (
                     <img 
                       src={item.logo} 
                       alt={`${item.name} logo`}
                       className="hidden md:block w-6 h-6 object-contain rounded-full"
                     />
-                  )}
+                  ) : null}
                   <h3 className={`font-orbitron font-bold text-sm md:text-lg text-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`}>
                     {item.name}
                   </h3>
@@ -179,8 +190,12 @@ export const Ecosystem = () => {
               <p className="text-muted-foreground text-xs md:text-sm transition-colors group-hover:text-foreground">
                 {item.description}
               </p>
-              {/* Logo visible only on mobile - at bottom */}
-              {item.logo && (
+              {/* Logo or emoji visible only on mobile - at bottom */}
+              {'emoji' in item && item.emoji ? (
+                <div className="mt-3 flex justify-center md:hidden">
+                  <span className="text-3xl">{item.emoji}</span>
+                </div>
+              ) : 'logo' in item && item.logo ? (
                 <div className="mt-3 flex justify-center md:hidden">
                   <img 
                     src={item.logo} 
@@ -188,7 +203,7 @@ export const Ecosystem = () => {
                     className="w-8 h-8 object-contain rounded-full"
                   />
                 </div>
-              )}
+              ) : null}
             </motion.a>
           ))}
         </div>
