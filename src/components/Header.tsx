@@ -45,6 +45,7 @@ export const Header = () => {
           {/* Animated tagline - visible on all sizes */}
           <span 
             className="font-orbitron font-bold text-xs sm:text-sm md:text-base animate-starlight mx-2 sm:mx-4 flex-shrink min-w-0 truncate md:hidden"
+            style={{ wordSpacing: '-0.1em' }}
             data-text="BIG BADASS GRAPH"
           >
             BIG BADASS GRAPH
@@ -53,6 +54,7 @@ export const Header = () => {
           {/* Desktop tagline */}
           <span 
             className="hidden md:inline font-orbitron font-bold text-sm md:text-base animate-starlight"
+            style={{ wordSpacing: '-0.1em' }}
             data-text="BIG BADASS GRAPH"
           >
             BIG BADASS GRAPH
