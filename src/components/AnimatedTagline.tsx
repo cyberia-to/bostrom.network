@@ -17,20 +17,22 @@ export const AnimatedTagline = () => {
 
   return (
     <div className="h-12 md:h-14 lg:h-16 flex items-center justify-center overflow-hidden">
-      <p className="text-xl md:text-2xl lg:text-3xl max-w-2xl mx-auto font-orbitron text-center text-accent text-glow-accent">
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={wordIndex}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="inline-block"
-          >
-            {words[wordIndex]}
-          </motion.span>
-        </AnimatePresence>
-        {' '}{staticPart}
+      <p className="text-xl md:text-2xl lg:text-3xl max-w-2xl mx-auto font-orbitron text-center text-accent text-glow-accent flex items-center justify-center gap-2">
+        <span className="inline-block w-[90px] md:w-[120px] lg:w-[140px] text-right">
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={wordIndex}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="inline-block"
+            >
+              {words[wordIndex]}
+            </motion.span>
+          </AnimatePresence>
+        </span>
+        <span>{staticPart}</span>
       </p>
     </div>
   );
