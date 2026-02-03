@@ -44,19 +44,6 @@ export const MusicPlayer = () => {
     if (!audio) return;
     audioRef.current = audio;
 
-    // If any old <audio> tags are lingering (dev hot reload), stop them.
-    document.querySelectorAll('audio').forEach((el) => {
-      try {
-        el.pause();
-      } catch {
-        // ignore
-      }
-    });
-
-    // Hard-stop any previous playback before starting (fixes the "two tracks" bug)
-    audio.pause();
-    audio.currentTime = 0;
-
     // Apply initial settings
     audio.loop = isLooping;
     audio.volume = volume / 100;
@@ -77,32 +64,50 @@ export const MusicPlayer = () => {
 
     setCurrentTime(audio.currentTime || 0);
     setDuration(audio.duration || 0);
-    setIsPlaying(!audio.paused);
 
     let interactionHandler: (() => void) | null = null;
 
-    // Attempt to autoplay
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => setIsPlaying(true))
-        .catch(() => {
-          // Autoplay was prevented by browser, wait for first interaction
-          setIsPlaying(false);
-          interactionHandler = () => {
-            audio.play().then(() => setIsPlaying(true)).catch(() => {});
-            document.removeEventListener('click', interactionHandler!);
-            document.removeEventListener('keydown', interactionHandler!);
-            interactionHandler = null;
-          };
-          document.addEventListener('click', interactionHandler);
-          document.addEventListener('keydown', interactionHandler);
-        });
+    const tryPlay = () => {
+      // Don't restart if already playing
+      if (!audio.paused) {
+        setIsPlaying(true);
+        return;
+      }
+      
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch(() => {
+            // Autoplay was prevented by browser, wait for first interaction
+            setIsPlaying(false);
+            interactionHandler = () => {
+              audio.play().then(() => setIsPlaying(true)).catch(() => {});
+              document.removeEventListener('click', interactionHandler!);
+              document.removeEventListener('keydown', interactionHandler!);
+              document.removeEventListener('touchstart', interactionHandler!);
+              interactionHandler = null;
+            };
+            document.addEventListener('click', interactionHandler);
+            document.addEventListener('keydown', interactionHandler);
+            document.addEventListener('touchstart', interactionHandler);
+          });
+      }
+    };
+
+    // Wait for audio to be ready before playing
+    if (audio.readyState >= 2) {
+      tryPlay();
+    } else {
+      const onCanPlay = () => {
+        tryPlay();
+        audio.removeEventListener('canplay', onCanPlay);
+      };
+      audio.addEventListener('canplay', onCanPlay);
     }
 
     return () => {
-      audio.pause();
-      audio.currentTime = 0;
+      // Don't pause audio on cleanup - keep it playing across re-renders
       audio.removeEventListener('timeupdate', onTimeUpdate);
       audio.removeEventListener('loadedmetadata', onLoadedMetadata);
       audio.removeEventListener('durationchange', onDurationChange);
@@ -111,6 +116,7 @@ export const MusicPlayer = () => {
       if (interactionHandler) {
         document.removeEventListener('click', interactionHandler);
         document.removeEventListener('keydown', interactionHandler);
+        document.removeEventListener('touchstart', interactionHandler);
       }
     };
   }, []);
