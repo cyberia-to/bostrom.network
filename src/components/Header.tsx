@@ -101,19 +101,34 @@ export const Header = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="lg:hidden fixed inset-0 top-0 z-[100]"
+          transition={{ duration: 0.2 }}
+          className="lg:hidden fixed inset-0 z-[100]"
           style={{ backgroundColor: 'hsl(0 0% 0%)' }}
         >
-          {/* Header area spacer */}
-          <div className="h-16 md:h-20" />
+          {/* Menu Header */}
+          <div className="container mx-auto px-2 sm:px-6">
+            <div className="flex items-center justify-between h-16 md:h-20">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <img src={bostromLogo} alt="Bostrom" className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10" />
+                <span className="font-orbitron font-bold text-base sm:text-lg md:text-xl text-primary text-glow-primary">
+                  BOSTROM
+                </span>
+              </div>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 text-foreground border border-primary/30 rounded-lg hover:border-primary transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
           
-          {/* Gradient background effect */}
-          <div className="absolute inset-0 top-16 md:top-20 bg-gradient-to-b from-primary/10 via-transparent to-accent/10 pointer-events-none" />
+          {/* Gradient line */}
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
           
-          <nav className="relative container mx-auto px-6 pt-20 md:pt-24 pb-8 flex flex-col h-full overflow-y-auto">
-            {/* Navigation links */}
-            <div className="flex flex-col gap-2">
+          {/* Navigation */}
+          <nav className="container mx-auto px-6 py-8 flex flex-col h-[calc(100%-5rem)] overflow-y-auto">
+            <div className="flex flex-col gap-1">
               {navLinks.map((link, index) => (
                 <motion.a
                   key={link.label}
@@ -123,10 +138,10 @@ export const Header = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05, duration: 0.3 }}
-                  className="group flex items-center gap-4 py-4 border-b border-border/30 hover:border-primary/50 transition-colors"
+                  transition={{ delay: index * 0.05, duration: 0.2 }}
+                  className="group flex items-center gap-4 py-5 border-b border-primary/20 hover:bg-primary/5 transition-all rounded-lg px-2 -mx-2"
                 >
-                  <span className="w-2 h-2 rounded-full bg-primary/30 group-hover:bg-primary group-hover:shadow-[0_0_10px_hsl(var(--primary))] transition-all" />
+                  <span className="w-2 h-2 rounded-full bg-primary group-hover:shadow-[0_0_12px_hsl(var(--primary))] transition-all" />
                   <span className="font-orbitron text-xl text-foreground group-hover:text-primary transition-colors">
                     {link.label}
                   </span>
@@ -134,18 +149,19 @@ export const Header = () => {
               ))}
             </div>
             
-            {/* CTA Button at bottom */}
+            {/* CTA Button */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.3 }}
-              className="mt-auto pb-8"
+              transition={{ delay: 0.25, duration: 0.2 }}
+              className="mt-auto pt-8 pb-4"
             >
               <a
                 href="https://cyb.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full px-6 py-4 bg-primary text-primary-foreground font-orbitron font-bold text-center text-lg rounded-xl hover:scale-[1.02] transition-transform shadow-[0_0_30px_hsl(var(--primary)/0.3)]"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full px-6 py-4 bg-primary text-primary-foreground font-orbitron font-bold text-center text-lg rounded-xl hover:scale-[1.02] transition-transform shadow-[0_0_30px_hsl(var(--primary)/0.4)]"
               >
                 LAUNCH BROWSER
               </a>
