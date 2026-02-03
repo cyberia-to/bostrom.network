@@ -62,8 +62,8 @@ export const Header = () => {
             </span>
           </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          {/* Desktop Nav - hidden on mobile and tablet */}
+          <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -85,23 +85,23 @@ export const Header = () => {
             </a>
           </nav>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile/Tablet Menu Toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-1 text-foreground shrink-0"
+            className="lg:hidden p-1 text-foreground shrink-0"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile/Tablet Menu */}
       {isMobileMenuOpen && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border"
+          className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border"
         >
           <nav className="container mx-auto px-6 py-4 flex flex-col gap-4">
             {navLinks.map((link) => (
