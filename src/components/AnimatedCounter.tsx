@@ -19,18 +19,18 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 min-h-[160px] md:h-[200px] flex flex-col justify-between items-center overflow-hidden">
-    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent pt-2">
+  <div className="p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
+    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
       {label}
     </div>
-    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap flex items-center justify-center flex-1">
+    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
         value
       )}
     </div>
-    <div className="text-sm sm:text-base md:text-lg text-foreground font-play text-center pb-2">
+    <div className="text-sm sm:text-base md:text-lg text-foreground font-play text-center h-12 md:h-14 flex items-start justify-center">
       {subtitle}
     </div>
   </div>
@@ -112,13 +112,13 @@ export const AnimatedCounter = () => {
             </div>
             
             {/* SPEED Block - order 2 on mobile (right after convergence), 2 on desktop (center) */}
-            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col overflow-hidden">
-              <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-auto uppercase tracking-widest text-center text-glow-accent pt-2">
+            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
+              <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
                 Speed
               </div>
               
               {/* Fixed slots container */}
-              <div className="flex justify-center items-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary whitespace-nowrap">
+              <div className="flex justify-center items-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary whitespace-nowrap h-16 md:h-20">
                 {chars.map((char, index) => {
                   const isLeadingZero = leadingZeroPositions.has(index);
                   return (
@@ -137,7 +137,7 @@ export const AnimatedCounter = () => {
                 })}
               </div>
               
-              <div className="text-sm sm:text-base md:text-lg text-foreground mt-auto font-play text-center pb-2">
+              <div className="text-sm sm:text-base md:text-lg text-foreground font-play text-center h-12 md:h-14 flex items-start justify-center">
                 {isLoading ? (
                   <span className="animate-pulse">Loading stats...</span>
                 ) : (
