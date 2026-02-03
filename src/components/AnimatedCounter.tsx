@@ -60,7 +60,7 @@ export const AnimatedCounter = () => {
           className="flex flex-col items-center gap-6"
         >
           {/* Stats blocks row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0.5 sm:gap-1 md:gap-2 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0.5 sm:gap-1 md:gap-2 w-full max-w-[1008px]">
             {/* SIZE Block - order 3 on mobile, 1 on desktop */}
             <div className="order-3 sm:order-1">
               <StatBlock
@@ -108,7 +108,7 @@ export const AnimatedCounter = () => {
           </div>
           
           {/* Convergence line spanning all blocks - hidden on mobile, shown on desktop */}
-          <div className="hidden sm:block w-full">
+          <div className="hidden sm:block w-full max-w-[1008px]">
             <ConvergenceGraph progress={progress} />
           </div>
         </motion.div>
