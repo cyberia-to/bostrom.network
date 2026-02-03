@@ -113,6 +113,20 @@ export const TokenSection = () => {
               mint hydrogen, and participate in governance.
             </p>
 
+            {/* Price Chart - above formula */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="mb-8 p-4 rounded-xl border border-border bg-card/30"
+            >
+              <PriceChart 
+                data={priceHistory} 
+                isPositive={(priceChange24h ?? 0) >= 0} 
+              />
+            </motion.div>
+
             {/* Formula: Price × Supply = Market Cap */}
             <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 mb-8">
               
@@ -121,7 +135,7 @@ export const TokenSection = () => {
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
                 className="p-6 rounded-xl border-2 border-primary/50 bg-primary/5 box-glow-primary w-full lg:w-auto lg:min-w-[200px]"
               >
                 <div className="text-sm text-muted-foreground font-play mb-1">
@@ -162,7 +176,7 @@ export const TokenSection = () => {
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
                 className="p-6 rounded-xl border border-border bg-card/50 w-full lg:w-auto lg:min-w-[200px]"
               >
                 <h3 
@@ -195,7 +209,7 @@ export const TokenSection = () => {
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
                 className="p-6 rounded-xl border-2 border-accent/50 bg-accent/5 w-full lg:w-auto lg:min-w-[200px]"
                 style={{ boxShadow: '0 0 20px rgba(0, 255, 0, 0.3)' }}
               >
@@ -216,20 +230,6 @@ export const TokenSection = () => {
                 </div>
               </motion.div>
             </div>
-
-            {/* Price Chart */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="mb-8 p-4 rounded-xl border border-border bg-card/30"
-            >
-              <PriceChart 
-                data={priceHistory} 
-                isPositive={(priceChange24h ?? 0) >= 0} 
-              />
-            </motion.div>
 
             {/* CTA - Single BUY button */}
             <div className="flex justify-center">
