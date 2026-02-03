@@ -6,6 +6,7 @@ import bostromLogo from '@/assets/bostrom-logo.png';
 const navLinks = [
   { label: 'How?', href: '#how' },
   { label: '$BOOT', href: '#token' },
+  { label: 'Science', href: '#science' },
   { label: 'Ecosystem', href: '#ecosystem' },
   { label: 'Docs', href: 'https://cyber.page/bostrom', external: true },
 ];
