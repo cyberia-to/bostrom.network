@@ -5,47 +5,15 @@ import { ConvergenceGraph } from './ConvergenceGraph';
 import { useMemo } from 'react';
 
 const MAX_COUNT = 3_000_000;
-const DIGIT_SLOTS = 7; // Fixed number of digit slots for stable layout
+const DIGIT_SLOTS = 8; // Fixed number of digit slots for stable width across blocks
 
 const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
 };
 
-interface StatBlockProps {
-  label: string;
-  value: string | number;
-  subtitle: string;
-  isLoading?: boolean;
-}
-
-const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
-    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
-      {label}
-    </div>
-    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
-      {isLoading ? (
-        <span className="animate-pulse">...</span>
-      ) : (
-        value
-      )}
-    </div>
-    <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-12 md:h-14 flex items-center justify-center">
-      {subtitle}
-    </div>
-  </div>
-);
-
-export const AnimatedCounter = () => {
-  const { count } = useWeightCounter();
-  const { data: bostromStats, isLoading } = useBostromStats();
-
-  // Calculate progress towards 3M
-  const progress = Math.min(count / MAX_COUNT, 1);
-
-  // Stable SPEED number layout (fixed slots) so digits don't "jump" on tablet
-  const { chars, leadingZeroPositions } = useMemo(() => {
-    const paddedNumber = count.toString().padStart(DIGIT_SLOTS, '0');
+const useSlottedNumber = (value: number) => {
+  return useMemo(() => {
+    const paddedNumber = value.toString().padStart(DIGIT_SLOTS, '0');
     const formatted = paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     const charArray = formatted.split('');
 
@@ -56,6 +24,7 @@ export const AnimatedCounter = () => {
       const ch = charArray[i];
 
       if (ch === ',') {
+        // Hide comma if it's between leading zeros
         if (!foundNonZero) leadingZeros.add(i);
         continue;
       }
@@ -68,7 +37,65 @@ export const AnimatedCounter = () => {
     }
 
     return { chars: charArray, leadingZeroPositions: leadingZeros };
-  }, [count]);
+  }, [value]);
+};
+
+const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }) => {
+  const { chars, leadingZeroPositions } = useSlottedNumber(value);
+
+  return (
+    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
+      {isLoading ? (
+        <span className="animate-pulse">...</span>
+      ) : (
+        <>
+          <span className="sr-only">{formatNumber(value)}</span>
+          <span aria-hidden="true" className="inline-flex items-center justify-center">
+            {chars.map((char, index) => {
+              const isLeadingZero = leadingZeroPositions.has(index);
+              return (
+                <span
+                  key={index}
+                  className={`inline-flex items-center justify-center ${
+                    char === ',' ? 'w-[0.3em] sm:w-[0.32em]' : 'w-[0.6em] sm:w-[0.65em]'
+                  } ${isLeadingZero ? 'opacity-0' : ''}`}
+                >
+                  {char}
+                </span>
+              );
+            })}
+          </span>
+        </>
+      )}
+    </div>
+  );
+};
+
+interface StatBlockProps {
+  label: string;
+  value: number;
+  subtitle: string;
+  isLoading?: boolean;
+}
+
+const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
+  <div className="p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
+    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
+      {label}
+    </div>
+    <NumberLine value={value} isLoading={isLoading} />
+    <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-12 md:h-14 flex items-center justify-center">
+      {subtitle}
+    </div>
+  </div>
+);
+
+export const AnimatedCounter = () => {
+  const { count } = useWeightCounter();
+  const { data: bostromStats, isLoading } = useBostromStats();
+
+  // Calculate progress towards 3M
+  const progress = Math.min(count / MAX_COUNT, 1);
 
   // Use real data or fallback to defaults
   const weightsPerSecond = bostromStats?.weightsPerSecond ?? 70000;
@@ -94,7 +121,7 @@ export const AnimatedCounter = () => {
             <div className="order-3 sm:order-1">
               <StatBlock
                 label="Size"
-                value={formatNumber(cyberlinks)}
+                value={cyberlinks}
                 subtitle="total cyberlinks"
                 isLoading={isLoading}
               />
@@ -112,21 +139,7 @@ export const AnimatedCounter = () => {
               </div>
 
               {/* Number line (aligned with SIZE/QUALITY) */}
-              <div className="flex justify-center items-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none whitespace-nowrap h-16 md:h-20">
-                {chars.map((char, index) => {
-                  const isLeadingZero = leadingZeroPositions.has(index);
-                  return (
-                    <span
-                      key={index}
-                      className={`inline-flex items-center justify-center ${
-                        char === ',' ? 'w-[0.3em] sm:w-[0.35em]' : 'w-[0.65em] sm:w-[0.75em]'
-                      } ${isLeadingZero ? 'opacity-0' : ''}`}
-                    >
-                      {char}
-                    </span>
-                  );
-                })}
-              </div>
+              <NumberLine value={count} />
               
               <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-12 md:h-14 flex items-center justify-center">
                 {isLoading ? (
@@ -141,7 +154,7 @@ export const AnimatedCounter = () => {
             <div className="order-4 sm:order-3">
               <StatBlock
                 label="Quality"
-                value={formatNumber(negentropy)}
+                value={negentropy}
                 subtitle="negentropy"
                 isLoading={isLoading}
               />
