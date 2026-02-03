@@ -10,35 +10,18 @@ const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
 };
 
-const padToLengthCentered = (s: string, minLen?: number) => {
-  if (!minLen || s.length >= minLen) return s;
-  const total = minLen - s.length;
-  const left = Math.floor(total / 2);
-  const right = total - left;
-  return `${" ".repeat(left)}${s}${" ".repeat(right)}`;
-};
-
 // Simple number display - no leading zeros, fits within container
-const NumberLine = ({
-  value,
-  isLoading,
-  minChars,
-}: {
-  value: number;
-  isLoading?: boolean;
-  minChars?: number;
-}) => {
+const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }) => {
   const formattedValue = formatNumber(value);
-  const displayValue = padToLengthCentered(formattedValue, minChars);
   
   return (
-    <div className="w-full flex-1 flex items-center justify-center px-6 py-1 min-w-0">
+    <div className="w-full flex-1 flex items-center justify-center px-4 min-w-0">
       {isLoading ? (
         <span className="font-orbitron font-bold text-primary text-glow-primary text-2xl animate-pulse">...</span>
       ) : (
         <FittedText
-          text={displayValue}
-          className="font-orbitron font-bold text-primary text-glow-primary text-[clamp(1.7rem,3.4vw,3.1rem)]"
+          text={formattedValue}
+          className="font-orbitron font-bold text-primary text-glow-primary text-[clamp(2rem,4.5vw,3.5rem)]"
         />
       )}
     </div>
@@ -114,7 +97,7 @@ export const AnimatedCounter = () => {
                 </div>
 
                 {/* Number line (aligned with SIZE/QUALITY) */}
-                 <NumberLine value={count} minChars={formatNumber(MAX_COUNT).length} />
+                 <NumberLine value={count} />
                 
                 <div className="text-xs sm:text-sm md:text-base text-foreground font-play text-center whitespace-nowrap shrink-0">
                   {isLoading ? (
