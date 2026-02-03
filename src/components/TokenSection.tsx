@@ -136,7 +136,7 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-background w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
                 style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
                 {/* Header row: Price + Change */}
@@ -186,7 +186,7 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-background w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
                 style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
                 <div className="h-7 flex items-center">
@@ -224,10 +224,9 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="p-6 rounded-xl border-2 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
+                className="p-6 rounded-xl border-2 bg-background w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
                 style={{ 
                   borderColor: 'rgba(255, 0, 255, 0.7)',
-                  backgroundColor: 'rgba(255, 0, 255, 0.05)',
                   boxShadow: '0 0 25px rgba(255, 0, 255, 0.3)' 
                 }}
               >
