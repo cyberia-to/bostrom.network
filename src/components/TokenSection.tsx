@@ -136,11 +136,11 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
                 style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
                 {/* Header row: Price + Change */}
-                <div className="flex items-center justify-center gap-3 mb-2">
+                <div className="flex items-center justify-center gap-2 h-7">
                   <h3 
                     className="text-lg font-orbitron font-bold text-cyan-300 text-center"
                     style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
@@ -162,14 +162,16 @@ export const TokenSection = () => {
                     </div>
                   )}
                 </div>
-                <div className="text-2xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap">
-                  {isLoading ? (
-                    <span className="animate-pulse">...</span>
-                  ) : price !== null ? (
-                    <>${formatPriceWithSubscript(price)}</>
-                  ) : (
-                    <span className="text-muted-foreground text-lg">N/A</span>
-                  )}
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-2xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap">
+                    {isLoading ? (
+                      <span className="animate-pulse">...</span>
+                    ) : price !== null ? (
+                      <>${formatPriceWithSubscript(price)}</>
+                    ) : (
+                      <span className="text-muted-foreground text-lg">N/A</span>
+                    )}
+                  </div>
                 </div>
               </motion.div>
 
@@ -184,26 +186,30 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
                 style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
-                <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2 text-center"
-                  style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
-                >
-                  Supply
-                </h3>
-                <div className="text-2xl font-orbitron font-bold text-primary flex items-center justify-center gap-2 whitespace-nowrap">
-                  {isLoading ? (
-                    <span className="animate-pulse text-muted-foreground">...</span>
-                  ) : totalSupply !== null ? (
-                    <>
-                      <BootLogo />
-                      <span>{formatSupply(totalSupply)}</span>
-                    </>
-                  ) : (
-                    <span className="text-muted-foreground text-lg">N/A</span>
-                  )}
+                <div className="h-7 flex items-center">
+                  <h3 
+                    className="text-lg font-orbitron font-bold text-cyan-300 text-center"
+                    style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
+                  >
+                    Supply
+                  </h3>
+                </div>
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-2xl font-orbitron font-bold text-primary flex items-center justify-center gap-2 whitespace-nowrap">
+                    {isLoading ? (
+                      <span className="animate-pulse text-muted-foreground">...</span>
+                    ) : totalSupply !== null ? (
+                      <>
+                        <BootLogo />
+                        <span>{formatSupply(totalSupply)}</span>
+                      </>
+                    ) : (
+                      <span className="text-muted-foreground text-lg">N/A</span>
+                    )}
+                  </div>
                 </div>
               </motion.div>
 
@@ -218,29 +224,33 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="p-6 rounded-xl border-2 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
+                className="p-6 rounded-xl border-2 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
                 style={{ 
                   borderColor: 'rgba(255, 0, 255, 0.7)',
                   backgroundColor: 'rgba(255, 0, 255, 0.05)',
                   boxShadow: '0 0 25px rgba(255, 0, 255, 0.3)' 
                 }}
               >
-                <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2 text-center"
-                  style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
-                >
-                  Market Cap
-                </h3>
-                <div className="text-2xl font-orbitron font-bold text-center whitespace-nowrap"
-                  style={{ color: '#FF00FF', textShadow: '0 0 10px rgba(255, 0, 255, 0.6)' }}
-                >
-                  {isLoading ? (
-                    <span className="animate-pulse text-muted-foreground">...</span>
-                  ) : calculatedMarketCap !== null ? (
-                    <span>${formatLargeNumber(calculatedMarketCap)}</span>
-                  ) : (
-                    <span className="text-muted-foreground text-lg">N/A</span>
-                  )}
+                <div className="h-7 flex items-center">
+                  <h3 
+                    className="text-lg font-orbitron font-bold text-cyan-300 text-center"
+                    style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
+                  >
+                    Market Cap
+                  </h3>
+                </div>
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-2xl font-orbitron font-bold text-center whitespace-nowrap"
+                    style={{ color: '#FF00FF', textShadow: '0 0 10px rgba(255, 0, 255, 0.6)' }}
+                  >
+                    {isLoading ? (
+                      <span className="animate-pulse text-muted-foreground">...</span>
+                    ) : calculatedMarketCap !== null ? (
+                      <span>${formatLargeNumber(calculatedMarketCap)}</span>
+                    ) : (
+                      <span className="text-muted-foreground text-lg">N/A</span>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </div>
