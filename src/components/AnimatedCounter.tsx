@@ -15,7 +15,9 @@ const formatNumber = (num: number): string => {
 const useFixedSlots = (value: number) => {
   return useMemo(() => {
     const safe = Math.max(0, Math.trunc(value));
-    const digits = safe.toString().padStart(8, ' ');
+    // Keep a constant digit count so the number does not shift when crossing digit-length boundaries.
+    // Use leading zeros but dim them to preserve readability.
+    const digits = safe.toString().padStart(8, '0');
 
     const chars = [
       digits[0],
@@ -30,38 +32,28 @@ const useFixedSlots = (value: number) => {
       digits[7],
     ];
 
-    const hidden = new Set<number>();
-    let foundDigit = false;
-    for (let i = 0; i < chars.length; i++) {
-      const ch = chars[i];
+    const dimmed = new Set<number>();
+    if (safe !== 0) {
+      let foundNonZero = false;
+      for (let i = 0; i < chars.length; i++) {
+        const ch = chars[i];
 
-      if (!foundDigit) {
-        if (ch === ' ' || ch === ',') {
-          hidden.add(i);
-        } else {
-          foundDigit = true;
+        if (!foundNonZero) {
+          if (ch === '0' || ch === ',') dimmed.add(i);
+          if (ch !== '0' && ch !== ',') foundNonZero = true;
         }
       }
     }
 
-    // If value is 0, show last digit slot as 0 (avoid hiding everything)
-    if (safe === 0) {
-      for (let i = 0; i < chars.length; i++) hidden.delete(i);
-      // hide leading spaces + commas before the final digit
-      for (let i = 0; i < chars.length - 1; i++) {
-        if (chars[i] === ' ' || chars[i] === ',') hidden.add(i);
-      }
-    }
-
-    return { chars, hidden };
+    return { chars, dimmed };
   }, [value]);
 };
 
 const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }) => {
-  const { chars, hidden } = useFixedSlots(value);
+  const { chars, dimmed } = useFixedSlots(value);
 
   return (
-    <div className="font-orbitron font-bold text-primary text-glow-primary leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20 w-full min-w-0 px-2">
+    <div className="font-orbitron font-bold text-primary text-glow-primary leading-[1.05] text-center whitespace-nowrap flex items-center justify-center min-h-14 md:min-h-16 w-full min-w-0 px-3 overflow-visible">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
@@ -69,16 +61,16 @@ const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }
           <span className="sr-only">{formatNumber(value)}</span>
           <span
             aria-hidden="true"
-            className="inline-flex items-center justify-center text-4xl sm:text-3xl md:text-4xl lg:text-5xl"
+            className="inline-flex flex-nowrap items-center justify-center tabular-nums text-4xl sm:text-4xl md:text-5xl lg:text-6xl"
           >
             {chars.map((ch, i) => (
               <span
                 key={i}
                 className={`inline-flex items-center justify-center shrink-0 ${
                   ch === ','
-                    ? 'w-[0.30em] sm:w-[0.32em] md:w-[0.34em] lg:w-[0.36em]'
-                    : 'w-[0.62em] sm:w-[0.66em] md:w-[0.70em] lg:w-[0.74em]'
-                } ${hidden.has(i) ? 'opacity-0' : ''}`}
+                    ? 'w-[0.36em] sm:w-[0.38em] md:w-[0.40em] lg:w-[0.42em]'
+                    : 'w-[0.78em] sm:w-[0.82em] md:w-[0.86em] lg:w-[0.90em]'
+                } ${dimmed.has(i) ? 'opacity-25' : 'opacity-100'}`}
               >
                 {ch}
               </span>
@@ -98,12 +90,12 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
-    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
+  <div className="p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center">
+    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-7 md:h-8 flex items-center">
       {label}
     </div>
     <NumberLine value={value} isLoading={isLoading} />
-    <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-12 md:h-14 flex items-center justify-center">
+    <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-10 md:h-12 flex items-center justify-center">
       {subtitle}
     </div>
   </div>
@@ -152,15 +144,15 @@ export const AnimatedCounter = () => {
             </div>
             
             {/* SPEED Block - order 2 on mobile (right after convergence), 2 on desktop (center) */}
-            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
-              <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
+            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[160px] md:h-[200px] flex flex-col items-center">
+              <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-7 md:h-8 flex items-center">
                 Speed
               </div>
 
               {/* Number line (aligned with SIZE/QUALITY) */}
               <NumberLine value={count} />
               
-              <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-12 md:h-14 flex items-center justify-center">
+              <div className="text-sm sm:text-base md:text-base lg:text-lg text-foreground font-play text-center whitespace-nowrap h-10 md:h-12 flex items-center justify-center">
                 {isLoading ? (
                   <span className="animate-pulse">Loading stats...</span>
                 ) : (
