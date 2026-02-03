@@ -2,7 +2,7 @@ import bostromLogo from '@/assets/bostrom-logo.png';
 
 export const Footer = () => {
   return (
-    <footer className="py-8 md:py-12 border-t border-border">
+    <footer className="py-8 md:py-12 pb-24 md:pb-28 border-t border-border">
       <div className="container mx-auto px-6">
         {/* Top row - logo and BIG BADASS GRAPH */}
         <div className="flex items-center justify-between mb-4 md:mb-6">
