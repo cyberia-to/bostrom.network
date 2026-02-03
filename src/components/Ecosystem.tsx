@@ -166,7 +166,7 @@ export const Ecosystem = () => {
                     <img 
                       src={item.logo} 
                       alt={`${item.name} logo`}
-                      className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                      className="w-5 h-5 md:w-6 md:h-6 object-contain rounded-full"
                     />
                   )}
                   <h3 className={`font-orbitron font-bold text-sm md:text-lg text-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`}>
