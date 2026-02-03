@@ -106,8 +106,13 @@ export const AnimatedCounter = () => {
               />
             </div>
             
-            {/* SPEED Block - order 1 on mobile (first), 2 on desktop (center) */}
-            <div className="order-1 sm:order-2 p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col">
+            {/* Convergence line - order 1 on mobile (before Speed), hidden on desktop */}
+            <div className="order-1 sm:hidden w-full">
+              <ConvergenceGraph progress={progress} />
+            </div>
+            
+            {/* SPEED Block - order 3 on mobile (after convergence), 2 on desktop (center) */}
+            <div className="order-3 sm:order-2 p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col">
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-auto uppercase tracking-widest text-center text-glow-accent pt-2">
                 Speed
               </div>
@@ -141,8 +146,8 @@ export const AnimatedCounter = () => {
               </div>
             </div>
             
-            {/* QUALITY Block - order 3 on both */}
-            <div className="order-3">
+            {/* QUALITY Block - order 4 on mobile, 3 on desktop */}
+            <div className="order-4 sm:order-3">
               <StatBlock
                 label="Quality"
                 value={formatNumber(negentropy)}
@@ -152,8 +157,8 @@ export const AnimatedCounter = () => {
             </div>
           </div>
           
-          {/* Convergence line spanning all blocks */}
-          <div className="w-full max-w-[1008px]">
+          {/* Convergence line spanning all blocks - hidden on mobile, shown on desktop */}
+          <div className="hidden sm:block w-full max-w-[1008px]">
             <ConvergenceGraph progress={progress} />
           </div>
         </motion.div>
