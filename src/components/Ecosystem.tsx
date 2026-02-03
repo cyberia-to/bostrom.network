@@ -9,7 +9,7 @@ const ecosystemItems = [
     color: 'primary',
   },
   {
-    name: 'Cyber',
+    name: 'cyber.page',
     description: 'Community knowledge graph for type I civilization',
     url: 'https://cyber.page/',
     color: 'secondary',
