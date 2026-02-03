@@ -7,7 +7,7 @@ let intervalId: NodeJS.Timeout | null = null;
 
 const maxCount = 3000000;
 const durationMs = 60000; // 1 minute
-const intervalMs = 16; // ~60fps
+const intervalMs = 50; // ~20fps - достаточно для плавной анимации счётчика
 const incrementPerInterval = Math.round(maxCount / (durationMs / intervalMs));
 
 const startInterval = () => {
