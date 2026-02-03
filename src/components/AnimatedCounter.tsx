@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
 import { useBostromStats } from '@/hooks/useBostromStats';
 import { ConvergenceGraph } from './ConvergenceGraph';
+import { FittedText } from '@/components/FittedText';
 
 const MAX_COUNT = 3_000_000;
 
@@ -9,23 +10,36 @@ const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
 };
 
+const padToLengthCentered = (s: string, minLen?: number) => {
+  if (!minLen || s.length >= minLen) return s;
+  const total = minLen - s.length;
+  const left = Math.floor(total / 2);
+  const right = total - left;
+  return `${" ".repeat(left)}${s}${" ".repeat(right)}`;
+};
+
 // Simple number display - no leading zeros, fits within container
-const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }) => {
+const NumberLine = ({
+  value,
+  isLoading,
+  minChars,
+}: {
+  value: number;
+  isLoading?: boolean;
+  minChars?: number;
+}) => {
   const formattedValue = formatNumber(value);
+  const displayValue = padToLengthCentered(formattedValue, minChars);
   
   return (
-    <div className="w-full flex-1 flex items-center justify-center px-4 sm:px-3 md:px-4 overflow-hidden">
+    <div className="w-full flex-1 flex items-center justify-center px-6 py-1 min-w-0">
       {isLoading ? (
         <span className="font-orbitron font-bold text-primary text-glow-primary text-2xl animate-pulse">...</span>
       ) : (
-        <span 
-          className="font-orbitron font-bold text-primary text-glow-primary leading-none text-center whitespace-nowrap"
-          style={{
-            fontSize: 'clamp(1.5rem, 5vw, 3rem)',
-          }}
-        >
-          {formattedValue}
-        </span>
+        <FittedText
+          text={displayValue}
+          className="font-orbitron font-bold text-primary text-glow-primary text-[clamp(1.7rem,3.4vw,3.1rem)]"
+        />
       )}
     </div>
   );
@@ -39,7 +53,7 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-4 md:p-5 lg:p-6 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[140px] sm:h-[150px] md:h-[170px] lg:h-[190px] flex flex-col items-center justify-between overflow-hidden">
+  <div className="p-4 sm:p-4 md:p-5 lg:p-6 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[140px] sm:h-[150px] md:h-[170px] lg:h-[190px] flex flex-col items-center justify-between">
     <div className="text-xs sm:text-sm md:text-base lg:text-lg font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent shrink-0">
       {label}
     </div>
@@ -94,13 +108,13 @@ export const AnimatedCounter = () => {
             
             {/* SPEED Block - order 2 on mobile (right after convergence), 2 on desktop (center) */}
             <div className="order-2 sm:order-2">
-              <div className="p-4 sm:p-4 md:p-5 lg:p-6 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[140px] sm:h-[150px] md:h-[170px] lg:h-[190px] flex flex-col items-center justify-between overflow-hidden">
+              <div className="p-4 sm:p-4 md:p-5 lg:p-6 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[140px] sm:h-[150px] md:h-[170px] lg:h-[190px] flex flex-col items-center justify-between">
                 <div className="text-xs sm:text-sm md:text-base lg:text-lg font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent shrink-0">
                   Speed
                 </div>
 
                 {/* Number line (aligned with SIZE/QUALITY) */}
-                <NumberLine value={count} />
+                 <NumberLine value={count} minChars={formatNumber(MAX_COUNT).length} />
                 
                 <div className="text-xs sm:text-sm md:text-base text-foreground font-play text-center whitespace-nowrap shrink-0">
                   {isLoading ? (
