@@ -215,8 +215,12 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="p-6 rounded-xl border-2 border-pink-500/70 bg-pink-500/5 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
-                style={{ boxShadow: '0 0 25px rgba(236, 72, 153, 0.3)' }}
+                className="p-6 rounded-xl border-2 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center"
+                style={{ 
+                  borderColor: 'rgba(255, 0, 255, 0.7)',
+                  backgroundColor: 'rgba(255, 0, 255, 0.05)',
+                  boxShadow: '0 0 25px rgba(255, 0, 255, 0.3)' 
+                }}
               >
                 <h3 
                   className="text-lg font-orbitron font-bold text-cyan-300 mb-2 text-center"
@@ -224,8 +228,8 @@ export const TokenSection = () => {
                 >
                   Market Cap
                 </h3>
-                <div className="text-2xl font-orbitron font-bold text-pink-400 text-center whitespace-nowrap"
-                  style={{ textShadow: '0 0 10px rgba(236, 72, 153, 0.6)' }}
+                <div className="text-2xl font-orbitron font-bold text-center whitespace-nowrap"
+                  style={{ color: '#FF00FF', textShadow: '0 0 10px rgba(255, 0, 255, 0.6)' }}
                 >
                   {isLoading ? (
                     <span className="animate-pulse text-muted-foreground">...</span>
@@ -244,8 +248,12 @@ export const TokenSection = () => {
                 href="https://app.osmosis.zone/assets/ibc/FE2CD1E6828EC0FAB8AF39BAC45BC25B965BA67CCBC50C13A14BD610B0D1E2C4"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-16 sm:px-24 py-4 sm:py-5 bg-pink-500 text-black font-orbitron font-bold text-lg sm:text-xl rounded-lg hover:scale-105 hover:bg-pink-400 transition-all text-center flex items-center gap-2 justify-center"
-                style={{ boxShadow: '0 0 30px rgba(236, 72, 153, 0.5)' }}
+                className="px-16 sm:px-24 py-4 sm:py-5 font-orbitron font-bold text-lg sm:text-xl rounded-lg hover:scale-105 transition-all text-center flex items-center gap-2 justify-center"
+                style={{ 
+                  backgroundColor: '#FF00FF',
+                  color: '#000000',
+                  boxShadow: '0 0 40px rgba(255, 0, 255, 0.6), 0 0 80px rgba(255, 0, 255, 0.3)'
+                }}
               >
                 BUY <img src={bostromLogo} alt="BOOT" className="h-6 sm:h-7 w-auto" /> BOOT
               </a>
