@@ -136,15 +136,16 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="p-6 rounded-xl border-2 border-primary/50 bg-primary/5 box-glow-primary w-full lg:w-auto lg:min-w-[200px]"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-primary/5 w-full lg:w-[220px] min-h-[140px] flex flex-col justify-center"
+                style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
                 <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2"
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-3 text-center"
                   style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
                 >
                   Price
                 </h3>
-                <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary text-glow-primary">
+                <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary text-glow-primary text-center">
                   {isLoading ? (
                     <span className="animate-pulse">...</span>
                   ) : price !== null ? (
@@ -155,7 +156,7 @@ export const TokenSection = () => {
                 </div>
                 {!isLoading && priceChange24h !== null && (
                   <div className={`flex items-center justify-center gap-1 mt-2 ${
-                    priceChange24h >= 0 ? 'text-green-400' : 'text-red-400'
+                    priceChange24h >= 0 ? 'text-primary' : 'text-red-400'
                   }`}>
                     {priceChange24h >= 0 ? (
                       <TrendingUp className="w-3 h-3" />
@@ -180,15 +181,15 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="p-6 rounded-xl border border-border bg-card/50 w-full lg:w-auto lg:min-w-[200px]"
+                className="p-6 rounded-xl border-2 border-primary/40 bg-card/50 w-full lg:w-[220px] min-h-[140px] flex flex-col justify-center"
               >
                 <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2"
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-3 text-center"
                   style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
                 >
                   Total Supply
                 </h3>
-                <div className="text-xl md:text-2xl font-orbitron font-bold text-primary flex items-center justify-center gap-2">
+                <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary flex items-center justify-center gap-2">
                   {isLoading ? (
                     <span className="animate-pulse text-muted-foreground">...</span>
                   ) : totalSupply !== null ? (
@@ -213,16 +214,18 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="p-6 rounded-xl border-2 border-accent/50 bg-accent/5 w-full lg:w-auto lg:min-w-[200px]"
-                style={{ boxShadow: '0 0 20px rgba(0, 255, 0, 0.3)' }}
+                className="p-6 rounded-xl border-2 border-pink-500/70 bg-pink-500/5 w-full lg:w-[220px] min-h-[140px] flex flex-col justify-center"
+                style={{ boxShadow: '0 0 25px rgba(236, 72, 153, 0.3)' }}
               >
                 <h3 
-                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2"
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-3 text-center"
                   style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
                 >
                   Market Cap
                 </h3>
-                <div className="text-2xl md:text-3xl font-orbitron font-bold text-accent">
+                <div className="text-2xl md:text-3xl font-orbitron font-bold text-pink-400 text-center"
+                  style={{ textShadow: '0 0 10px rgba(236, 72, 153, 0.6)' }}
+                >
                   {isLoading ? (
                     <span className="animate-pulse text-muted-foreground">...</span>
                   ) : calculatedMarketCap !== null ? (
