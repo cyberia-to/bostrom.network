@@ -96,8 +96,8 @@ export const AnimatedCounter = () => {
         >
           {/* Stats blocks row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1008px]">
-            {/* SIZE Block - order 2 on mobile, 1 on desktop */}
-            <div className="order-2 sm:order-1">
+            {/* SIZE Block - order 3 on mobile, 1 on desktop */}
+            <div className="order-3 sm:order-1">
               <StatBlock
                 label="Size"
                 value={formatNumber(cyberlinks)}
@@ -106,13 +106,13 @@ export const AnimatedCounter = () => {
               />
             </div>
             
-            {/* Convergence line - order 1 on mobile (before Speed), hidden on desktop */}
+            {/* Convergence line - order 1 on mobile (first), hidden on desktop */}
             <div className="order-1 sm:hidden w-full">
               <ConvergenceGraph progress={progress} />
             </div>
             
-            {/* SPEED Block - order 3 on mobile (after convergence), 2 on desktop (center) */}
-            <div className="order-3 sm:order-2 p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col">
+            {/* SPEED Block - order 2 on mobile (right after convergence), 2 on desktop (center) */}
+            <div className="order-2 sm:order-2 p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full min-h-[160px] md:h-[200px] flex flex-col">
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-auto uppercase tracking-widest text-center text-glow-accent pt-2">
                 Speed
               </div>
