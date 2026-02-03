@@ -17,7 +17,7 @@ import discordLogo from '@/assets/ecosystem/discord.svg';
 const ecosystemItems = [
   {
     name: 'cy',
-    description: 'tool for agents',
+    description: 'CLI tool for agents',
     url: 'https://github.com/cyber-prophet/cy',
     color: 'cyan',
     emoji: '💎',
