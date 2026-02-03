@@ -21,7 +21,8 @@ const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }
       ) : (
         <FittedText
           text={formattedValue}
-          className="font-orbitron font-bold text-primary text-glow-primary text-[clamp(2rem,4.5vw,3.5rem)]"
+          className="font-orbitron font-bold text-[clamp(2rem,4.5vw,3.5rem)]"
+          characterClassName="text-primary text-glow-primary"
         />
       )}
     </div>
