@@ -191,7 +191,7 @@ export const TokenSection = () => {
                   className="text-lg font-orbitron font-bold text-cyan-300 mb-2 text-center"
                   style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
                 >
-                  Total Supply
+                  Supply
                 </h3>
                 <div className="text-2xl font-orbitron font-bold text-primary flex items-center justify-center gap-2 whitespace-nowrap">
                   {isLoading ? (
