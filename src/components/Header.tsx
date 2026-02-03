@@ -102,7 +102,7 @@ export const Header = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="lg:hidden bg-black backdrop-blur-2xl"
+          className="lg:hidden"
           style={{ 
             position: 'fixed',
             top: 0,
@@ -112,11 +112,67 @@ export const Header = () => {
             zIndex: 99999,
             height: '100vh',
             width: '100vw',
-            overflowY: 'auto'
+            overflowY: 'auto',
+            background: 'linear-gradient(135deg, #000000 0%, #0a1f0a 25%, #000000 50%, #0f0f1a 75%, #000000 100%)'
           }}
         >
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {/* Grid pattern */}
+            <div 
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px)
+                `,
+                backgroundSize: '50px 50px'
+              }}
+            />
+            {/* Radial glow top-left */}
+            <motion.div
+              animate={{ 
+                opacity: [0.3, 0.5, 0.3],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute -top-32 -left-32 w-96 h-96 rounded-full"
+              style={{ background: 'radial-gradient(circle, rgba(0, 255, 65, 0.15) 0%, transparent 70%)' }}
+            />
+            {/* Radial glow bottom-right */}
+            <motion.div
+              animate={{ 
+                opacity: [0.2, 0.4, 0.2],
+                scale: [1, 1.15, 1]
+              }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+              className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full"
+              style={{ background: 'radial-gradient(circle, rgba(255, 0, 255, 0.1) 0%, transparent 70%)' }}
+            />
+            {/* Floating particles */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 rounded-full bg-primary/40"
+                style={{
+                  left: `${15 + i * 15}%`,
+                  top: `${20 + (i % 3) * 25}%`,
+                }}
+                animate={{
+                  y: [0, -30, 0],
+                  opacity: [0.2, 0.6, 0.2],
+                }}
+                transition={{
+                  duration: 3 + i * 0.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: i * 0.3,
+                }}
+              />
+            ))}
+          </div>
           {/* Menu Header */}
-          <div className="container mx-auto px-2 sm:px-6">
+          <div className="container mx-auto px-2 sm:px-6 relative z-10">
             <div className="flex items-center justify-between h-16 md:h-20">
               <div className="flex items-center">
                 <a href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -143,10 +199,10 @@ export const Header = () => {
           </div>
           
           {/* Gradient line */}
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/50 to-transparent relative z-10" />
           
           {/* Navigation */}
-          <nav className="container mx-auto px-6 py-8 flex flex-col" style={{ minHeight: 'calc(100vh - 5rem)' }}>
+          <nav className="container mx-auto px-6 py-8 flex flex-col relative z-10" style={{ minHeight: 'calc(100vh - 5rem)' }}>
             <div className="flex flex-col gap-1">
               {navLinks.map((link, index) => (
                 <motion.a
