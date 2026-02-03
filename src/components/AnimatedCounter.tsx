@@ -23,7 +23,7 @@ const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
     <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
       {label}
     </div>
-    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
+    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
@@ -95,7 +95,7 @@ export const AnimatedCounter = () => {
           className="flex flex-col items-center gap-6"
         >
           {/* Stats blocks row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4 w-full max-w-[1100px]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2 md:gap-3 w-full max-w-[1280px]">
             {/* SIZE Block - order 3 on mobile, 1 on desktop */}
             <div className="order-3 sm:order-1">
               <StatBlock
@@ -118,18 +118,17 @@ export const AnimatedCounter = () => {
               </div>
               
               {/* Fixed slots container */}
-              <div className="flex justify-center items-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary whitespace-nowrap h-16 md:h-20">
+              <div className="flex justify-center items-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none whitespace-nowrap h-16 md:h-20">
                 {chars.map((char, index) => {
                   const isLeadingZero = leadingZeroPositions.has(index);
                   return (
                     <div 
                       key={index}
-                      className={`flex items-center justify-center ${
+                      className={`flex items-center justify-center leading-none h-[1em] ${
                         char === ',' 
                           ? 'w-[0.3em] sm:w-[0.4em]' 
                           : 'w-[0.6em] sm:w-[0.75em]'
                       } ${isLeadingZero ? 'opacity-0' : ''}`}
-                      style={{ height: '1.2em' }}
                     >
                       {char}
                     </div>
@@ -158,7 +157,7 @@ export const AnimatedCounter = () => {
           </div>
           
           {/* Convergence line spanning all blocks - hidden on mobile, shown on desktop */}
-          <div className="hidden sm:block w-full max-w-[1008px]">
+          <div className="hidden sm:block w-full max-w-[1280px]">
             <ConvergenceGraph progress={progress} />
           </div>
         </motion.div>
