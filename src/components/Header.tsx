@@ -108,10 +108,19 @@ export const Header = () => {
           {/* Menu Header */}
           <div className="container mx-auto px-2 sm:px-6">
             <div className="flex items-center justify-between h-16 md:h-20">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <img src={bostromLogo} alt="Bostrom" className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10" />
-                <span className="font-orbitron font-bold text-base sm:text-lg md:text-xl text-primary text-glow-primary">
-                  BOSTROM
+              <div className="flex items-center">
+                <a href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
+                  <img src={bostromLogo} alt="Bostrom" className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10" />
+                  <span className="font-orbitron font-bold text-base sm:text-lg md:text-xl text-primary text-glow-primary">
+                    BOSTROM
+                  </span>
+                </a>
+                <span 
+                  className="font-orbitron font-bold text-xs sm:text-sm animate-starlight truncate"
+                  style={{ wordSpacing: '-0.1em', marginLeft: '0.6em' }}
+                  data-text="BIG BADASS GRAPH"
+                >
+                  BIG BADASS GRAPH
                 </span>
               </div>
               <button
