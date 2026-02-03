@@ -177,7 +177,7 @@ export const TokenSection = () => {
               </motion.div>
 
               {/* Multiplication Sign */}
-              <div className="text-4xl font-orbitron font-bold text-primary text-glow-primary flex items-center justify-center">
+              <div className="text-4xl font-orbitron font-bold text-primary flex items-center justify-center">
                 ×
               </div>
 
@@ -215,7 +215,7 @@ export const TokenSection = () => {
               </motion.div>
 
               {/* Equals Sign */}
-              <div className="text-4xl font-orbitron font-bold text-primary text-glow-primary flex items-center justify-center">
+              <div className="text-4xl font-orbitron font-bold text-primary flex items-center justify-center">
                 =
               </div>
 
