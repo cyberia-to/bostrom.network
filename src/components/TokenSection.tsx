@@ -138,9 +138,12 @@ export const TokenSection = () => {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="p-6 rounded-xl border-2 border-primary/50 bg-primary/5 box-glow-primary w-full lg:w-auto lg:min-w-[200px]"
               >
-                <div className="text-sm text-muted-foreground font-play mb-1">
+                <h3 
+                  className="text-lg font-orbitron font-bold text-cyan-300 mb-2"
+                  style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
+                >
                   Price
-                </div>
+                </h3>
                 <div className="text-2xl md:text-3xl font-orbitron font-bold text-primary text-glow-primary">
                   {isLoading ? (
                     <span className="animate-pulse">...</span>
