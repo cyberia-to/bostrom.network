@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
 import { useBostromStats } from '@/hooks/useBostromStats';
 import { ConvergenceGraph } from './ConvergenceGraph';
+import { useMemo } from 'react';
 
 const MAX_COUNT = 3_000_000;
 
@@ -9,15 +10,81 @@ const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
 };
 
+// Fixed-slot formatter to prevent horizontal jitter (Orbitron digits aren't reliably tabular).
+// Layout template: XX,XXX,XXX (8 digits) => 10 chars.
+const useFixedSlots = (value: number) => {
+  return useMemo(() => {
+    const safe = Math.max(0, Math.trunc(value));
+    const digits = safe.toString().padStart(8, ' ');
+
+    const chars = [
+      digits[0],
+      digits[1],
+      ',',
+      digits[2],
+      digits[3],
+      digits[4],
+      ',',
+      digits[5],
+      digits[6],
+      digits[7],
+    ];
+
+    const hidden = new Set<number>();
+    let foundDigit = false;
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+
+      if (!foundDigit) {
+        if (ch === ' ' || ch === ',') {
+          hidden.add(i);
+        } else {
+          foundDigit = true;
+        }
+      }
+    }
+
+    // If value is 0, show last digit slot as 0 (avoid hiding everything)
+    if (safe === 0) {
+      for (let i = 0; i < chars.length; i++) hidden.delete(i);
+      // hide leading spaces + commas before the final digit
+      for (let i = 0; i < chars.length - 1; i++) {
+        if (chars[i] === ' ' || chars[i] === ',') hidden.add(i);
+      }
+    }
+
+    return { chars, hidden };
+  }, [value]);
+};
+
 const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }) => {
+  const { chars, hidden } = useFixedSlots(value);
+
   return (
-    <div className="font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20 w-full min-w-0 px-2">
+    <div className="font-orbitron font-bold text-primary text-glow-primary leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20 w-full min-w-0 px-2">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
-        <span className="inline-block text-[clamp(2rem,2.6vw,2.5rem)] tracking-tight max-w-full">
-          {formatNumber(value)}
-        </span>
+        <>
+          <span className="sr-only">{formatNumber(value)}</span>
+          <span
+            aria-hidden="true"
+            className="inline-flex items-center justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
+          >
+            {chars.map((ch, i) => (
+              <span
+                key={i}
+                className={`inline-flex items-center justify-center shrink-0 ${
+                  ch === ','
+                    ? 'w-[0.30em] sm:w-[0.32em] md:w-[0.34em] lg:w-[0.36em]'
+                    : 'w-[0.62em] sm:w-[0.66em] md:w-[0.70em] lg:w-[0.74em]'
+                } ${hidden.has(i) ? 'opacity-0' : ''}`}
+              >
+                {ch}
+              </span>
+            ))}
+          </span>
+        </>
       )}
     </div>
   );
