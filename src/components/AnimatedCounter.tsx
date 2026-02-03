@@ -44,13 +44,13 @@ const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }
   const { chars, leadingZeroPositions } = useSlottedNumber(value);
 
   return (
-    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
+    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20 max-w-full overflow-hidden">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
         <>
           <span className="sr-only">{formatNumber(value)}</span>
-          <span aria-hidden="true" className="inline-flex items-center justify-center">
+          <span aria-hidden="true" className="inline-flex items-center justify-center max-w-full overflow-hidden">
             {chars.map((char, index) => {
               const isLeadingZero = leadingZeroPositions.has(index);
               return (
@@ -58,8 +58,8 @@ const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }
                   key={index}
                   className={`inline-flex items-center justify-center shrink-0 overflow-hidden ${
                     char === ','
-                      ? 'w-[0.34em] sm:w-[0.36em] md:w-[0.38em] lg:w-[0.4em]'
-                      : 'w-[0.72em] sm:w-[0.78em] md:w-[0.82em] lg:w-[0.85em]'
+                      ? 'w-[0.28em] sm:w-[0.30em] md:w-[0.32em] lg:w-[0.34em]'
+                      : 'w-[0.55em] sm:w-[0.58em] md:w-[0.60em] lg:w-[0.62em]'
                   } ${isLeadingZero ? 'opacity-0' : ''}`}
                 >
                   {char}
@@ -81,7 +81,7 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
+  <div className="p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full flex-1 h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
     <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
       {label}
     </div>
@@ -135,7 +135,7 @@ export const AnimatedCounter = () => {
             </div>
             
             {/* SPEED Block - order 2 on mobile (right after convergence), 2 on desktop (center) */}
-            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
+            <div className="order-2 sm:order-2 p-4 sm:p-5 md:p-5 lg:p-8 rounded-2xl border border-primary/30 bg-card box-glow-primary w-full h-[160px] md:h-[200px] flex flex-col items-center overflow-hidden">
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
                 Speed
               </div>
