@@ -19,18 +19,18 @@ interface StatBlockProps {
 }
 
 const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
-  <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 min-h-[160px] md:h-[200px] flex flex-col">
-    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent mb-auto uppercase tracking-widest text-center text-glow-accent pt-2">
+  <div className="p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm box-glow-primary w-full flex-1 min-h-[160px] md:h-[200px] flex flex-col justify-between items-center">
+    <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent pt-2">
       {label}
     </div>
-    <div className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap">
+    <div className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap flex items-center justify-center flex-1">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
         value
       )}
     </div>
-    <div className="text-sm sm:text-base md:text-lg text-muted-foreground mt-auto font-play text-center pb-2">
+    <div className="text-sm sm:text-base md:text-lg text-muted-foreground font-play text-center pb-2">
       {subtitle}
     </div>
   </div>
