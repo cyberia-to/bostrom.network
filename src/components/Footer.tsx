@@ -26,12 +26,6 @@ export const Footer = () => {
           Named after Nick Bostrom. Building the bootloader of superintelligence.
         </p>
 
-        {/* Copyright */}
-        <div className="pt-6 border-t border-border/50 text-center">
-          <p className="text-xs text-muted-foreground font-play">
-            © {new Date().getFullYear()} Bostrom Network. Open source.
-          </p>
-        </div>
       </div>
     </footer>
   );
