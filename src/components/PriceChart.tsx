@@ -32,7 +32,7 @@ export const PriceChart = ({ data, isPositive }: PriceChartProps) => {
   const fillColor = isPositive ? 'hsl(142, 76%, 36%)' : 'hsl(0, 84%, 60%)';
 
   return (
-    <div className="h-16 w-full mt-4">
+    <div className="h-16 w-full mt-4 relative">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
           <defs>
@@ -52,7 +52,7 @@ export const PriceChart = ({ data, isPositive }: PriceChartProps) => {
           />
         </AreaChart>
       </ResponsiveContainer>
-      <div className="text-xs text-muted-foreground text-center mt-1 font-mono">
+      <div className="absolute bottom-0 left-0 text-xs text-muted-foreground font-mono">
         7d price chart
       </div>
     </div>
