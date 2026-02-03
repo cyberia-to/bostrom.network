@@ -224,10 +224,11 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="p-6 rounded-xl border-2 bg-background w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
+                className="p-6 rounded-xl border-2 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
                 style={{ 
                   borderColor: 'rgba(255, 0, 255, 0.7)',
-                  boxShadow: '0 0 25px rgba(255, 0, 255, 0.3)' 
+                  backgroundColor: '#000000',
+                  boxShadow: '0 0 20px rgba(255, 0, 255, 0.25), 0 0 40px rgba(255, 0, 255, 0.15)' 
                 }}
               >
                 <div className="h-7 flex items-center">
