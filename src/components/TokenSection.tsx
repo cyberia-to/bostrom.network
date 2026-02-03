@@ -211,31 +211,15 @@ export const TokenSection = () => {
               ))}
             </div>
 
-            {/* CTA - 3 buttons in a row, BUY in the middle */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-md mx-auto">
-              <a
-                href="https://cyb.ai/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 sm:px-6 py-3 border border-primary text-primary font-orbitron font-bold text-sm sm:text-base rounded-lg hover:bg-primary/10 transition-colors text-center"
-              >
-                ORACLE
-              </a>
+            {/* CTA - Single BUY button */}
+            <div className="flex justify-center">
               <a
                 href="https://app.osmosis.zone/assets/ibc/FE2CD1E6828EC0FAB8AF39BAC45BC25B965BA67CCBC50C13A14BD610B0D1E2C4"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 sm:px-10 py-3 bg-accent text-accent-foreground font-orbitron font-bold text-sm sm:text-base rounded-lg hover:scale-105 transition-transform text-center"
+                className="px-16 sm:px-24 py-4 sm:py-5 bg-accent text-accent-foreground font-orbitron font-bold text-lg sm:text-xl rounded-lg hover:scale-105 transition-transform text-center"
               >
-                BUY
-              </a>
-              <a
-                href="https://cyb.ai/senate"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 sm:px-6 py-3 border border-primary text-primary font-orbitron font-bold text-sm sm:text-base rounded-lg hover:bg-primary/10 transition-colors text-center"
-              >
-                SENATE
+                BUY $BOOT
               </a>
             </div>
           </motion.div>
