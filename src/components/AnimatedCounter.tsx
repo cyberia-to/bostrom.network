@@ -2,10 +2,8 @@ import { motion } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
 import { useBostromStats } from '@/hooks/useBostromStats';
 import { ConvergenceGraph } from './ConvergenceGraph';
-import { useMemo } from 'react';
 
 const MAX_COUNT = 3_000_000;
-const DIGIT_SLOTS = 7; // Fixed number of digit slots
 
 const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
@@ -23,7 +21,7 @@ const StatBlock = ({ label, value, subtitle, isLoading }: StatBlockProps) => (
     <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
       {label}
     </div>
-    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-end justify-center h-16 md:h-20 pb-1 md:pb-2">
+    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
@@ -42,39 +40,6 @@ export const AnimatedCounter = () => {
 
   // Calculate progress towards 3M
   const progress = Math.min(count / MAX_COUNT, 1);
-  
-  // Format with leading zeros to always have 7 digits, then split into chars
-  // Track which positions are leading zeros
-  const { chars, leadingZeroPositions } = useMemo(() => {
-    const paddedNumber = count.toString().padStart(DIGIT_SLOTS, '0');
-    // Insert commas: X,XXX,XXX format
-    const formatted = paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    const charArray = formatted.split('');
-    
-    // Find leading zero positions (before first non-zero digit)
-    const leadingZeros = new Set<number>();
-    let foundNonZero = false;
-    let digitIndex = 0;
-    
-    for (let i = 0; i < charArray.length; i++) {
-      if (charArray[i] === ',') {
-        // Hide comma if it's between leading zeros
-        if (!foundNonZero) {
-          leadingZeros.add(i);
-        }
-        continue;
-      }
-      
-      if (!foundNonZero && charArray[i] === '0') {
-        leadingZeros.add(i);
-      } else {
-        foundNonZero = true;
-      }
-      digitIndex++;
-    }
-    
-    return { chars: charArray, leadingZeroPositions: leadingZeros };
-  }, [count]);
 
   // Use real data or fallback to defaults
   const weightsPerSecond = bostromStats?.weightsPerSecond ?? 70000;
@@ -95,7 +60,7 @@ export const AnimatedCounter = () => {
           className="flex flex-col items-center gap-6"
         >
           {/* Stats blocks row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0.5 sm:gap-1 md:gap-2 w-full max-w-[1400px]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0.5 sm:gap-1 md:gap-2 w-full">
             {/* SIZE Block - order 3 on mobile, 1 on desktop */}
             <div className="order-3 sm:order-1">
               <StatBlock
@@ -116,24 +81,10 @@ export const AnimatedCounter = () => {
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-orbitron text-accent uppercase tracking-widest text-center text-glow-accent h-8 md:h-10 flex items-center">
                 Speed
               </div>
-              
-              {/* Fixed slots container */}
-              <div className="flex justify-center items-end text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none whitespace-nowrap h-16 md:h-20 pb-1 md:pb-2">
-                {chars.map((char, index) => {
-                  const isLeadingZero = leadingZeroPositions.has(index);
-                  return (
-                    <div 
-                      key={index}
-                      className={`flex items-end justify-center leading-none ${
-                        char === ',' 
-                          ? 'w-[0.3em] sm:w-[0.4em]' 
-                          : 'w-[0.6em] sm:w-[0.75em]'
-                      } ${isLeadingZero ? 'opacity-0' : ''}`}
-                    >
-                      {char}
-                    </div>
-                  );
-                })}
+
+              {/* Number line (aligned with SIZE/QUALITY) */}
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20">
+                {formatNumber(count)}
               </div>
               
               <div className="text-sm sm:text-base md:text-lg text-foreground font-play text-center h-12 md:h-14 flex items-start justify-center">
@@ -157,7 +108,7 @@ export const AnimatedCounter = () => {
           </div>
           
           {/* Convergence line spanning all blocks - hidden on mobile, shown on desktop */}
-          <div className="hidden sm:block w-full max-w-[1400px]">
+          <div className="hidden sm:block w-full">
             <ConvergenceGraph progress={progress} />
           </div>
         </motion.div>
