@@ -94,7 +94,7 @@ const ecosystemItems = [
   },
   {
     name: 'Discord',
-    description: 'Bostrom community and support',
+    description: 'Gamers community and support',
     url: 'https://discord.gg/ARwv74ZyGH',
     color: 'discord',
     logo: discordLogo,
