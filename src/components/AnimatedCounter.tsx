@@ -2,72 +2,22 @@ import { motion } from 'framer-motion';
 import { useWeightCounter } from '@/hooks/useWeightCounter';
 import { useBostromStats } from '@/hooks/useBostromStats';
 import { ConvergenceGraph } from './ConvergenceGraph';
-import { useMemo } from 'react';
 
 const MAX_COUNT = 3_000_000;
-const DIGIT_SLOTS = 8; // Fixed number of digit slots for stable width across blocks
 
 const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US');
 };
 
-const useSlottedNumber = (value: number) => {
-  return useMemo(() => {
-    const paddedNumber = value.toString().padStart(DIGIT_SLOTS, '0');
-    const formatted = paddedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    const charArray = formatted.split('');
-
-    const leadingZeros = new Set<number>();
-    let foundNonZero = false;
-
-    for (let i = 0; i < charArray.length; i++) {
-      const ch = charArray[i];
-
-      if (ch === ',') {
-        // Hide comma if it's between leading zeros
-        if (!foundNonZero) leadingZeros.add(i);
-        continue;
-      }
-
-      if (!foundNonZero && ch === '0') {
-        leadingZeros.add(i);
-      } else {
-        foundNonZero = true;
-      }
-    }
-
-    return { chars: charArray, leadingZeroPositions: leadingZeros };
-  }, [value]);
-};
-
 const NumberLine = ({ value, isLoading }: { value: number; isLoading?: boolean }) => {
-  const { chars, leadingZeroPositions } = useSlottedNumber(value);
-
   return (
-    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20 max-w-full overflow-hidden">
+    <div className="font-orbitron font-bold text-primary text-glow-primary tabular-nums leading-none text-center whitespace-nowrap flex items-center justify-center h-16 md:h-20 w-full min-w-0 px-2">
       {isLoading ? (
         <span className="animate-pulse">...</span>
       ) : (
-        <>
-          <span className="sr-only">{formatNumber(value)}</span>
-          <span aria-hidden="true" className="inline-flex items-center justify-center max-w-full overflow-hidden">
-            {chars.map((char, index) => {
-              const isLeadingZero = leadingZeroPositions.has(index);
-              return (
-                <span
-                  key={index}
-                  className={`inline-flex items-center justify-center shrink-0 overflow-hidden ${
-                    char === ','
-                      ? 'w-[0.28em] sm:w-[0.30em] md:w-[0.32em] lg:w-[0.34em]'
-                      : 'w-[0.55em] sm:w-[0.58em] md:w-[0.60em] lg:w-[0.62em]'
-                  } ${isLeadingZero ? 'opacity-0' : ''}`}
-                >
-                  {char}
-                </span>
-              );
-            })}
-          </span>
-        </>
+        <span className="inline-block text-[clamp(2rem,2.6vw,2.5rem)] tracking-tight max-w-full">
+          {formatNumber(value)}
+        </span>
       )}
     </div>
   );
