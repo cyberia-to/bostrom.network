@@ -136,11 +136,11 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="p-6 rounded-xl border-2 border-primary/70 bg-background w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-background w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center gap-2"
                 style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
                 {/* Header row: Price + Change */}
-                <div className="flex items-center justify-center gap-2 h-7">
+                <div className="flex items-center justify-center gap-2">
                   <h3 
                     className="text-lg font-orbitron font-bold text-cyan-300 text-center"
                     style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
@@ -162,7 +162,7 @@ export const TokenSection = () => {
                     </div>
                   )}
                 </div>
-                <div className="flex-1 flex items-center justify-center">
+                <div className="flex items-center justify-center">
                   <div className="text-2xl font-orbitron font-bold text-primary text-glow-primary text-center whitespace-nowrap">
                     {isLoading ? (
                       <span className="animate-pulse">...</span>
@@ -186,10 +186,10 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="p-6 rounded-xl border-2 border-primary/70 bg-background w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
+                className="p-6 rounded-xl border-2 border-primary/70 bg-background w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center gap-2"
                 style={{ boxShadow: '0 0 25px rgba(0, 255, 65, 0.3)' }}
               >
-                <div className="h-7 flex items-center">
+                <div className="flex items-center">
                   <h3 
                     className="text-lg font-orbitron font-bold text-cyan-300 text-center"
                     style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
@@ -197,7 +197,7 @@ export const TokenSection = () => {
                     Supply
                   </h3>
                 </div>
-                <div className="flex-1 flex items-center justify-center">
+                <div className="flex items-center justify-center">
                   <div className="text-2xl font-orbitron font-bold text-primary flex items-center justify-center gap-2 whitespace-nowrap">
                     {isLoading ? (
                       <span className="animate-pulse text-muted-foreground">...</span>
@@ -224,14 +224,14 @@ export const TokenSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="p-6 rounded-xl border-2 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-start items-center pt-4"
+                className="p-6 rounded-xl border-2 w-full lg:w-[200px] lg:flex-shrink-0 h-[130px] flex flex-col justify-center items-center gap-2"
                 style={{ 
                   borderColor: 'rgba(255, 0, 255, 0.7)',
                   backgroundColor: '#000000',
                   boxShadow: '0 0 20px rgba(255, 0, 255, 0.25), 0 0 40px rgba(255, 0, 255, 0.15)' 
                 }}
               >
-                <div className="h-7 flex items-center">
+                <div className="flex items-center">
                   <h3 
                     className="text-lg font-orbitron font-bold text-cyan-300 text-center"
                     style={{ textShadow: '0 0 8px #00FFFF, 0 0 20px #00FFFF' }}
@@ -239,7 +239,7 @@ export const TokenSection = () => {
                     Market Cap
                   </h3>
                 </div>
-                <div className="flex-1 flex items-center justify-center">
+                <div className="flex items-center justify-center">
                   <div className="text-2xl font-orbitron font-bold text-center whitespace-nowrap"
                     style={{ color: '#FF00FF', textShadow: '0 0 10px rgba(255, 0, 255, 0.6)' }}
                   >
