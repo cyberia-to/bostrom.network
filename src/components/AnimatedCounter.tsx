@@ -95,7 +95,7 @@ export const AnimatedCounter = () => {
           className="flex flex-col items-center gap-6"
         >
           {/* Stats blocks row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1008px]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4 w-full max-w-[1100px]">
             {/* SIZE Block - order 3 on mobile, 1 on desktop */}
             <div className="order-3 sm:order-1">
               <StatBlock
