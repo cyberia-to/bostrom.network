@@ -176,7 +176,7 @@ export const Ecosystem = () => {
                 </div>
                 <ExternalLink className={`w-4 h-4 md:w-5 md:h-5 text-muted-foreground transition-colors ${textColorStyles[item.color as keyof typeof textColorStyles]}`} />
               </div>
-              <p className="text-muted-foreground text-xs md:text-sm">
+              <p className="text-muted-foreground text-xs md:text-sm transition-colors group-hover:text-foreground">
                 {item.description}
               </p>
               {/* Logo visible only on mobile - at bottom */}
