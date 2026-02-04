@@ -19,6 +19,7 @@ import pingpubLogo from '@/assets/ecosystem/pingpub.svg';
 import exploreristLogo from '@/assets/ecosystem/explorerist.ico';
 import stakingexplorerLogo from '@/assets/ecosystem/stakingexplorer.png';
 import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.png';
+import defillamaLogo from '@/assets/ecosystem/defillama.png';
 
 const ecosystemItems = [
   {
@@ -106,6 +107,13 @@ const ecosystemItems = [
     logo: validatorinfoLogo,
   },
   {
+    name: 'DefiLlama',
+    description: 'DeFi TVL and analytics',
+    url: 'https://defillama.com/chain/bostrom',
+    color: 'defillama',
+    logo: defillamaLogo,
+  },
+  {
     name: 'Keplr',
     description: 'Interchain wallet for Cosmos ecosystem',
     url: 'https://www.keplr.app/',
@@ -169,6 +177,7 @@ const colorStyles = {
   explorerist: 'border-[#22D3EE]/30 hover:border-[#22D3EE]',
   stakingexplorer: 'border-[#F59E0B]/30 hover:border-[#F59E0B]',
   validatorinfo: 'border-[#10B981]/30 hover:border-[#10B981]',
+  defillama: 'border-[#2775CA]/30 hover:border-[#2775CA]',
 };
 
 const textColorStyles = {
@@ -191,6 +200,7 @@ const textColorStyles = {
   explorerist: 'group-hover:text-[#22D3EE]',
   stakingexplorer: 'group-hover:text-[#F59E0B]',
   validatorinfo: 'group-hover:text-[#10B981]',
+  defillama: 'group-hover:text-[#2775CA]',
 };
 
 export const Ecosystem = () => {
