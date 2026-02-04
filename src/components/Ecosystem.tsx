@@ -22,6 +22,7 @@ import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.svg';
 import defillamaLogo from '@/assets/ecosystem/defillama.png';
 import osmosisLogo from '@/assets/ecosystem/osmosis.svg';
 import leapwalletLogo from '@/assets/ecosystem/leapwallet.png';
+import dexscreenerLogo from '@/assets/ecosystem/dexscreener.png';
 
 const ecosystemItems = [
   {
@@ -123,6 +124,13 @@ const ecosystemItems = [
     logo: osmosisLogo,
   },
   {
+    name: 'DEX Screener',
+    description: 'BOOT/OSMO pair charts and analytics',
+    url: 'https://dexscreener.com/osmosis/912-ibc_ea1d43981d5c9a1c4aaea9c23bb1d4fa126ba9bc7020a25e0ae4aa841ea25dc5-ibc_fe2cd1e6828ec0fab8af39bac45bc25b965ba67ccbc50c13a14bd610b0d1e2c4',
+    color: 'dexscreener',
+    logo: dexscreenerLogo,
+  },
+  {
     name: 'Keplr',
     description: 'Interchain wallet for Cosmos ecosystem',
     url: 'https://www.keplr.app/',
@@ -196,6 +204,7 @@ const colorStyles = {
   defillama: 'border-[#2775CA]/30 hover:border-[#2775CA]',
   osmosis: 'border-[#5E12A0]/30 hover:border-[#5E12A0]',
   leapwallet: 'border-[#29A874]/30 hover:border-[#29A874]',
+  dexscreener: 'border-[#00D4AA]/30 hover:border-[#00D4AA]',
 };
 
 const textColorStyles = {
@@ -221,6 +230,7 @@ const textColorStyles = {
   defillama: 'group-hover:text-[#2775CA]',
   osmosis: 'group-hover:text-[#5E12A0]',
   leapwallet: 'group-hover:text-[#29A874]',
+  dexscreener: 'group-hover:text-[#00D4AA]',
 };
 
 export const Ecosystem = () => {
