@@ -18,7 +18,7 @@ import mapofzonesLogo from '@/assets/ecosystem/mapofzones.png';
 import pingpubLogo from '@/assets/ecosystem/pingpub.svg';
 import exploreristLogo from '@/assets/ecosystem/explorerist.ico';
 import stakingexplorerLogo from '@/assets/ecosystem/stakingexplorer.png';
-import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.png';
+import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.svg';
 import defillamaLogo from '@/assets/ecosystem/defillama.png';
 import osmosisLogo from '@/assets/ecosystem/osmosis.png';
 import leapwalletLogo from '@/assets/ecosystem/leapwallet.png';
