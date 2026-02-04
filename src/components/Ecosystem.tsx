@@ -23,6 +23,7 @@ import defillamaLogo from '@/assets/ecosystem/defillama.png';
 import osmosisLogo from '@/assets/ecosystem/osmosis.svg';
 import leapwalletLogo from '@/assets/ecosystem/leapwallet.png';
 import dexscreenerLogo from '@/assets/ecosystem/dexscreener.png';
+import coinbaseLogo from '@/assets/ecosystem/coinbase.png';
 
 const ecosystemItems = [
   {
@@ -159,6 +160,13 @@ const ecosystemItems = [
     logo: coinmarketcapLogo,
   },
   {
+    name: 'Coinbase',
+    description: 'BOOT token on Coinbase',
+    url: 'https://www.coinbase.com/en-gb/price/bostrom',
+    color: 'coinbase',
+    logo: coinbaseLogo,
+  },
+  {
     name: 'Telegram',
     description: 'Join the community chat',
     url: 'https://t.me/fuckgoogle',
@@ -205,6 +213,7 @@ const colorStyles = {
   osmosis: 'border-[#5E12A0]/30 hover:border-[#5E12A0]',
   leapwallet: 'border-[#29A874]/30 hover:border-[#29A874]',
   dexscreener: 'border-[#00D4AA]/30 hover:border-[#00D4AA]',
+  coinbase: 'border-[#0052FF]/30 hover:border-[#0052FF]',
 };
 
 const textColorStyles = {
@@ -231,6 +240,7 @@ const textColorStyles = {
   osmosis: 'group-hover:text-[#5E12A0]',
   leapwallet: 'group-hover:text-[#29A874]',
   dexscreener: 'group-hover:text-[#00D4AA]',
+  coinbase: 'group-hover:text-[#0052FF]',
 };
 
 export const Ecosystem = () => {
