@@ -20,7 +20,7 @@ import exploreristLogo from '@/assets/ecosystem/explorerist.ico';
 import stakingexplorerLogo from '@/assets/ecosystem/stakingexplorer.png';
 import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.svg';
 import defillamaLogo from '@/assets/ecosystem/defillama.webp';
-import osmosisLogo from '@/assets/ecosystem/osmosis.png';
+import osmosisLogo from '@/assets/ecosystem/osmosis.svg';
 import leapwalletLogo from '@/assets/ecosystem/leapwallet.png';
 
 const ecosystemItems = [
