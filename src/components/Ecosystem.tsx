@@ -21,6 +21,7 @@ import stakingexplorerLogo from '@/assets/ecosystem/stakingexplorer.png';
 import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.png';
 import defillamaLogo from '@/assets/ecosystem/defillama.png';
 import osmosisLogo from '@/assets/ecosystem/osmosis.png';
+import leapwalletLogo from '@/assets/ecosystem/leapwallet.png';
 
 const ecosystemItems = [
   {
@@ -129,6 +130,13 @@ const ecosystemItems = [
     logo: keplrLogo,
   },
   {
+    name: 'Leap Wallet',
+    description: 'Cosmos wallet with multi-chain support',
+    url: 'https://www.leapwallet.io/download',
+    color: 'leapwallet',
+    logo: leapwalletLogo,
+  },
+  {
     name: 'CoinGecko',
     description: 'BOOT token price and market data',
     url: 'https://www.coingecko.com/en/coins/bostrom',
@@ -187,6 +195,7 @@ const colorStyles = {
   validatorinfo: 'border-[#10B981]/30 hover:border-[#10B981]',
   defillama: 'border-[#2775CA]/30 hover:border-[#2775CA]',
   osmosis: 'border-[#5E12A0]/30 hover:border-[#5E12A0]',
+  leapwallet: 'border-[#29A874]/30 hover:border-[#29A874]',
 };
 
 const textColorStyles = {
@@ -211,6 +220,7 @@ const textColorStyles = {
   validatorinfo: 'group-hover:text-[#10B981]',
   defillama: 'group-hover:text-[#2775CA]',
   osmosis: 'group-hover:text-[#5E12A0]',
+  leapwallet: 'group-hover:text-[#29A874]',
 };
 
 export const Ecosystem = () => {
