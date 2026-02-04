@@ -19,7 +19,7 @@ import pingpubLogo from '@/assets/ecosystem/pingpub.svg';
 import exploreristLogo from '@/assets/ecosystem/explorerist.ico';
 import stakingexplorerLogo from '@/assets/ecosystem/stakingexplorer.png';
 import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.svg';
-import defillamaLogo from '@/assets/ecosystem/defillama.webp';
+import defillamaLogo from '@/assets/ecosystem/defillama.png';
 import osmosisLogo from '@/assets/ecosystem/osmosis.svg';
 import leapwalletLogo from '@/assets/ecosystem/leapwallet.png';
 
