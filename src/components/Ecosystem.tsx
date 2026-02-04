@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
+import { useSectionTracking } from '@/hooks/useSectionTracking';
 
 // Import logos
 import cybLogo from '@/assets/ecosystem/cyb.png';
@@ -244,8 +245,10 @@ const textColorStyles = {
 };
 
 export const Ecosystem = () => {
+  const sectionRef = useSectionTracking('ecosystem');
+
   return (
-    <section id="ecosystem" className="py-24 relative">
+    <section ref={sectionRef} id="ecosystem" className="py-24 relative">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

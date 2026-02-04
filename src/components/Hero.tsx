@@ -2,10 +2,13 @@ import { motion } from 'framer-motion';
 import { KnowledgeGraph } from './KnowledgeGraph';
 import { AnimatedTagline } from './AnimatedTagline';
 import bostromLogo from '@/assets/bostrom-logo.png';
+import { useSectionTracking } from '@/hooks/useSectionTracking';
 
 export const Hero = () => {
+  const sectionRef = useSectionTracking('hero');
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={sectionRef} id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-background">
         <KnowledgeGraph />
