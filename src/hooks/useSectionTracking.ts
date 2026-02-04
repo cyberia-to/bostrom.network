@@ -8,7 +8,8 @@ declare global {
   }
 }
 
-const trackedSections = new Set<string>();
+// Track which sections have been viewed in this session
+const viewedSections = new Set<string>();
 
 export const useSectionTracking = (sectionId: string) => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -20,45 +21,38 @@ export const useSectionTracking = (sectionId: string) => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Track when section becomes 50% visible
-          if (entry.isIntersecting && !trackedSections.has(sectionId)) {
-            trackedSections.add(sectionId);
+          // Track when section becomes visible (at least 10% in viewport)
+          if (entry.isIntersecting && !viewedSections.has(sectionId)) {
+            viewedSections.add(sectionId);
             
             // Construct the full URL with hash
             const newPath = sectionId === 'hero' ? '/' : `/#${sectionId}`;
             const fullUrl = window.location.origin + newPath;
             
             // Update URL hash without scrolling
-            history.replaceState(null, '', sectionId === 'hero' ? '/' : `#${sectionId}`);
+            if (sectionId !== 'hero') {
+              history.replaceState(null, '', `#${sectionId}`);
+            } else {
+              history.replaceState(null, '', '/');
+            }
             
             // Manually trigger pageview with the full URL
-            // Plausible tracks 'pageview' events with 'u' parameter for custom URLs
+            console.log('Plausible pageview:', fullUrl);
             if (window.plausible) {
-              console.log('Plausible pageview:', fullUrl);
               window.plausible('pageview', { u: fullUrl });
             }
           }
         });
       },
-      { threshold: 0.5 }
+      { 
+        threshold: 0.1 // Trigger when at least 10% of section is visible
+      }
     );
 
     observer.observe(section);
 
     return () => observer.disconnect();
   }, [sectionId]);
-
-  // Reset tracking when user leaves and comes back
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        trackedSections.clear();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, []);
 
   return sectionRef;
 };
