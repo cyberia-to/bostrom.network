@@ -58,6 +58,48 @@ const ecosystemItems = [
     logo: atomscanLogo,
   },
   {
+    name: 'Forbes',
+    description: 'BOOT token on Forbes Digital Assets',
+    url: 'https://www.forbes.com/digital-assets/assets/bostrom-boot/',
+    color: 'forbes',
+    emoji: '📰',
+  },
+  {
+    name: 'Map of Zones',
+    description: 'Cosmos IBC network visualization',
+    url: 'https://mapofzones.com/zones/bostrom/overview',
+    color: 'mapofzones',
+    emoji: '🗺️',
+  },
+  {
+    name: 'Ping.pub',
+    description: 'Open-source blockchain explorer',
+    url: 'https://ping.pub/bostrom',
+    color: 'pingpub',
+    emoji: '🔍',
+  },
+  {
+    name: 'Explorer.ist',
+    description: 'Bostrom network explorer',
+    url: 'https://explorer.ist/bostrom',
+    color: 'explorerist',
+    emoji: '🌐',
+  },
+  {
+    name: 'Staking Explorer',
+    description: 'Staking stats and analytics',
+    url: 'https://staking-explorer.com/assets/bostrom',
+    color: 'stakingexplorer',
+    emoji: '📊',
+  },
+  {
+    name: 'Validator Info',
+    description: 'Validator rankings and info',
+    url: 'https://validatorinfo.com/networks/bostrom/validators',
+    color: 'validatorinfo',
+    emoji: '✅',
+  },
+  {
     name: 'Keplr',
     description: 'Interchain wallet for Cosmos ecosystem',
     url: 'https://www.keplr.app/',
@@ -115,6 +157,12 @@ const colorStyles = {
   telegram: 'border-[#229ED9]/30 hover:border-[#229ED9]',
   x: 'border-foreground/30 hover:border-foreground',
   discord: 'border-[#5865F2]/30 hover:border-[#5865F2]',
+  forbes: 'border-[#B4A06E]/30 hover:border-[#B4A06E]',
+  mapofzones: 'border-[#7B61FF]/30 hover:border-[#7B61FF]',
+  pingpub: 'border-[#6366F1]/30 hover:border-[#6366F1]',
+  explorerist: 'border-[#22D3EE]/30 hover:border-[#22D3EE]',
+  stakingexplorer: 'border-[#F59E0B]/30 hover:border-[#F59E0B]',
+  validatorinfo: 'border-[#10B981]/30 hover:border-[#10B981]',
 };
 
 const textColorStyles = {
@@ -131,6 +179,12 @@ const textColorStyles = {
   telegram: 'group-hover:text-[#229ED9]',
   x: 'group-hover:text-foreground',
   discord: 'group-hover:text-[#5865F2]',
+  forbes: 'group-hover:text-[#B4A06E]',
+  mapofzones: 'group-hover:text-[#7B61FF]',
+  pingpub: 'group-hover:text-[#6366F1]',
+  explorerist: 'group-hover:text-[#22D3EE]',
+  stakingexplorer: 'group-hover:text-[#F59E0B]',
+  validatorinfo: 'group-hover:text-[#10B981]',
 };
 
 export const Ecosystem = () => {
