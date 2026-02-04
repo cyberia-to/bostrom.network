@@ -74,10 +74,12 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
+    // Log detailed error server-side only
     console.error('Error fetching Bostrom stats:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
+    // Return generic error message to client
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: 'Unable to fetch blockchain statistics. Please try again later.' }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

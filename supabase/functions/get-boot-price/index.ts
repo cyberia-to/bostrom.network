@@ -229,12 +229,14 @@ Deno.serve(async (req) => {
       }
     );
   } catch (error) {
+    // Log detailed error server-side only
     console.error('Error fetching BOOT data:', error);
     
+    // Return generic error message to client
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Unable to fetch token data. Please try again later.',
       }),
       { 
         status: 500,
