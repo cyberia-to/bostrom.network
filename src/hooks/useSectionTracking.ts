@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 
-// Declare plausible on window
+// Declare plausible on window with correct API
 declare global {
   interface Window {
-    plausible?: (event: string, options?: { props?: Record<string, string>; u?: string }) => void;
+    plausible?: ((event: 'pageview', options?: { u: string }) => void) & 
+                ((event: string, options?: { props?: Record<string, string> }) => void);
   }
 }
 
@@ -23,13 +24,18 @@ export const useSectionTracking = (sectionId: string) => {
           if (entry.isIntersecting && !trackedSections.has(sectionId)) {
             trackedSections.add(sectionId);
             
-            // Update URL hash and trigger pageview for Plausible
-            const newUrl = sectionId === 'hero' ? '/' : `/#${sectionId}`;
+            // Construct the full URL with hash
+            const newPath = sectionId === 'hero' ? '/' : `/#${sectionId}`;
+            const fullUrl = window.location.origin + newPath;
+            
+            // Update URL hash without scrolling
             history.replaceState(null, '', sectionId === 'hero' ? '/' : `#${sectionId}`);
             
-            // Manually trigger pageview with the new URL
+            // Manually trigger pageview with the full URL
+            // Plausible tracks 'pageview' events with 'u' parameter for custom URLs
             if (window.plausible) {
-              window.plausible('pageview', { u: window.location.origin + newUrl });
+              console.log('Plausible pageview:', fullUrl);
+              window.plausible('pageview', { u: fullUrl });
             }
           }
         });
