@@ -3,6 +3,7 @@ import bostromLogo from '@/assets/bostrom-logo.png';
 import { useBootPrice } from '@/hooks/useBootPrice';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { PriceChart } from './PriceChart';
+import { useSectionTracking } from '@/hooks/useSectionTracking';
 
 // Format price with subscript notation for small numbers (CoinGecko style)
 // e.g., 0.00000000127 becomes 0.0₉127 where ₉ indicates 9 zeros
@@ -62,6 +63,7 @@ const formatSupply = (num: number): string => {
 };
 
 export const TokenSection = () => {
+  const sectionRef = useSectionTracking('token');
   const { 
     price, 
     priceChange24h, 
@@ -85,7 +87,7 @@ export const TokenSection = () => {
     : null;
 
   return (
-    <section id="token" className="py-24 relative overflow-hidden">
+    <section ref={sectionRef} id="token" className="py-24 relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
 

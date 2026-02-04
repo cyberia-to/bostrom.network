@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
+import { useSectionTracking } from '@/hooks/useSectionTracking';
 
 const paragraphs = [
   "Frontier AI runs on transformers. They learn by backpropagation: feed in data, push error backward, adjust weights. Billions of parameters become a next-symbol engine. It works, but it's heavy — trained in massive runs, then mostly frozen. And it can't be intelligent like we are.",
@@ -44,8 +45,9 @@ const TypewriterText = ({ text, startDelay, onComplete }: { text: string; startD
 };
 
 export const BostromExplainer = () => {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+  const sectionRef = useSectionTracking('how');
+  const viewRef = useRef(null);
+  const isInView = useInView(viewRef, { once: true, amount: 0.3 });
   const [currentLine, setCurrentLine] = useState(-1);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export const BostromExplainer = () => {
 
   return (
     <section id="how" ref={sectionRef} className="py-8 md:py-12 pb-4 md:pb-6 bg-background relative overflow-hidden">
-      <div className="container mx-auto px-6 relative z-10">
+      <div ref={viewRef} className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
