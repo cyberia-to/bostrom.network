@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 // Declare plausible on window
 declare global {
   interface Window {
-    plausible?: (event: string, options?: { props?: Record<string, string> }) => void;
+    plausible?: (event: string, options?: { props?: Record<string, string>; u?: string }) => void;
   }
 }
 
@@ -23,16 +23,13 @@ export const useSectionTracking = (sectionId: string) => {
           if (entry.isIntersecting && !trackedSections.has(sectionId)) {
             trackedSections.add(sectionId);
             
-            // Send event to Plausible
-            if (window.plausible) {
-              window.plausible('Section View', { 
-                props: { section: sectionId } 
-              });
-            }
+            // Update URL hash and trigger pageview for Plausible
+            const newUrl = sectionId === 'hero' ? '/' : `/#${sectionId}`;
+            history.replaceState(null, '', sectionId === 'hero' ? '/' : `#${sectionId}`);
             
-            // Update URL hash without scrolling
-            if (sectionId !== 'hero') {
-              history.replaceState(null, '', `#${sectionId}`);
+            // Manually trigger pageview with the new URL
+            if (window.plausible) {
+              window.plausible('pageview', { u: window.location.origin + newUrl });
             }
           }
         });
