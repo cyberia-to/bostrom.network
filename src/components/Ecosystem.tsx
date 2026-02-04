@@ -13,6 +13,12 @@ import coinmarketcapLogo from '@/assets/ecosystem/coinmarketcap.png';
 import telegramLogo from '@/assets/ecosystem/telegram.png';
 import xLogo from '@/assets/ecosystem/x.png';
 import discordLogo from '@/assets/ecosystem/discord.svg';
+import forbesLogo from '@/assets/ecosystem/forbes.png';
+import mapofzonesLogo from '@/assets/ecosystem/mapofzones.png';
+import pingpubLogo from '@/assets/ecosystem/pingpub.svg';
+import exploreristLogo from '@/assets/ecosystem/explorerist.ico';
+import stakingexplorerLogo from '@/assets/ecosystem/stakingexplorer.png';
+import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.png';
 
 const ecosystemItems = [
   {
@@ -62,42 +68,42 @@ const ecosystemItems = [
     description: 'BOOT token on Forbes Digital Assets',
     url: 'https://www.forbes.com/digital-assets/assets/bostrom-boot/',
     color: 'forbes',
-    emoji: '📰',
+    logo: forbesLogo,
   },
   {
     name: 'Map of Zones',
     description: 'Cosmos IBC network visualization',
     url: 'https://mapofzones.com/zones/bostrom/overview',
     color: 'mapofzones',
-    emoji: '🗺️',
+    logo: mapofzonesLogo,
   },
   {
     name: 'Ping.pub',
     description: 'Open-source blockchain explorer',
     url: 'https://ping.pub/bostrom',
     color: 'pingpub',
-    emoji: '🔍',
+    logo: pingpubLogo,
   },
   {
     name: 'Explorer.ist',
     description: 'Bostrom network explorer',
     url: 'https://explorer.ist/bostrom',
     color: 'explorerist',
-    emoji: '🌐',
+    logo: exploreristLogo,
   },
   {
     name: 'Staking Explorer',
     description: 'Staking stats and analytics',
     url: 'https://staking-explorer.com/assets/bostrom',
     color: 'stakingexplorer',
-    emoji: '📊',
+    logo: stakingexplorerLogo,
   },
   {
     name: 'Validator Info',
     description: 'Validator rankings and info',
     url: 'https://validatorinfo.com/networks/bostrom/validators',
     color: 'validatorinfo',
-    emoji: '✅',
+    logo: validatorinfoLogo,
   },
   {
     name: 'Keplr',
