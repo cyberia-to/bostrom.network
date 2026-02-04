@@ -20,6 +20,7 @@ import exploreristLogo from '@/assets/ecosystem/explorerist.ico';
 import stakingexplorerLogo from '@/assets/ecosystem/stakingexplorer.png';
 import validatorinfoLogo from '@/assets/ecosystem/validatorinfo.png';
 import defillamaLogo from '@/assets/ecosystem/defillama.png';
+import osmosisLogo from '@/assets/ecosystem/osmosis.png';
 
 const ecosystemItems = [
   {
@@ -114,6 +115,13 @@ const ecosystemItems = [
     logo: defillamaLogo,
   },
   {
+    name: 'Osmosis',
+    description: 'Trade BOOT on Osmosis DEX',
+    url: 'https://app.osmosis.zone/assets/ibc/FE2CD1E6828EC0FAB8AF39BAC45BC25B965BA67CCBC50C13A14BD610B0D1E2C4',
+    color: 'osmosis',
+    logo: osmosisLogo,
+  },
+  {
     name: 'Keplr',
     description: 'Interchain wallet for Cosmos ecosystem',
     url: 'https://www.keplr.app/',
@@ -178,6 +186,7 @@ const colorStyles = {
   stakingexplorer: 'border-[#F59E0B]/30 hover:border-[#F59E0B]',
   validatorinfo: 'border-[#10B981]/30 hover:border-[#10B981]',
   defillama: 'border-[#2775CA]/30 hover:border-[#2775CA]',
+  osmosis: 'border-[#5E12A0]/30 hover:border-[#5E12A0]',
 };
 
 const textColorStyles = {
@@ -201,6 +210,7 @@ const textColorStyles = {
   stakingexplorer: 'group-hover:text-[#F59E0B]',
   validatorinfo: 'group-hover:text-[#10B981]',
   defillama: 'group-hover:text-[#2775CA]',
+  osmosis: 'group-hover:text-[#5E12A0]',
 };
 
 export const Ecosystem = () => {
