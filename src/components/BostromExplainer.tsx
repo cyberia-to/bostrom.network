@@ -5,7 +5,7 @@ import { useSectionTracking } from '@/hooks/useSectionTracking';
 const paragraphs = [
   "Frontier AI runs on transformers. They learn by backpropagation: feed in data, push error backward, adjust weights. Billions of parameters become a next-symbol engine. It works, but it's heavy — trained in massive runs, then mostly frozen. And it can't be intelligent like we are.",
   "Brains don't work like that. They learn live — predict, act, sense, update. A world-model that keeps adapting on 20 watts.",
-  "Bostrom is that idea made collective. One public mind instead of one private model. Humans, agents, robots, animals, sensors, swarms — all linking the same living graph.",
+  "Bostrom is that idea made collective. One public mind instead of many private models. Humans, agents, robots, animals, sensors, swarms — all linking the same living graph.",
   "Link two ideas and you open a path for attention. Stake strengthens the path. Where attention accumulates is what the network treats as important right now. Every weight is public. Auditable. Contestable.",
   "This is diffusion with teeth. For an ergodic walk, attention provably converges to a unique equilibrium. This enables a new kind of consensus — a shared map of collective focus that anyone can verify and recompute.",
   "The whole graph is retrained every minute by GPUs in consensus. That is why it's orders of magnitude faster for a collective learning task than any blockchain today. It can process weights for a knowledge graph that scales to the needs of superintelligence.",
